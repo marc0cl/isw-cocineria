@@ -20,7 +20,6 @@ export async function getIncome(req, res) {
 
     if (errorIncome) return handleErrorClient(res, 404, errorIncome);
 
-    // Devuelve solo el body de la data
     res.status(200).send(income);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
@@ -33,7 +32,7 @@ export async function getIncomes(req, res) {
 
     if (errorIncomes) return handleErrorClient(res, 404, errorIncomes);
 
-    res.status(200).send(incomes); // Devuelve solo el body de la data
+    res.status(200).send(incomes);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -50,7 +49,7 @@ export async function addIncome(req, res) {
 
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
-    res.status(201).send("Ingreso añadido correctamente"); // Solo mensaje
+    res.status(201).send("Ingreso añadido correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -72,7 +71,7 @@ export async function updateIncome(req, res) {
 
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
-    res.status(200).send("Ingreso actualizado correctamente"); // Solo mensaje
+    res.status(200).send("Ingreso actualizado correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -89,7 +88,7 @@ export async function deleteIncome(req, res) {
 
     if (errorIncome) return handleErrorClient(res, 404, errorIncome);
 
-    res.status(200).send("Ingreso eliminado correctamente"); // Solo mensaje
+    res.status(200).send("Ingreso eliminado correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }

@@ -20,7 +20,7 @@ export async function getExpense(req, res) {
 
     if (errorExpense) return handleErrorClient(res, 404, errorExpense);
 
-    res.status(200).send(expense); // Devuelve solo el body de la data
+    res.status(200).send(expense);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -32,7 +32,7 @@ export async function getExpenses(req, res) {
 
     if (errorExpenses) return handleErrorClient(res, 404, errorExpenses);
 
-    res.status(200).send(expenses); // Devuelve solo el body de la data
+    res.status(200).send(expenses);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -49,7 +49,7 @@ export async function addExpense(req, res) {
 
     if (errorExpense) return handleErrorClient(res, 400, errorExpense);
 
-    res.status(201).send("Gasto añadido correctamente"); // Solo mensaje
+    res.status(201).send("Gasto añadido correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -71,7 +71,7 @@ export async function updateExpense(req, res) {
 
     if (errorExpense) return handleErrorClient(res, 400, errorExpense);
 
-    res.status(200).send("Gasto actualizado correctamente"); // Solo mensaje
+    res.status(200).send("Gasto actualizado correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -88,7 +88,7 @@ export async function deleteExpense(req, res) {
 
     if (errorExpense) return handleErrorClient(res, 404, errorExpense);
 
-    res.status(200).send("Gasto eliminado correctamente"); // Solo mensaje
+    res.status(200).send("Gasto eliminado correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }

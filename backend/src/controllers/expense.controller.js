@@ -5,7 +5,7 @@ import {
   getExpenseService,
   getExpensesService,
   updateExpenseService,
-} from "../services/expenseService.js";
+} from "../services/expense.service.js";
 import { expenseBodyValidation, expenseQueryValidation } from "../validations/expenseValidation.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 

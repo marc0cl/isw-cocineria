@@ -1,5 +1,5 @@
 "use strict";
-import Expense from "../entity/expenseEntity.js";
+import Expense from "../entity/expense.entity.js";
 import { AppDataSource } from "../config/configDb.js";
 
 export async function getExpenseService(query) {
@@ -52,7 +52,12 @@ export async function updateExpenseService(query, body) {
 
     if (!expenseFound) return [null, "Gasto no encontrado"];
 
-    await expenseRepository.update({ id: expenseFound.id }, body);
+    const updatedData = {
+      ...body,
+      updatedAt: new Date(),
+    };
+
+    await expenseRepository.update({ id: expenseFound.id }, updatedData);
     const updatedExpense = await expenseRepository.findOne({ where: { id: expenseFound.id } });
 
     return [updatedExpense, null];

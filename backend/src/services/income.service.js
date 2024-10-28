@@ -1,5 +1,5 @@
 "use strict";
-import Income from "../entity/incomeEntity.js";
+import Income from "../entity/income.entity.js";
 import { AppDataSource } from "../config/configDb.js";
 
 export async function getIncomeService(query) {
@@ -54,7 +54,12 @@ export async function updateIncomeService(query, body) {
 
     if (!incomeFound) return [null, "Ingreso no encontrado"];
 
-    await incomeRepository.update({ id: incomeFound.id }, body);
+    const updatedData = {
+      ...body,
+      updatedAt: new Date(),
+    };
+
+    await incomeRepository.update({ id: incomeFound.id }, updatedData);
     const updatedIncome = await incomeRepository.findOne({ where: { id: incomeFound.id } });
 
     return [updatedIncome, null];

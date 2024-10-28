@@ -5,7 +5,7 @@ import {
   getIncomeService,
   getIncomesService,
   updateIncomeService,
-} from "../services/incomeService.js";
+} from "../services/income.service.js";
 import { incomeBodyValidation, incomeQueryValidation } from "../validations/incomeValidation.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 

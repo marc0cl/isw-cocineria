@@ -8,7 +8,7 @@ import {
   getExpense,
   getExpenses,
   updateExpense,
-} from "../controllers/expenseController.js";
+} from "../controllers/expense.controller.js";
 
 const router = Router();
 

@@ -2,8 +2,8 @@
 import { Router } from "express";
 import userRoutes from "./user.routes.js";
 import authRoutes from "./auth.routes.js";
-import expensesRoutes from "./expensesRoutes.js";
-import incomeRoutes from "./incomeRoutes.js";
+import expensesRoutes from "./expenses.routes.js";
+import incomeRoutes from "./income.routes.js";
 
 const router = Router();
 

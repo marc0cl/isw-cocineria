@@ -8,7 +8,7 @@ import {
   getIncome,
   getIncomes,
   updateIncome,
-} from "../controllers/incomeController.js";
+} from "../controllers/income.controller.js";
 
 const router = Router();
 

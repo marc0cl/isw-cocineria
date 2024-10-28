@@ -1,5 +1,5 @@
 "use strict";
-import Expense from "../entity/expense.entity.js";
+import Expense from "../entity/expenseEntity.js";
 import { AppDataSource } from "../config/configDb.js";
 
 export async function getExpenseService(query) {

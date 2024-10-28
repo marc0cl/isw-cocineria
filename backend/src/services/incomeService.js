@@ -1,5 +1,5 @@
 "use strict";
-import Income from "../entity/income.entity.js";
+import Income from "../entity/incomeEntity.js";
 import { AppDataSource } from "../config/configDb.js";
 
 export async function getIncomeService(query) {

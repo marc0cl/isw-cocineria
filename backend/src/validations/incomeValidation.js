@@ -11,10 +11,10 @@ export const incomeQueryValidation = Joi.object({
       "number.positive": "El id debe ser un número positivo.",
     }),
   source: Joi.string()
-    .valid("cocina", "bar")
+    .valid("cocina", "bar", "proveedor", "otros")
     .messages({
       "string.empty": "La fuente del ingreso no puede estar vacía.",
-      "any.only": "La fuente debe ser 'cocina' o 'bar'.",
+      "any.only": "La fuente debe ser 'cocina', 'bar', 'proveedor' o 'otros'.",
     }),
 })
   .or("id", "source")
@@ -41,10 +41,10 @@ export const incomeBodyValidation = Joi.object({
       "string.max": "La descripción debe tener como máximo 255 caracteres.",
     }),
   source: Joi.string()
-    .valid("cocina", "bar")
+    .valid("cocina", "bar", "proveedor", "otros")
     .messages({
       "string.empty": "La fuente no puede estar vacía.",
-      "any.only": "La fuente debe ser 'cocina' o 'bar'.",
+      "any.only": "La fuente debe ser 'cocina', 'bar', 'proveedor' o 'otros'.",
     }),
 })
   .required()

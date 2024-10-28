@@ -34,6 +34,12 @@ export const expenseBodyValidation = Joi.object({
       "string.base": "La descripción debe ser de tipo string.",
       "string.max": "La descripción debe tener como máximo 255 caracteres.",
     }),
+  source: Joi.string()
+    .valid("cocina", "bar", "proveedor", "otros")
+    .messages({
+      "string.empty": "La fuente no puede estar vacía.",
+      "any.only": "La fuente debe ser 'cocina', 'bar', 'proveedor' o 'otros'.",
+    }),
 })
   .required()
   .unknown(false)

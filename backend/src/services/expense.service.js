@@ -17,10 +17,23 @@ export async function getExpenseService(query) {
   }
 }
 
-export async function getExpensesService() {
+export async function getExpensesService(query = {}) {
   try {
+    const { from, to } = query;
     const expenseRepository = AppDataSource.getRepository(Expense);
-    const expenses = await expenseRepository.find();
+
+    const queryBuilder = expenseRepository.createQueryBuilder("expense");
+    const fromDate = from ? new Date(`${from}T00:00:00Z`) : null;
+    const toDate = to ? new Date(`${to}T23:59:59Z`) : null;
+
+    if (fromDate) {
+      queryBuilder.andWhere("expense.updatedAt >= :fromDate", { fromDate });
+    }
+    if (toDate) {
+      queryBuilder.andWhere("expense.updatedAt <= :toDate", { toDate });
+    }
+
+    const expenses = await queryBuilder.getMany();
 
     if (!expenses || expenses.length === 0) return [null, "No hay gastos registrados"];
 

@@ -28,7 +28,8 @@ export async function getIncome(req, res) {
 
 export async function getIncomes(req, res) {
   try {
-    const [incomes, errorIncomes] = await getIncomesService();
+    const { from, to } = req.query;
+    const [incomes, errorIncomes] = await getIncomesService({ from, to });
 
     if (errorIncomes) return handleErrorClient(res, 404, errorIncomes);
 

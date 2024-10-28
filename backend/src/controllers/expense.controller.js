@@ -28,7 +28,8 @@ export async function getExpense(req, res) {
 
 export async function getExpenses(req, res) {
   try {
-    const [expenses, errorExpenses] = await getExpensesService();
+    const { from, to } = req.query;
+    const [expenses, errorExpenses] = await getExpensesService({ from, to });
 
     if (errorExpenses) return handleErrorClient(res, 404, errorExpenses);
 

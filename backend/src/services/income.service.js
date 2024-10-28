@@ -19,10 +19,23 @@ export async function getIncomeService(query) {
   }
 }
 
-export async function getIncomesService() {
+export async function getIncomesService(query = {}) {
   try {
+    const { from, to } = query;
     const incomeRepository = AppDataSource.getRepository(Income);
-    const incomes = await incomeRepository.find();
+
+    const queryBuilder = incomeRepository.createQueryBuilder("income");
+    const fromDate = from ? new Date(`${from}T00:00:00Z`) : null;
+    const toDate = to ? new Date(`${to}T23:59:59Z`) : null;
+
+    if (fromDate) {
+      queryBuilder.andWhere("expense.updatedAt >= :fromDate", { fromDate });
+    }
+    if (toDate) {
+      queryBuilder.andWhere("expense.updatedAt <= :toDate", { toDate });
+    }
+
+    const incomes = await queryBuilder.getMany();
 
     if (!incomes || incomes.length === 0) return [null, "No hay ingresos registrados"];
 

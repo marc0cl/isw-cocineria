@@ -44,6 +44,7 @@ async function initializeData() {
         expenseRepository.create({
           amount: 500.25,
           description: "Compra de insumos de cocina",
+          source: "bar",
         })
       );
       console.log("* => Gasto creado exitosamente");

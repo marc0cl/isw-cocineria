@@ -19,6 +19,11 @@ const ExpenseSchema = new EntitySchema({
       length: 255,
       nullable: true,
     },
+    source: {
+      type: "enum",
+      enum: ["bar", "proveedor", "cocina", "otros"],
+      nullable: false,
+    },
     createdAt: {
       type: "timestamp with time zone",
       default: () => "CURRENT_TIMESTAMP",
@@ -36,6 +41,10 @@ const ExpenseSchema = new EntitySchema({
       name: "IDX_EXPENSE",
       columns: ["id"],
       unique: true,
+    },
+    {
+      name: "IDX_EXPENSE_UPDATEDAT",
+      columns: ["updatedAt"],
     },
   ],
 });

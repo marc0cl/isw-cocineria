@@ -20,8 +20,8 @@ const IncomeSchema = new EntitySchema({
       nullable: true,
     },
     source: {
-      type: "varchar",
-      length: 50,
+      type: "enum",
+      enum: ["bar", "proveedor", "cocina", "otros"],
       nullable: false,
     },
     createdAt: {
@@ -41,6 +41,10 @@ const IncomeSchema = new EntitySchema({
       name: "IDX_INCOME",
       columns: ["id"],
       unique: true,
+    },
+    {
+      name: "IDX_INCOME_UPDATEDAT",
+      columns: ["updatedAt"],
     },
   ],
 });

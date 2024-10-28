@@ -5,9 +5,9 @@ import {
   getIncomeService,
   getIncomesService,
   updateIncomeService,
-} from "../services/incomeService.js";
+} from "../services/income.service.js";
 import { incomeBodyValidation, incomeQueryValidation } from "../validations/incomeValidation.js";
-import { handleErrorClient, handleErrorServer, handleSuccess } from "../handlers/responseHandlers.js";
+import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function getIncome(req, res) {
   try {
@@ -20,7 +20,8 @@ export async function getIncome(req, res) {
 
     if (errorIncome) return handleErrorClient(res, 404, errorIncome);
 
-    handleSuccess(res, 200, "Ingreso encontrado", income);
+    // Devuelve solo el body de la data
+    res.status(200).send(income);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -32,9 +33,7 @@ export async function getIncomes(req, res) {
 
     if (errorIncomes) return handleErrorClient(res, 404, errorIncomes);
 
-    incomes.length === 0
-      ? handleSuccess(res, 204)
-      : handleSuccess(res, 200, "Ingresos encontrados", incomes);
+    res.status(200).send(incomes); // Devuelve solo el body de la data
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -47,11 +46,11 @@ export async function addIncome(req, res) {
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [income, errorIncome] = await addIncomeService(body);
+    const [, errorIncome] = await addIncomeService(body);
 
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
-    handleSuccess(res, 201, "Ingreso añadido correctamente", income);
+    res.status(201).send("Ingreso añadido correctamente"); // Solo mensaje
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -69,11 +68,11 @@ export async function updateIncome(req, res) {
 
     if (bodyError) return handleErrorClient(res, 400, bodyError.message);
 
-    const [income, errorIncome] = await updateIncomeService({ id }, body);
+    const [, errorIncome] = await updateIncomeService({ id }, body);
 
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
-    handleSuccess(res, 200, "Ingreso actualizado correctamente", income);
+    res.status(200).send("Ingreso actualizado correctamente"); // Solo mensaje
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -86,11 +85,11 @@ export async function deleteIncome(req, res) {
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [deletedIncome, errorIncome] = await deleteIncomeService({ id });
+    const [, errorIncome] = await deleteIncomeService({ id });
 
     if (errorIncome) return handleErrorClient(res, 404, errorIncome);
 
-    handleSuccess(res, 200, "Ingreso eliminado correctamente", deletedIncome);
+    res.status(200).send("Ingreso eliminado correctamente"); // Solo mensaje
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }

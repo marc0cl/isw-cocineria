@@ -5,9 +5,9 @@ import {
   getExpenseService,
   getExpensesService,
   updateExpenseService,
-} from "../services/expenseService.js";
+} from "../services/expense.service.js";
 import { expenseBodyValidation, expenseQueryValidation } from "../validations/expenseValidation.js";
-import { handleErrorClient, handleErrorServer, handleSuccess } from "../handlers/responseHandlers.js";
+import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function getExpense(req, res) {
   try {
@@ -20,7 +20,7 @@ export async function getExpense(req, res) {
 
     if (errorExpense) return handleErrorClient(res, 404, errorExpense);
 
-    handleSuccess(res, 200, "Gasto encontrado", expense);
+    res.status(200).send(expense); // Devuelve solo el body de la data
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -32,9 +32,7 @@ export async function getExpenses(req, res) {
 
     if (errorExpenses) return handleErrorClient(res, 404, errorExpenses);
 
-    expenses.length === 0
-      ? handleSuccess(res, 204)
-      : handleSuccess(res, 200, "Gastos encontrados", expenses);
+    res.status(200).send(expenses); // Devuelve solo el body de la data
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -47,11 +45,11 @@ export async function addExpense(req, res) {
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [expense, errorExpense] = await addExpenseService(body);
+    const [, errorExpense] = await addExpenseService(body);
 
     if (errorExpense) return handleErrorClient(res, 400, errorExpense);
 
-    handleSuccess(res, 201, "Gasto añadido correctamente", expense);
+    res.status(201).send("Gasto añadido correctamente"); // Solo mensaje
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -69,11 +67,11 @@ export async function updateExpense(req, res) {
 
     if (bodyError) return handleErrorClient(res, 400, bodyError.message);
 
-    const [expense, errorExpense] = await updateExpenseService({ id }, body);
+    const [, errorExpense] = await updateExpenseService({ id }, body);
 
     if (errorExpense) return handleErrorClient(res, 400, errorExpense);
 
-    handleSuccess(res, 200, "Gasto actualizado correctamente", expense);
+    res.status(200).send("Gasto actualizado correctamente"); // Solo mensaje
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -86,11 +84,11 @@ export async function deleteExpense(req, res) {
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [deletedExpense, errorExpense] = await deleteExpenseService({ id });
+    const [, errorExpense] = await deleteExpenseService({ id });
 
     if (errorExpense) return handleErrorClient(res, 404, errorExpense);
 
-    handleSuccess(res, 200, "Gasto eliminado correctamente", deletedExpense);
+    res.status(200).send("Gasto eliminado correctamente"); // Solo mensaje
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }

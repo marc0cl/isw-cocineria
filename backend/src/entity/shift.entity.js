@@ -3,8 +3,8 @@ import { EntitySchema, JoinColumn } from "typeorm";
 import UserSchema from "./user.entity.js";
 
 const ShiftSchema = new EntitySchema({
-    name: "Shift",
-    tableName:"Shifts",
+    name: "shift",
+    tableName:"shifts",
     columns: {
         id: {
             type: "int",

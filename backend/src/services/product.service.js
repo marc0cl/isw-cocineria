@@ -20,7 +20,7 @@ export async function getProductService(query) {
     }
 }
 
-export async function getProductService() {
+export async function getProductsService() {
     try {
         const productRepository = AppDataSource.getRepository(Product);
         const products = await productRepository.find();

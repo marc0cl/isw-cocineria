@@ -64,7 +64,7 @@ export async function updateUser(req, res) {
 
     if (queryError) {
       return handleErrorClient(
-        res,
+        res, 
         400,
         "Error de validación en la consulta",
         queryError.message,

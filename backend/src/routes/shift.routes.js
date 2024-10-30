@@ -1,6 +1,7 @@
 "use strict"
 import { Router } from "express";
 import {
+    createShift,
     deleteShift,
     getShift,
     getShifts,
@@ -8,11 +9,14 @@ import {
 } from "../controllers/shift.controller.js";
 
 
+
 const router = Router();
+
 router
+    .post("/", createShift)
     .get("/", getShifts)
-    .get("/detail/", getShift)
-    .patch("/detail/", updateShift)
-    .delete("/detail/", deleteShift);
+    .get("/:id", getShift)
+    .patch("/:id", updateShift)
+    .delete("/:id", deleteShift);
 
 export default router;

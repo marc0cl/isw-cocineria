@@ -33,7 +33,7 @@ export const shiftValidation = Joi.object({
 
     endTime: Joi.date()
         .iso()
-        .greater(Joi.ref("startTime")) // Verifica que `endTime` sea posterior a `startTime`
+        .greater(Joi.ref("startTime"))
         .required()
         .messages({
             "date.base": "La hora de término debe ser una fecha y hora válida.",

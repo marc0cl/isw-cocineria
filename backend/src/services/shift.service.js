@@ -1,16 +1,39 @@
 "use strict"
-import Shift from "../entity/shift.entity.js";
-import { AppDataSource } from "../config/configDb";
+import shift from "../entity/shift.entity.js";
+import { AppDataSource } from "../config/configDb.js";
 
+export async function createShiftService(dataShift) {
+    try {
+    const shiftRepository = AppDataSource.getRepository(shift);
+
+
+
+    const newShift = shiftRepository.create({
+        date: dataShift.date,
+        startTime: dataShift.startIime,
+        endTime: dataShift.endTime,
+        users: dataShift.users,
+        manager: dataShift.manager,
+    });
+    
+    const shiftSaved = await shiftRepository.save(newShift);
+    
+    return [shiftSaved,null];
+    
+    } catch (error) {
+    console.log("Error de llegada de datos")
+    
+    }
+}
 
 export async function getShiftService(query) {
     try {
-        const { id , managerId } = query;
+        const { id } = query;
         
-        const shiftRepository = AppDataSource.getRepository(Shift)
+        const shiftRepository = AppDataSource.getRepository(shift)
 
         const shiftFound = await  shiftRepository.findOne({
-            where: [{ id: id },{ manager: { id: managerId } }],
+            where: { id: id },
         });
 
         if(!shiftFound) return [null,"Turno no encontrado"];
@@ -24,7 +47,7 @@ export async function getShiftService(query) {
 
 export async function getShiftsService() {
     try {
-        const shiftRepository = AppDataSource.getRepository(Shift);
+        const shiftRepository = AppDataSource.getRepository(shift);
 
         const shifts = await shiftRepository.find();
 
@@ -41,7 +64,7 @@ export async function updateShiftService(query,body){
     try {
         const { id } = query;
 
-        const shiftRepository = AppDataSource.getRepository(Shift);
+        const shiftRepository = AppDataSource.getRepository(shift);
 
         const shiftFound = await shiftRepository.findOne({
             where: [{ id : id }, { manager: { id : managerId } }]
@@ -87,7 +110,7 @@ export async function deleteShiftService(query) {
     try {
         const { id } = query;
 
-        const shiftRepository = AppDataSource.getRepository(Shift);
+        const shiftRepository = AppDataSource.getRepository(shift);
 
         const shiftFound = await shiftRepository.findOne({
             where: [{ id : id }]

@@ -18,10 +18,16 @@ const ShiftSchema = new EntitySchema({
         startTime: {
             type:"timestamp with time zone",
             nullable: false,
+            default: () => "CURRENT_TIMESTAMP",
         },
         endTime: {
             type:"timestamp with time zone",
             nullable: false,
+        },
+        users:{
+            type:"int",
+            array: true,
+            nullable:false,
         },
         createdAt: {
             type: "timestamp with time zone",
@@ -34,6 +40,7 @@ const ShiftSchema = new EntitySchema({
             onUpdate: "CURRENT_TIMESTAMP",
             nullable: false,
         },        
+
     },
     relations:{
         users:{

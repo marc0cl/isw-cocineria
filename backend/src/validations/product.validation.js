@@ -3,7 +3,7 @@ import Joi from "joi";
 
 export const productBodyValidation = Joi.object({
   codigoIdentificador: Joi.string()
-    .min(5)
+    .min(1)
     .max(20)
     .required()
     .messages({

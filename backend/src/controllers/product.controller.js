@@ -1,9 +1,10 @@
 "use strict";
-import{
-    getProductService,
-    getProductsService,
-    deleteProductService,
-    updateProductService,
+import {
+  createProductService,
+  deleteProductService,
+  getProductService,
+  getProductsService,
+  updateProductService,
 } from "../services/product.service.js";
 import{
     productBodyValidation,
@@ -125,3 +126,22 @@ export async function getProduct(req, res) {
       handleErrorServer(res, 500, error.message);
     }
   }
+
+export async function createProduct(req, res) {
+  try {
+    const { body } = req;
+
+    const { error } = productBodyValidation.validate(body);
+    if (error)
+      return handleErrorClient(res, 400, "Error de validación", error.message);
+
+    const [newProduct, errorNewProduct] = await createProductService(body);
+
+    if (errorNewProduct)
+      return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message);
+
+    handleSuccess(res, 201, "Producto insertado con éxito", newProduct);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
+  }
+}

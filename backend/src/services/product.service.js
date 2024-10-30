@@ -88,3 +88,37 @@ export async function deleteProductService(query) {
       return [null, "Error interno del servidor"];
     }
   }
+
+export async function createProductService(productData) {
+  try {
+    const productRepository = AppDataSource.getRepository(Product);
+    const { codigoIdentificador, nombreProducto, cantidadProducto, fechaDeCaducidad, tipoDeProducto } = productData;
+
+    const createErrorMessage = (dataInfo, message) => ({
+      dataInfo,
+      message,
+    });
+
+    const existingProduct = await productRepository.findOne({
+      where: { codigoIdentificador },
+    });
+    if (existingProduct) {
+      return [null, createErrorMessage("codigoIdentificador", "Código identificador en uso")];
+    }
+
+    const newProduct = productRepository.create({
+      codigoIdentificador,
+      nombreProducto,
+      cantidadProducto,
+      fechaDeCaducidad,
+      tipoDeProducto,
+    });
+
+    await productRepository.save(newProduct);
+
+    return [newProduct, null];
+  } catch (error) {
+    console.error("Error al crear el producto:", error);
+    return [null, "Error interno del servidor"];
+  }
+}

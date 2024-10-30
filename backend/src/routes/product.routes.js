@@ -3,6 +3,7 @@ import { Router } from "express";
 import { isAdmin } from "../middlewares/authorization.middleware.js";
 import { authenticateJwt } from "../middlewares/authentication.middleware.js";
 import {
+    createProduct,
     deleteProduct,
     getProduct,
     getProducts,
@@ -18,6 +19,7 @@ router
 router
   .get("/", getProducts)              // Obtener todos los productos
   .get("/detail/", getProduct)         // Obtener un solo producto
+  .post("/", createProduct)            // Crear un nuevo producto
   .patch("/detail/", updateProduct)    // Actualizar un producto
   .delete("/detail/", deleteProduct);  // Eliminar un producto
 

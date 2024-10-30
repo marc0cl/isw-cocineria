@@ -47,16 +47,7 @@ export const productBodyValidation = Joi.object({
       "string.min": "El tipo de producto debe tener al menos 3 caracteres.",
       "string.max": "El tipo de producto no puede exceder los 255 caracteres.",
     }),
-  createdAt: Joi.date()
-    .default(() => new Date(), "Fecha de creación por defecto")
-    .messages({
-      "date.base": "La fecha de creación debe ser una fecha válida.",
-    }),
-  updatedAt: Joi.date()
-    .default(() => new Date(), "Fecha de actualización por defecto")
-    .messages({
-      "date.base": "La fecha de actualización debe ser una fecha válida.",
-    }),
+
 })
   .unknown(false)
   .messages({

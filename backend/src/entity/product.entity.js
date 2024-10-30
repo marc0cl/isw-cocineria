@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 import { EntitySchema } from "typeorm";
 
 const ProductSchema = new EntitySchema({
@@ -11,7 +11,7 @@ const ProductSchema = new EntitySchema({
         generated: true,
     },
     
-    codigoIdentidicador: {
+    codigoIdentificador: {
         type: "varchar",
         length: 20,
         nullable: false,
@@ -62,8 +62,9 @@ const ProductSchema = new EntitySchema({
     },
     {
         name: "IDX_PRODUCT_CODIGO",
-        columns: ["codigoIdentidicador"],
+        columns: ["codigoIdentificador"],
         unique:true
     },
   ],  
 });
+export default ProductSchema;

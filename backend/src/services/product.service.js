@@ -1,4 +1,4 @@
-"user strict"
+"user strict";
 import Product from"../entity/product.entity.js";
 import { AppDataSource } from "../config/configDb.js"; 
 

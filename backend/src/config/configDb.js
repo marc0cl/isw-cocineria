@@ -15,6 +15,7 @@ export const AppDataSource = new DataSource({
   ssl: {
       rejectUnauthorized: false,
     }
+    
   });
 
 export async function connectDB() {

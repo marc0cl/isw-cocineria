@@ -67,7 +67,7 @@ export async function updateShiftService(query,body){
         const shiftRepository = AppDataSource.getRepository(shift);
 
         const shiftFound = await shiftRepository.findOne({
-            where: [{ id : id }, { manager: { id : managerId } }]
+            where:{ id : id } 
         })
 
         if(!shiftFound) return [null,"Turno no encontrado"];
@@ -85,9 +85,9 @@ export async function updateShiftService(query,body){
 
         const dataShiftUpdate = {
             date:body.date,
-            startatIime:body.startTime,
+            startTime:body.startTime,
             endTime:body.endTime,
-            updateAt: new Date(),
+            updatedAt: new Date(),
         };
 
         await shiftRepository.update({ id : shiftFound.id },dataShiftUpdate);

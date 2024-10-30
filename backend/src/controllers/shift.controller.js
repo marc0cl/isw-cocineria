@@ -13,6 +13,7 @@ import {
     handleSuccess,
 } from "../handlers/responseHandlers.js";
 import { shiftValidation } from "../validations/shift.validation.js";
+import { shiftIdValidation } from "../validations/shift.validation.js";
 
 export async function createShift(req,res) {
     try {
@@ -33,7 +34,7 @@ export async function createShift(req,res) {
 export async function getShift(req,res) {
     try {
         const id = req.params.id;
-        const { error } = shiftValidation.validate({ id });
+        const { error } = shiftIdValidation.validate({ id });
 
         if(error) return handleErrorClient(res,400,error.message);
 
@@ -59,40 +60,36 @@ export async function getShifts(req,res) {
     }
 }
 
-export async function updateShift(req,res) {
+export async function updateShift(req, res) {
     try {
         const id = req.params.id;
-        const { body } = req;
-        const { errorUpdate } = shiftValidation.validate({ date,startTime,endTime,manager,users });
+        const { date, startTime, endTime, manager, users } = req.body; 
+        const { error: errorUpdate } = shiftValidation.validate({ date, startTime, endTime, manager, users });
 
-        if(errorUpdate) return handleErrorClient(res,400,"Error de validación en los datos enviados",errorUpdate);
-        
-        const [shift,errorShift] = await updateShiftService(id,body);
+        if (errorUpdate) return handleErrorClient(res, 400, "Error de validación en los datos enviados", errorUpdate);
 
-        if(errorShift) return handleErrorClient(res,400,"Error modificando turno",errorShift);
-        
-        handleSuccess(res,200,"Turno modificado corresctamente",shift);
+        const [shift, errorShift] = await updateShiftService(id, { date, startTime, endTime, manager, users });
+
+        if (errorShift) return handleErrorClient(res, 400, "Error modificando turno", errorShift);
+
+        handleSuccess(res, 200, "Turno modificado correctamente", shift);
     } catch (error) {
-        handleErrorServer(res,500,error.message);
-        
+        handleErrorServer(res, 500, error.message);
     }
 }
 
-export async function deleteShift(req,res) {
+export async function deleteShift(req, res) {
     try {
         const id = req.params.id;
-        const { error } = shiftValidation.validate(id);
+        const { error } = shiftIdValidation.validate({ id }); 
 
-        if (error) return handleErrorClient(res,400,error.message);
-        
-        const [ shiftDelete, errorShiftDelete ] = await deleteShiftService(id);
+        if (error) return handleErrorClient(res, 400, error.message);
 
-        if(errorShiftDelete) return handleErrorClient(res,400,error.message);
-        handleSuccess(res,200,"Turno eliminado exitosamente",shiftDelete);
+        const [shiftDelete, errorShiftDelete] = await deleteShiftService({ id });
+
+        if (errorShiftDelete) return handleErrorClient(res, 400, error.message);
+        handleSuccess(res, 200, "Turno eliminado exitosamente", shiftDelete);
     } catch (error) {
-        handleErrorServer(res,500,error.message)
-        
+        handleErrorServer(res, 500, error.message);
     }
-    
 }
-

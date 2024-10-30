@@ -73,3 +73,15 @@ export const shiftValidation = Joi.object({
             "any.required": "El turno debe tener usuarios asignados.",
         }),
 });
+export const shiftIdValidation = Joi.object({
+    id: Joi.number()
+    .integer()
+    .positive()
+    .required()
+    .messages({
+        "number.base": "El id debe ser un número.",
+        "number.integer": "El id debe ser un número entero.",
+        "number.positive": "El id debe ser un número positivo.",
+        "any.required": "El id es obligatorio para buscar un turno.",
+    }),
+});

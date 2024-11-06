@@ -6,8 +6,6 @@ export async function createShiftService(dataShift) {
     try {
     const shiftRepository = AppDataSource.getRepository(shift);
 
-
-
     const newShift = shiftRepository.create({
         date: dataShift.date,
         startTime: dataShift.startIime,

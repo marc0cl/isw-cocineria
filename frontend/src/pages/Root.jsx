@@ -10,13 +10,16 @@ return (
 );
 }
 
-function PageRoot() {
-return (
-    <>
+function PageRoot()  {
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
-        <Outlet />
-    </>
-);
-}
+        <div style={{ flex: 1, display: 'flex', marginTop: '60px'}}>
+            <Outlet />
+        </div>
+        </div>
+    );
+    }
+    
 
 export default Root;

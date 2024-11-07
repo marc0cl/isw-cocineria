@@ -8,8 +8,8 @@ const Home = () => {
       <nav>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           <li>
-            <Link to="/gestion-turnos" style={{ textDecoration: 'none', color: 'Blue',fontsize: 20 ,padding:10 }}>
-              Gestion de Turnos
+            <Link to="/gestion-turnos" style={{ textDecoration: 'none',color:'#003366'}}>
+            <h1>Gestion de turnos</h1>
             </Link>
           </li>
         </ul>

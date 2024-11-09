@@ -8,6 +8,7 @@ import Error404 from '@pages/Error404';
 import Root from '@pages/Root';
 import ProtectedRoute from '@components/ProtectedRoute';
 import GestionProveedores from '@pages/GestionProveedores';
+import CrearProveedor from './pages/CrearProveedor';
 import '@styles/styles.css';
 
 const router = createBrowserRouter([
@@ -26,10 +27,16 @@ const router = createBrowserRouter([
         <ProtectedRoute allowedRoles={['administrador']}>
           <Users />
         </ProtectedRoute>
-        ),
+        )
+      },
+      {
         path: '/gestion-proveedores',
         element: <GestionProveedores/>
-    }
+      },
+      {
+        path: '/crear-proveedor',
+        element: <CrearProveedor/>
+      }
     ]
   },
   {

@@ -1,10 +1,19 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
+import '../styles/GestionProveedores.css';
 
 const GestionProveedores = () => {
-  return (
-    <>
-    </>
-  );
+  const navigate = useNavigate();
+
+  const handleRegisterClick = () => {
+    navigate('/crear-proveedor');
+  };
+
+    return (
+      <div className="gestion-proveedores-container">
+        <button className="register-button" onClick={handleRegisterClick}>Registrar Proveedor</button>
+      </div>
+    );
 };
 
 export default GestionProveedores;

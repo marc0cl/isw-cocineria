@@ -24,15 +24,15 @@ export async function getIncomesService(query = {}) {
     const { from, to } = query;
     const incomeRepository = AppDataSource.getRepository(Income);
 
-    const queryBuilder = incomeRepository.createQueryBuilder("income");
+    const queryBuilder = incomeRepository.createQueryBuilder("incomes");
     const fromDate = from ? new Date(`${from}T00:00:00Z`) : null;
     const toDate = to ? new Date(`${to}T23:59:59Z`) : null;
 
     if (fromDate) {
-      queryBuilder.andWhere("expense.updatedAt >= :fromDate", { fromDate });
+      queryBuilder.andWhere("incomes.updatedAt >= :fromDate", { fromDate });
     }
     if (toDate) {
-      queryBuilder.andWhere("expense.updatedAt <= :toDate", { toDate });
+      queryBuilder.andWhere("incomes.updatedAt <= :toDate", { toDate });
     }
 
     const incomes = await queryBuilder.getMany();

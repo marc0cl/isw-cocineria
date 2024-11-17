@@ -7,6 +7,7 @@ import Register from '@pages/Register';
 import Error404 from '@pages/Error404';
 import Root from '@pages/Root';
 import ProtectedRoute from '@components/ProtectedRoute';
+import Inventory from "@pages/Inventory"; // Crea esta página más adelante
 import '@styles/styles.css';
 
 const router = createBrowserRouter([
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <Register/>
-  }
+  },
+  {
+    path: '/inventory',
+    element: <Inventory/>
+  }//sin probar
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(

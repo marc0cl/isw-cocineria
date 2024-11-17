@@ -59,19 +59,32 @@ const Navbar = () => {
                         </NavLink>
                     </li>
                     {userRole === 'administrador' && (
+                        <li>
+                            <NavLink 
+                                to="/users" 
+                                onClick={() => { 
+                                    setMenuOpen(false); 
+                                    addActiveClass();
+                                }} 
+                                activeClassName="active"
+                            >
+                                Usuarios
+                            </NavLink>
+                        </li>
+                    )}
+                    {/* Enlace de Inventario */}
                     <li>
                         <NavLink 
-                            to="/users" 
+                            to="/products" 
                             onClick={() => { 
                                 setMenuOpen(false); 
                                 addActiveClass();
                             }} 
                             activeClassName="active"
                         >
-                            Usuarios
+                            Inventario
                         </NavLink>
                     </li>
-                    )}
                     <li>
                         <NavLink 
                             to="/auth" 
@@ -94,5 +107,4 @@ const Navbar = () => {
         </nav>
     );
 };
-
 export default Navbar;

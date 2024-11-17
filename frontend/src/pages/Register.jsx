@@ -15,7 +15,6 @@ const Register = () => {
         setGeneralError('');
         try {
             const response = await registerService(data);
-            console.log("Respuesta del servidor:", response);
             if (response.status === 'Success') {
                 showSuccessAlert('¡Registrado!', 'Usuario registrado exitosamente.');
                 setTimeout(() => {

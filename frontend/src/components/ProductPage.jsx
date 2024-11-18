@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../services/inventory.service';
+import '../styles/product_page.css';
 
 export default function ProductPage() {
     const [products, setProducts] = useState([]);
     const [form, setForm] = useState({ id: null, name: '', price: '' });
     const [isEditing, setIsEditing] = useState(false);
 
-    // Cargar productos al montar el componente
     useEffect(() => {
         loadProducts();
     }, []);
 
     const loadProducts = async () => {
-        const data = await fetchProducts();
-        setProducts(data.products); // Asumiendo que `data.products` contiene la lista
+        try {
+            const data = await fetchProducts();
+            console.log('Productos cargados:', data.products);
+            setProducts(data.products || []);
+        } catch (error) {
+            console.error('Error al cargar productos:', error);
+            setProducts([]);
+        }
     };
 
-    // Manejar cambios en los campos del formulario
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    // Manejar envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isEditing) {
@@ -34,22 +38,20 @@ export default function ProductPage() {
         loadProducts();
     };
 
-    // Manejar selección para editar
     const handleEdit = (product) => {
         setForm({ id: product.id, name: product.name, price: product.price });
         setIsEditing(true);
     };
 
-    // Manejar eliminación
     const handleDelete = async (id) => {
         await deleteProduct(id);
         loadProducts();
     };
 
     return (
-        <div>
-            <h1>Gestión de Productos</h1>
-            <form onSubmit={handleSubmit}>
+        <div className="product-page">
+            <h1 className="product-pagetitle">Gestión de Productos</h1>
+            <form className="product-pageform" onSubmit={handleSubmit}>
                 <input
                     type="text"
                     name="name"
@@ -57,24 +59,38 @@ export default function ProductPage() {
                     value={form.name}
                     onChange={handleChange}
                     required
+                    className="product-pageinput"
                 />
                 <input
                     type="number"
                     name="price"
-                    placeholder="Precio"
+                    placeholder="id"
                     value={form.price}
                     onChange={handleChange}
                     required
+                    className="product-pageinput"
                 />
-                <button type="submit">{isEditing ? 'Actualizar' : 'Agregar'}</button>
+                <button type="submit" className="product-pagebutton">
+                    {isEditing ? 'Actualizar' : 'Agregar'}
+                </button>
             </form>
-            <h2>Lista de Productos</h2>
-            <ul>
+            <h2 className="product-pagesubtitle">Lista de Productos</h2>
+            <ul className="product-pagelist">
                 {products.map((product) => (
-                    <li key={product.id}>
+                    <li key={product.id} className="product-pageitem">
                         {product.name} - ${product.price}
-                        <button onClick={() => handleEdit(product)}>Editar</button>
-                        <button onClick={() => handleDelete(product.id)}>Eliminar</button>
+                        <button
+                            className="product-pagebutton"
+                            onClick={() => handleEdit(product)}
+                        >
+                            Editar
+                        </button>
+                        <button
+                            className="product-pagebutton product-page__button--delete"
+                            onClick={() => handleDelete(product.id)}
+                        >
+                            Eliminar
+                        </button>
                     </li>
                 ))}
             </ul>

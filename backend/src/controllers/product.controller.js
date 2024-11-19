@@ -131,17 +131,17 @@ export async function createProduct(req, res) {
   try {
     const { body } = req;
 
-    const { error } = productBodyValidation.validate(body);
-    if (error)
-      return handleErrorClient(res, 400, "Error de validación", error.message);
+    // const { error } = productBodyValidation.validate(body);
+    // if (error)
+      // return handleErrorClient(res, 400, "Error de validación", error.message);
 
     const [newProduct, errorNewProduct] = await createProductService(body);
 
-    if (errorNewProduct)
-      return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message);
+    // if (errorNewProduct)
+      // return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message);
 
     handleSuccess(res, 201, "Producto insertado con éxito", newProduct);
-  } catch (error) {
+   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
 }

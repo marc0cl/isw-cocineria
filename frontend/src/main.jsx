@@ -8,6 +8,8 @@ import Error404 from '@pages/Error404';
 import Root from '@pages/Root';
 import ProtectedRoute from '@components/ProtectedRoute';
 import '@styles/styles.css';
+import Finances from "@pages/Finances.jsx";
+import AddIncome from "@pages/AddIncome.jsx";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +28,23 @@ const router = createBrowserRouter([
           <Users />
         </ProtectedRoute>
         ),
-    }
+      },
+      {
+        path: '/finanzas',
+        element: (
+            <ProtectedRoute allowedRoles={['administrador']}>
+              <Finances />
+            </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/ingresar-ingresos',
+        element: (
+            <ProtectedRoute allowedRoles={['administrador', 'garzon']}>
+              <AddIncome />
+            </ProtectedRoute>
+        ),
+      },
     ]
   },
   {

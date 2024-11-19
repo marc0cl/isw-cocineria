@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     PieChart, Pie, Cell, Tooltip, Legend,
     BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 import { getIncomesService, getExpensesService } from '@services/transaction.service.js';
 import '@styles/finances.css';
-import dayjs from 'dayjs'; // Librería para formatear fechas
+import dayjs from 'dayjs';
 
 const Finances = () => {
     const [pieData, setPieData] = useState([]);
@@ -58,7 +58,7 @@ const Finances = () => {
 
             const bestSellers = Object.keys(productSales).map(product => ({
                 name: product,
-                sales: productSales[product],
+                cantidad: productSales[product],
             }));
 
             setBestSellingProducts(bestSellers);
@@ -83,7 +83,7 @@ const Finances = () => {
                                 cy="50%"
                                 labelLine={false}
                                 label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                                outerRadius={130}
+                                outerRadius={120}
                                 paddingAngle={5}
                                 dataKey="value"
                             >
@@ -123,7 +123,7 @@ const Finances = () => {
                             <XAxis dataKey="name" />
                             <YAxis allowDecimals={false} />
                             <Tooltip />
-                            <Bar dataKey="sales" fill="#82ca9d" />
+                            <Bar dataKey="cantidad" fill="#82ca9d" />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

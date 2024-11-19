@@ -1,22 +1,25 @@
 "use strict";
 import {
-  addIncomeService,
-  deleteIncomeService,
-  getIncomeService,
-  getIncomesService,
-  updateIncomeService,
-} from "../services/income.service.js";
-import { incomeBodyValidation, incomeQueryValidation } from "../validations/incomeValidation.js";
+  addTransactionService,
+  deleteTransactionService,
+  getTransactionService,
+  getTransactionsService,
+  updateTransactionService,
+} from "../services/transaction.service.js";
+import {
+  transactionBodyValidation,
+  transactionQueryValidation,
+} from "../validations/transaction.validation.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function getIncome(req, res) {
   try {
     const { id, source } = req.query;
-    const { error } = incomeQueryValidation.validate({ id, source });
+    const { error } = transactionQueryValidation.validate({ id, source, type: "income" });
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [income, errorIncome] = await getIncomeService({ id, source });
+    const [income, errorIncome] = await getTransactionService({ id, source, type: "income" });
 
     if (errorIncome) return handleErrorClient(res, 404, errorIncome);
 
@@ -29,7 +32,7 @@ export async function getIncome(req, res) {
 export async function getIncomes(req, res) {
   try {
     const { from, to } = req.query;
-    const [incomes, errorIncomes] = await getIncomesService({ from, to });
+    const [incomes, errorIncomes] = await getTransactionsService({ from, to, type: "income" });
 
     if (errorIncomes) return handleErrorClient(res, 404, errorIncomes);
 
@@ -42,11 +45,12 @@ export async function getIncomes(req, res) {
 export async function addIncome(req, res) {
   try {
     const { body } = req;
-    const { error } = incomeBodyValidation.validate(body);
+    const data = { ...body, type: "income" };
+    const { error } = transactionBodyValidation.validate(data);
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [, errorIncome] = await addIncomeService(body);
+    const [, errorIncome] = await addTransactionService(data);
 
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
@@ -60,15 +64,16 @@ export async function updateIncome(req, res) {
   try {
     const { id } = req.query;
     const { body } = req;
-    const { error: queryError } = incomeQueryValidation.validate({ id });
+    const data = { ...body, type: "income" };
+    const { error: queryError } = transactionQueryValidation.validate({ id });
 
     if (queryError) return handleErrorClient(res, 400, queryError.message);
 
-    const { error: bodyError } = incomeBodyValidation.validate(body);
+    const { error: bodyError } = transactionBodyValidation.validate(data);
 
     if (bodyError) return handleErrorClient(res, 400, bodyError.message);
 
-    const [, errorIncome] = await updateIncomeService({ id }, body);
+    const [, errorIncome] = await updateTransactionService({ id }, data);
 
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
@@ -81,11 +86,11 @@ export async function updateIncome(req, res) {
 export async function deleteIncome(req, res) {
   try {
     const { id } = req.query;
-    const { error } = incomeQueryValidation.validate({ id });
+    const { error } = transactionQueryValidation.validate({ id });
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [, errorIncome] = await deleteIncomeService({ id });
+    const [, errorIncome] = await deleteTransactionService({ id });
 
     if (errorIncome) return handleErrorClient(res, 404, errorIncome);
 

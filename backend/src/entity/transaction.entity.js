@@ -1,9 +1,9 @@
 "use strict";
 import { EntitySchema } from "typeorm";
 
-const IncomeSchema = new EntitySchema({
-  name: "Income",
-  tableName: "incomes",
+const TransactionSchema = new EntitySchema({
+  name: "Transaction",
+  tableName: "transactions",
   columns: {
     id: {
       type: "int",
@@ -24,6 +24,11 @@ const IncomeSchema = new EntitySchema({
       enum: ["bar", "proveedor", "cocina", "otros"],
       nullable: false,
     },
+    type: {
+      type: "enum",
+      enum: ["income", "expense"],
+      nullable: false,
+    },
     createdAt: {
       type: "timestamp with time zone",
       default: () => "CURRENT_TIMESTAMP",
@@ -38,15 +43,15 @@ const IncomeSchema = new EntitySchema({
   },
   indices: [
     {
-      name: "IDX_INCOME",
+      name: "IDX_TRANSACTION",
       columns: ["id"],
       unique: true,
     },
     {
-      name: "IDX_INCOME_UPDATEDAT",
+      name: "IDX_TRANSACTION_UPDATEDAT",
       columns: ["updatedAt"],
     },
   ],
 });
 
-export default IncomeSchema;
+export default TransactionSchema;

@@ -16,45 +16,53 @@
     flex: 1 1 300px;
     max-width: 500px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-item h2 {
+    margin-bottom: 10px;
+    flex: 0 0 auto;
 }
 
 .transactions-container {
     max-height: 450px;
     overflow-y: auto;
+    flex: 1 1 auto;
 }
 
-.transactions-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.transactions-table th,
+.transactions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
     text-align: left;
 }
 
-.transactions-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
+.transactions-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
 }
 
-.transaction-date {
-    flex: 0 0 100px;
+.transactions-table tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
-.transaction-description {
-    flex: 1;
-    margin-left: 10px;
+.transactions-table tr:hover {
+    background-color: #ddd;
 }
 
-.transactions-list li.income .transaction-description {
+.transactions-table .amount.income {
     color: green;
 }
 
-.transactions-list li.expense .transaction-description {
+.transactions-table .amount.expense {
     color: red;
-}
-
-.chart-item h2 {
-    margin-bottom: 10px;
 }
 
 @media (max-width: 768px) {
@@ -66,4 +74,42 @@
     .chart-item {
         max-width: 100%;
     }
+
+    .transactions-table,
+    .transactions-table thead,
+    .transactions-table tbody,
+    .transactions-table th,
+    .transactions-table td,
+    .transactions-table tr {
+        display: block;
+    }
+
+    .transactions-table tr {
+        margin-bottom: 15px;
+    }
+
+    .transactions-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .transactions-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .transactions-table th {
+        display: none;
+    }
+
+    .transactions-table td:nth-of-type(1)::before { content: "Fecha"; }
+    .transactions-table td:nth-of-type(2)::before { content: "Descripción"; }
+    .transactions-table td:nth-of-type(3)::before { content: "Monto"; }
+    .transactions-table td:nth-of-type(4)::before { content: "Origen"; }
 }

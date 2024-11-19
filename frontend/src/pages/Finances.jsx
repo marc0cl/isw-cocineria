@@ -12,6 +12,12 @@ const Finances = () => {
     const [transactions, setTransactions] = useState([]);
     const [bestSellingProducts, setBestSellingProducts] = useState([]);
 
+    const sourceDisplay = {
+        bar: 'Bar',
+        cocina: 'Cocina',
+        otro: 'Otro',
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             // Obtener ingresos
@@ -97,21 +103,33 @@ const Finances = () => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Lista de transacciones */}
-                <div className="chart-item transactions-container">
+                {/* Sección de Transacciones */}
+                <div className="chart-item">
                     <h2>Transacciones</h2>
-                    <ul className="transactions-list">
-                        {transactions.map((t, index) => (
-                            <li key={index} className={t.type === 'income' ? 'income' : 'expense'}>
-                <span className="transaction-date">
-                  {dayjs(t.createdAt).format('DD/MM/YYYY')}
-                </span>
-                                <span className="transaction-description">
-                  {t.description} - ${parseFloat(t.amount).toFixed(2)}
-                </span>
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="transactions-container">
+                        <table className="transactions-table">
+                            <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Monto</th>
+                                <th>Origen</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {transactions.map((t, index) => (
+                                <tr key={index}>
+                                    <td>{dayjs(t.createdAt).format('DD/MM/YYYY')}</td>
+                                    <td>{t.description}</td>
+                                    <td className={`amount ${t.type === 'income' ? 'income' : 'expense'}`}>
+                                        ${parseFloat(t.amount).toFixed(2)}
+                                    </td>
+                                    <td>{sourceDisplay[t.source] || t.source}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {/* Productos más vendidos */}

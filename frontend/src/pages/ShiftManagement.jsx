@@ -1,7 +1,8 @@
+//import { Link } from "react-router-dom";
 //import React from 'react';
 export const ShiftManagement = () => { 
 return (
-<div 
+/*<div 
     style={{ display: 'flex', minHeight: '100vh' }}
     className="shift-management">
         <aside 
@@ -24,7 +25,15 @@ return (
             </button>
         </section>
     </aside>
-    </div>
+    </div>*/
+    <nav className='nav'>
+        <ul className='list'>
+            <li className="list__button">
+                
+            </li>
+                <></>
+        </ul>
+    </nav>
     );
 };
 export default ShiftManagement;

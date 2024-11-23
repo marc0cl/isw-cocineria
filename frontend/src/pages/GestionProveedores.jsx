@@ -6,7 +6,6 @@ const GestionProveedores = () => {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate('/crear-proveedor');
   };
 
     return (

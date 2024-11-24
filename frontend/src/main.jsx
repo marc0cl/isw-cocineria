@@ -7,19 +7,20 @@ import Register from '@pages/Register';
 import Error404 from '@pages/Error404';
 import Root from '@pages/Root';
 import ProtectedRoute from '@components/ProtectedRoute';
-import ProductPage from '@pages/ProductPage';  // Página para ver los detalles del producto
+import ProductPage from '@pages/ProductPage';  // Página para agregar productos
+import Product from '@pages/Product';        // Página para listar productos
 
 import '@styles/styles.css';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root/>,
-    errorElement: <Error404/>,
+    element: <Root />,
+    errorElement: <Error404 />,
     children: [
       {
         path: '/home',
-        element: <Home/>
+        element: <Home />
       },
       {
         path: '/users',
@@ -36,17 +37,18 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     children: [
-        { path: '/products', element: <ProductPage /> },
+      { path: '/products', element: <Product /> },       // Ruta para la lista de productos
+      { path: '/add-product', element: <ProductPage /> }, // Ruta para agregar productos
     ],
   },
 
   {
     path: '/auth',
-    element: <Login/>,
+    element: <Login />,
   },
   {
     path: '/register',
-    element: <Register/>,
+    element: <Register />,
   },
 
 ]);

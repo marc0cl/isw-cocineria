@@ -6,55 +6,37 @@ import ArrowIcon from '../assets/ArrowIcon.svg';
 import '@styles/homenav.css';
 const Home = () => {
   return (
-    <div style={{ display: 'flex' , minHeight: '100vh'}}>
-    <aside style={{ width: '250px', padding: '20px', background: '#f4f4f4' }}>
       <nav className='nav'>
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
+        <ul className='list'>
           
-          <li style={{ display: 'flex'}} className="list__item">
-            
-            <div>
-              
-              <img src={UsersIcon} className="nav__link" />
-              <a href="#" className="nav__link">Gestión de Usuarios</a>
-        
-            </div>
+        <li className="list__item">
+    <div className='list__button'>
+        <img src={UsersIcon} alt="Usuarios" />
+        <a href="#" className="nav__link">Usuarios</a>
+    </div>
+</li>
 
-          </li>
-
-          <li className="list__item">
-            <div className="list__button list__button--click">
-              <img src={ShiftIcon} alt="" />
-              <a href="#" className="nav__link">Gestión de Turnos</a>
-              <img src={ArrowIcon} className="list__arrow" />
-            </div>
-
-            <ul className="list__show">
-
-              <li className="list__inside">
-                <a href="#" className="nav__link nav__link--inside">Listar Turnos</a>
-              </li>
-
-              <li className="list__inside">
-                <a href="#" className="nav__link nav__link--inside">Asignar Turno a Usuario</a>
-              </li>
-
-              <li className="list__inside">
-                <a href="#" className="nav__link nav__link--inside">Eliminar Turno</a>
-              </li>
-              
-            </ul>
-
-          </li>
+<li className="list__item list__item--click">
+    <div className="list__button list__button--click">
+        <img src={ShiftIcon} alt="Turnos" />
+        <a href="#" className="nav__link">Turnos</a>
+        <img src={ArrowIcon} className="list__arrow" alt="Flecha" />
+    </div>
+    <ul className="list__show">
+        <li className="list__inside">
+            <a href="#" className="nav__link nav__link--inside">Listar Turnos</a>
+        </li>
+        <li className="list__inside">
+            <a href="#" className="nav__link nav__link--inside">Asignar Turno a Usuario</a>
+        </li>
+        <li className="list__inside">
+            <a href="#" className="nav__link nav__link--inside">Eliminar Turno</a>
+        </li>
+    </ul>
+</li>
 
         </ul>
       </nav>
-    </aside>
-    <main style={{ flex: 1, padding: '20px' }}>
-      {}
-    </main>
-  </div>
-  
   )
 }
 

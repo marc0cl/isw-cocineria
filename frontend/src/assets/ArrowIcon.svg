@@ -1,7 +1,6 @@
-<svg width="20" height="20" fill="#003366" viewBox="0 -0.5 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="si-glyph si-glyph-triangle-down"  transform="rotate(270)">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="#003366" xmlns="http://www.w3.org/2000/svg" transform="rotate(90)">
 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-<g id="SVGRepo_iconCarrier"> <title>1237</title> <defs> </defs> 
-<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> 
-<path d="M10.106,12.69 C9.525,13.27 8.584,13.27 8.002,12.69 L1.561,6.246 C0.979,5.665 0.722,4.143 2.561,4.143 L15.549,4.143 C17.45,4.143 17.131,5.664 16.549,6.246 L10.106,12.69 L10.106,12.69 Z" fill="#003366" class="si-glyph-fill"> 
-</path> </g> </g></svg>
+<g id="SVGRepo_iconCarrier"> 
+<path d="M18.2929 15.2893C18.6834 14.8988 18.6834 14.2656 18.2929 13.8751L13.4007 8.98766C12.6195 8.20726 11.3537 8.20757 10.5729 8.98835L5.68257 13.8787C5.29205 14.2692 5.29205 14.9024 5.68257 15.2929C6.0731 15.6835 6.70626 15.6835 7.09679 15.2929L11.2824 11.1073C11.673 10.7168 12.3061 10.7168 12.6966 11.1073L16.8787 15.2893C17.2692 15.6798 17.9024 15.6798 18.2929 15.2893Z" fill="#003366">
+</path> </g></svg>

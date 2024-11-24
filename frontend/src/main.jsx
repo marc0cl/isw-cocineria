@@ -7,7 +7,7 @@ import Register from '@pages/Register';
 import Error404 from '@pages/Error404';
 import Root from '@pages/Root';
 import ProtectedRoute from '@components/ProtectedRoute';
-import ProductPage from '@pages/ProductPage';
+import ProductPage from '@pages/ProductPage';  // Página para ver los detalles del producto
 
 import '@styles/styles.css';
 
@@ -24,12 +24,11 @@ const router = createBrowserRouter([
       {
         path: '/users',
         element: (
-        <ProtectedRoute allowedRoles={['administrador']}>
-          <Users />
-        </ProtectedRoute>
+          <ProtectedRoute allowedRoles={['administrador']}>
+            <Users />
+          </ProtectedRoute>
         ),
-    }
-    
+      }
     ]
   },
 
@@ -43,16 +42,15 @@ const router = createBrowserRouter([
 
   {
     path: '/auth',
-    element: <Login/>
+    element: <Login/>,
   },
   {
     path: '/register',
-    element: <Register/>
+    element: <Register/>,
   },
 
-])
+]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router}/>
-)
-
+  <RouterProvider router={router} />
+);

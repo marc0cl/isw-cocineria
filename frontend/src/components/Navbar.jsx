@@ -130,6 +130,19 @@ const Navbar = () => {
                                         Eliminar producto
                                     </NavLink>
                                 </li>
+                                {/* Opción para editar un producto */}
+                                <li>
+                                    <NavLink 
+                                        to="/edit-product" // Enlace para editar producto
+                                        onClick={() => { 
+                                            setMenuOpen(false); 
+                                            addActiveClass();
+                                        }} 
+                                        activeClassName="active"
+                                    >
+                                        Editar producto
+                                    </NavLink>
+                                </li>
                             </ul>
                         )}
                     </li>

@@ -10,7 +10,7 @@ import ProtectedRoute from '@components/ProtectedRoute';
 import ProductPage from '@pages/ProductPage';  // Página para agregar productos
 import Product from '@pages/Product';        // Página para listar productos
 import DeleteProduct from '@pages/DeleteProduct'; // Página para eliminar productos
-
+import UpdateProduct from '@pages/UpdateProduct'; // Página para actualizar productos
 
 import '@styles/styles.css';
 
@@ -42,6 +42,7 @@ const router = createBrowserRouter([
       { path: '/products', element: <Product /> },       // Ruta para la lista de productos
       { path: '/add-product', element: <ProductPage /> }, // Ruta para agregar productos
       { path: '/delete-product', element: <DeleteProduct /> }, // Ruta para eliminar productos
+      { path: '/edit-product', element: <UpdateProduct /> }, // Ruta para actualizar productos
 
     ],
   },

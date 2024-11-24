@@ -20,9 +20,19 @@ export async function createProduct(productData) {
 
 // Actualizar un producto existente
 export async function updateProduct(id, updatedData) {
-    const response = await axios.patch(`/product/detail?id=${id}`, updatedData); // Se mantiene /product/detail
-    return response.data;
-}
+    try {
+      // Corrigiendo la interpolación de la URL con comillas invertidas
+      const response = await axios.patch(`/product/detail?id=${id}`, updatedData);
+  
+      // Agregando datos al console.log
+      console.log("Llamada a updateProduct con:", { id, updatedData });
+  
+      return response.data;
+    } catch (error) {
+      console.error("Error en updateProduct:", error.response || error);
+      throw error;
+    }
+  }
 
 // Eliminar un producto
 export async function deleteProduct(id) {

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProducts } from '@services/inventory.service'; // O el nombre correcto de tu servicio
+import { fetchProducts } from '@services/inventory.service'; 
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]); // Estado para almacenar los productos
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Usamos useEffect para cargar los productos desde el servicio
+  // useEffect para cargar los productos desde el servicio
   useEffect(() => {
     const loadProducts = async () => {
       try {

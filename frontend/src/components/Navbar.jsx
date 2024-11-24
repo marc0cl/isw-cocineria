@@ -94,7 +94,7 @@ const Navbar = () => {
                                 {/* Opción para agregar un producto */}
                                 <li>
                                     <NavLink 
-                                        to="/products"
+                                        to="/add-product" // Enlace para agregar producto
                                         onClick={() => { 
                                             setMenuOpen(false); 
                                             addActiveClass();
@@ -107,7 +107,7 @@ const Navbar = () => {
                                 {/* Opción para listar los productos */}
                                 <li>
                                     <NavLink 
-                                        to="/" 
+                                        to="/products" // Enlace para listar productos
                                         onClick={() => { 
                                             setMenuOpen(false); 
                                             addActiveClass();
@@ -115,32 +115,6 @@ const Navbar = () => {
                                         activeClassName="active"
                                     >
                                         Listado de productos
-                                    </NavLink>
-                                </li>
-                                {/* Opción para actualizar un producto */}
-                                <li>
-                                    <NavLink 
-                                        to="/products/update" 
-                                        onClick={() => { 
-                                            setMenuOpen(false); 
-                                            addActiveClass();
-                                        }} 
-                                        activeClassName="active"
-                                    >
-                                        Actualizar producto
-                                    </NavLink>
-                                </li>
-                                {/* Opción para eliminar un producto */}
-                                <li>
-                                    <NavLink 
-                                        to="/products/delete" 
-                                        onClick={() => { 
-                                            setMenuOpen(false); 
-                                            addActiveClass();
-                                        }} 
-                                        activeClassName="active"
-                                    >
-                                        Eliminar producto
                                     </NavLink>
                                 </li>
                             </ul>

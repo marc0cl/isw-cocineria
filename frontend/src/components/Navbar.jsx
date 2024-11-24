@@ -9,6 +9,7 @@ const Navbar = () => {
     const user = JSON.parse(sessionStorage.getItem('usuario')) || '';
     const userRole = user?.rol;
     const [menuOpen, setMenuOpen] = useState(false);
+    const [inventoryMenuOpen, setInventoryMenuOpen] = useState(false); // Nuevo estado para el submenú de Inventario
 
     const logoutSubmit = () => {
         try {
@@ -26,6 +27,10 @@ const Navbar = () => {
             addActiveClass();
         }
         setMenuOpen(!menuOpen);
+    };
+
+    const toggleInventoryMenu = () => {
+        setInventoryMenuOpen(!inventoryMenuOpen); // Alterna el estado del submenú de Inventario
     };
 
     const removeActiveClass = () => {
@@ -72,18 +77,74 @@ const Navbar = () => {
                             </NavLink>
                         </li>
                     )}
-                    {/* Enlace de Inventario */}
-                    <li>
+                    {/* Opción de Inventario con submenú */}
+                    <li className={`submenu ${inventoryMenuOpen ? 'open' : ''}`}>
                         <NavLink 
-                            to="/products" 
-                            onClick={() => { 
-                                setMenuOpen(false); 
-                                addActiveClass();
+                            to="#!" 
+                            onClick={(e) => { 
+                                e.preventDefault(); // Evita la navegación por defecto
+                                toggleInventoryMenu(); // Toggle del submenú
                             }} 
                             activeClassName="active"
                         >
                             Inventario
                         </NavLink>
+                        {inventoryMenuOpen && (
+                            <ul className="sub-menu">
+                                {/* Opción para agregar un producto */}
+                                <li>
+                                    <NavLink 
+                                        to="/products"
+                                        onClick={() => { 
+                                            setMenuOpen(false); 
+                                            addActiveClass();
+                                        }} 
+                                        activeClassName="active"
+                                    >
+                                        Agregar producto
+                                    </NavLink>
+                                </li>
+                                {/* Opción para listar los productos */}
+                                <li>
+                                    <NavLink 
+                                        to="/" 
+                                        onClick={() => { 
+                                            setMenuOpen(false); 
+                                            addActiveClass();
+                                        }} 
+                                        activeClassName="active"
+                                    >
+                                        Listado de productos
+                                    </NavLink>
+                                </li>
+                                {/* Opción para actualizar un producto */}
+                                <li>
+                                    <NavLink 
+                                        to="/products/update" 
+                                        onClick={() => { 
+                                            setMenuOpen(false); 
+                                            addActiveClass();
+                                        }} 
+                                        activeClassName="active"
+                                    >
+                                        Actualizar producto
+                                    </NavLink>
+                                </li>
+                                {/* Opción para eliminar un producto */}
+                                <li>
+                                    <NavLink 
+                                        to="/products/delete" 
+                                        onClick={() => { 
+                                            setMenuOpen(false); 
+                                            addActiveClass();
+                                        }} 
+                                        activeClassName="active"
+                                    >
+                                        Eliminar producto
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        )}
                     </li>
                     <li>
                         <NavLink 
@@ -107,4 +168,5 @@ const Navbar = () => {
         </nav>
     );
 };
+
 export default Navbar;

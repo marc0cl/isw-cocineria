@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '@services/inventory.service';  
 import { deleteProduct } from '@services/inventory.service';
+import '../styles/DeleteProduct.css'; // Importa el archivo CSS para aplicar estilos
 
 const DeleteProductPage = () => {
   const [products, setProducts] = useState([]);  // Estado para almacenar los productos

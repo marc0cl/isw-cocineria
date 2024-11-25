@@ -8,6 +8,7 @@ import {
 } from "../services/product.service.js";
 import{
     productBodyValidation,
+    productBodyUpdateValidation,
     productQueryValidation,
 }from "../validations/product.validation.js";
 import{
@@ -50,49 +51,50 @@ export async function getProduct(req, res) {
     }
   }
   
-  // Función para actualizar un producto
-  export async function updateProduct(req, res) {
-    try {
-      const { id, codigoIdentificador } = req.query;
-      const { body } = req;
-  
-      const { error: queryError } = productQueryValidation.validate({
-        id,
-        codigoIdentificador,
-      });
-  
-      if (queryError) {
-        return handleErrorClient(
-          res,
-          400,
-          "Error de validación en la consulta",
-          queryError.message,
-        );
-      }
-  
-      const { error: bodyError } = productBodyValidation.validate(body);
-  
-      if (bodyError)
-        return handleErrorClient(
-          res,
-          400,
-          "Error de validación en los datos enviados",
-          bodyError.message,
-        );
-  
-      const [product, productError] = await updateProductService(
-        { id, codigoIdentificador },
-        body,
+// Función para actualizar un producto
+export async function updateProduct(req, res) {
+  try {
+    // Obtener el codigoIdentificador de los parámetros de la consulta
+    const { codigoIdentificador } = req.query;
+    const { body } = req;
+
+
+
+
+    // Validación del cuerpo de la solicitud (producto)
+    const { error: bodyError } = productBodyUpdateValidation.validate(body);
+
+    if (bodyError) {
+      return handleErrorClient(
+        res,
+        400,
+        "Error de validación en los datos enviados",
+        bodyError.message
       );
-  
-      if (productError)
-        return handleErrorClient(res, 400, "Error modificando el producto", productError);
-  
-      handleSuccess(res, 200, "Producto modificado correctamente", product);
-    } catch (error) {
-      handleErrorServer(res, 500, error.message);
     }
+
+    // Llamada al servicio de actualización, solo con el codigoIdentificador
+    const [product, productError] = await updateProductService(
+      { codigoIdentificador }, // Solo pasamos el codigoIdentificador
+      body
+    );
+
+    if (productError) {
+      return handleErrorClient(
+        res,
+        400,
+        "Error modificando el producto",
+        productError
+      );
+    }
+
+    // Respuesta exitosa
+    handleSuccess(res, 200, "Producto modificado correctamente", product);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
   }
+}
+
   
   // Función para eliminar un producto
   export async function deleteProduct(req, res) {
@@ -131,14 +133,14 @@ export async function createProduct(req, res) {
   try {
     const { body } = req;
 
-    // const { error } = productBodyValidation.validate(body);
-    // if (error)
-      // return handleErrorClient(res, 400, "Error de validación", error.message);
+     const { error } = productBodyValidation.validate(body);
+     if (error)
+       return handleErrorClient(res, 400, "Error de validación", error.message);
 
     const [newProduct, errorNewProduct] = await createProductService(body);
 
-    // if (errorNewProduct)
-      // return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message);
+     if (errorNewProduct)
+     return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message);
 
     handleSuccess(res, 201, "Producto insertado con éxito", newProduct);
    } catch (error) {

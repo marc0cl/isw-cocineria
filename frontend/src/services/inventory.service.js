@@ -15,24 +15,26 @@ export async function fetchProductDetail(id) {
 // Crear un nuevo producto
 export async function createProduct(productData) {
     const response = await axios.post('/product', productData); // Se mantiene /product para que coincida con el backend
+    console.log(productData);
     return response.data;
 }
 
 // Actualizar un producto existente
-export async function updateProduct(id, updatedData) {
-    try {
-      // Corrigiendo la interpolación de la URL con comillas invertidas
-      const response = await axios.patch(`/product/detail?id=${id}`, updatedData);
-  
-      // Agregando datos al console.log
-      console.log("Llamada a updateProduct con:", { id, updatedData });
-  
-      return response.data;
-    } catch (error) {
-      console.error("Error en updateProduct:", error.response || error);
-      throw error;
-    }
+export async function updateProduct(codigoIdentificador, updatedData) {
+  try {
+    // Corrigiendo la URL para usar codigoIdentificador
+    const response = await axios.patch(`/product/detail?codigoIdentificador=${codigoIdentificador}`, updatedData);
+
+    // Log para verificar la llamada
+    console.log("Llamada a updateProduct con:", { codigoIdentificador, updatedData });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error en updateProduct:", error.response || error);
+    console.log(data);
+    throw error;
   }
+}
 
 // Eliminar un producto
 export async function deleteProduct(id) {

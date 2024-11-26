@@ -36,8 +36,17 @@ const GestionProveedores = () => {
 
   return (
     <div className="gestion-proveedores-container">
-      <h1>Proveedores</h1>
-      <button className="register-button" onClick={handleRegisterClick}>Registrar Proveedor</button>
+      <h1 className="titulo-proveedores">Proveedores</h1>
+      <div className="button-container">
+        <button className="delete-button">
+          <img src="https://img.icons8.com/material-outlined/24/trash--v1.png" alt="Delete" />
+          DELETE
+        </button>
+        <button className="register-button" onClick={handleRegisterClick}>
+          <img src="https://img.icons8.com/material-outlined/24/plus--v1.png" alt="Create Icon" />
+          Añadir
+        </button>
+      </div>
       <Table columns={columns} data={proveedores} />
     </div>
   );

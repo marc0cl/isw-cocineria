@@ -13,8 +13,8 @@ import {
 const router = Router();
 
 router
-    .post("/", createShift)
-    .get("/", getShifts)
+    .post("/", createShift) 
+    .get("/all", getShifts)
     .get("/:id", getShift)
     .patch("/:id", updateShift)
     .delete("/:id", deleteShift);

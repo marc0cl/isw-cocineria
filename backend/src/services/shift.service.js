@@ -13,7 +13,7 @@ export async function createShiftService(dataShift) {
         startTime: dataShift.startIime,
         endTime: dataShift.endTime,
         users: dataShift.users,
-        manager: dataShift.manager,
+        manager: dataShift.manager.id,
     });
     
     const shiftSaved = await shiftRepository.save(newShift);

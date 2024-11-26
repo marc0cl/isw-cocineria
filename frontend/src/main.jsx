@@ -39,12 +39,32 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     children: [
-      { path: '/products', element: <Product /> },       // Ruta para la lista de productos
-      { path: '/add-product', element: <ProductPage /> }, // Ruta para agregar productos
-      { path: '/delete-product', element: <DeleteProduct /> }, // Ruta para eliminar productos
-      { path: '/edit-product', element: <UpdateProduct /> }, // Ruta para actualizar productos
-
-    ],
+      { path: '/products', element: <Product /> },       // Ruta para la lista de productos, accesible para todos
+      { 
+        path: '/add-product', 
+        element: (
+          <ProtectedRoute allowedRoles={['administrador']}>
+            <ProductPage />
+          </ProtectedRoute>
+        ) 
+      }, // Ruta para agregar productos, solo para administradores
+      { 
+        path: '/delete-product', 
+        element: (
+          <ProtectedRoute allowedRoles={['administrador']}>
+            <DeleteProduct />
+          </ProtectedRoute>
+        ) 
+      }, // Ruta para eliminar productos, solo para administradores
+      { 
+        path: '/edit-product', 
+        element: (
+          <ProtectedRoute allowedRoles={['administrador']}>
+            <UpdateProduct />
+          </ProtectedRoute>
+        ) 
+      }, // Ruta para editar productos, solo para administradores
+    ]
   },
 
   {

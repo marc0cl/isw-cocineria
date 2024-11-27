@@ -33,7 +33,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/gestion-proveedores',
-        element: <GestionProveedores />
+        element: (
+          <ProtectedRoute allowedRoles={['administrador']}>
+            <GestionProveedores />
+          </ProtectedRoute>
+        )
       },
       {
         path: '/finanzas',

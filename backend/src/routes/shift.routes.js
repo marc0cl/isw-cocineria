@@ -1,5 +1,7 @@
 "use strict"
 import { Router } from "express";
+import { isAdmin } from "../middlewares/authorization.middleware.js";
+import { authenticateJwt } from "../middlewares/authentication.middleware.js";
 import {
     createShift,
     deleteShift,
@@ -8,15 +10,16 @@ import {
     updateShift,
 } from "../controllers/shift.controller.js";
 
-
-
 const router = Router();
 
+router.use(authenticateJwt);
+
+router .get("/all", getShifts);
+router.get("/:id", getShift);
+
 router
-    .post("/", createShift)
-    .get("/", getShifts)
-    .get("/:id", getShift)
-    .patch("/:id", updateShift)
-    .delete("/:id", deleteShift);
+    .post("/",isAdmin ,createShift) 
+    .patch("/:id", isAdmin,updateShift)
+    .delete("/:id",isAdmin, deleteShift);
 
 export default router;

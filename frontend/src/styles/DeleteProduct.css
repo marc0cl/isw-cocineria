@@ -1,0 +1,88 @@
+/* Estilos generales para la página de eliminar producto */
+.delete-product-page {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Fondo claro */
+    padding: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de la página */
+.delete-product-page h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Estilos para los productos listados */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.product-item {
+    background-color: white;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.product-item h3 {
+    font-size: 20px;
+    color: #333;
+    margin: 0;
+}
+
+.product-item p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+}
+
+/* Estilos para el botón de eliminar */
+.product-item button {
+    background-color: #e74c3c; /* Rojo */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 150px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efecto de hover para el botón */
+.product-item button:hover {
+    background-color: #c0392b; /* Rojo oscuro */
+    transform: scale(1.05);
+}
+
+/* Efecto de clic para el botón */
+.product-item button:active {
+    background-color: #a93226; /* Rojo aún más oscuro */
+}
+
+/* Estilo para el mensaje de carga */
+.delete-product-page p {
+    font-size: 16px;
+    color: #555;
+    text-align: center;
+}
+
+/* Estilos para el mensaje de error o vacío */
+.delete-product-page .error {
+    color: #e74c3c; /* Rojo para los errores */
+    font-weight: bold;
+    text-align: center;
+}

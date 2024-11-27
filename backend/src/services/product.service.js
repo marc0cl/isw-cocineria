@@ -32,41 +32,52 @@ export async function getProductsService() {
     }
 }
 export async function updateProductService(query, body) {
-    try {
-        const {id, codigoIdentificador} = query;
-        const productRepository = AppDataSource.getRepository(Product);
-        const productFound = await productRepository.findOne({
-            where: [{id: id} ,{codigoIdentificador: codigoIdentificador}] 
-        });
+  try {
+    const { codigoIdentificador } = query; // Solo usamos el codigoIdentificador para encontrar el producto
+    const productRepository = AppDataSource.getRepository(Product);
 
-        if (!productFound) return [null, "producto no encontrado"];
+    if (!codigoIdentificador) {
+      return [null, "El código identificador es requerido para actualizar el producto"];
+    }
 
-        const existingProduct = await productRepository.findOne({
-            where: [{codigoIdentificador : body.codigoIdentificador}],
-        });
-        if(existingProduct && existingProduct.id !== productFound.id){
-            return[null, "ya existe un producto con el mismo codigo identificador "];
-        }
-        const dataProductUpdate = {
-            nombreProducto: body.nombreProducto,
-            cantidadProducto: body.cantidadProducto,
-            fechaDeCaducidad: body.fechaDeCaducidad,
-            tipoDeProducto: body.tipoDeProducto,
-            updatedAt: new Date(),
-        };
-        await productRepository.update({ id: productFound.id }, dataProductUpdate);
-        
-        const updatedProduct = await productRepository.findOne({
-            where: { id: productFound.id },
-          });
-          return [updatedProduct, null];
+    // Buscar el producto por codigoIdentificador
+    const productFound = await productRepository.findOne({
+      where: { codigoIdentificador },
+    });
 
-    } catch (error) {
+    if (!productFound) {
+      return [null, "Producto no encontrado"];
+    }
+
+    // Validar que el codigoIdentificador no se esté intentando modificar
+    if (body.codigoIdentificador && body.codigoIdentificador !== codigoIdentificador) {
+      return [null, "No se permite cambiar el código identificador"];
+    }
+
+    // Crear el objeto de datos para la actualización (sin incluir codigoIdentificador)
+    const dataProductUpdate = {
+      nombreProducto: body.nombreProducto || productFound.nombreProducto,
+      cantidadProducto: body.cantidadProducto || productFound.cantidadProducto,
+      fechaDeCaducidad: body.fechaDeCaducidad || productFound.fechaDeCaducidad,
+      tipoDeProducto: body.tipoDeProducto || productFound.tipoDeProducto,
+      updatedAt: new Date(), // Marca el tiempo de la actualización
+    };
+
+    // Actualizar el producto
+    await productRepository.update({ codigoIdentificador }, dataProductUpdate);
+
+    // Retornar el producto actualizado
+    const updatedProduct = await productRepository.findOne({
+      where: { codigoIdentificador },
+    });
+    
+    return [updatedProduct, null];
+  } catch (error) {
     console.error("Error al modificar el producto:", error);
     return [null, "Error interno del servidor"];
   }
-
 }
+
 
 export async function deleteProductService(query) {
     try {

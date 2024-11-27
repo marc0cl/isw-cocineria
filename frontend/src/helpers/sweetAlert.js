@@ -27,3 +27,13 @@ export const showErrorAlert = (titleMessage, message) => {
     'error'
   );
 };
+export async function createShiftDataAlert() {
+  return Swal.fire({
+    title: "¿Estás seguro que quieres crear un turno?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, crear turno !"
+  })
+}

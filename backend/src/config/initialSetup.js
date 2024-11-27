@@ -1,16 +1,16 @@
 "use strict";
-import User from "../entity/user.entity.js";
-import Expense from "../entity/expense.entity.js";
-import Income from "../entity/income.entity.js";
+import User from "../entity/user.entity.js"
+import Transaction from "../entity/transaction.entity.js";
 import { AppDataSource } from "./configDb.js";
 import { encryptPassword } from "../helpers/bcrypt.helper.js";
 
-async function initializeData() {
+async function createUsers() {
   try {
     const userRepository = AppDataSource.getRepository(User);
-    const expenseRepository = AppDataSource.getRepository(Expense);
-    const incomeRepository = AppDataSource.getRepository(Income);
+    
+    const transactionRepository = AppDataSource.getRepository(Transaction);
 
+    // Crear usuarios si no existen
     const userCount = await userRepository.count();
     if (userCount === 0) {
       await Promise.all([
@@ -25,9 +25,9 @@ async function initializeData() {
         ),
         userRepository.save(
           userRepository.create({
-            nombreCompleto: "Diego Sebastián Ampuero Belmar",
-            rut: "21.151.897-9",
-            email: "usuario1.2024@gmail.cl",
+            nombreCompleto: "Alexander Benjamín Marcelo Carrasco Fuentes",
+            rut: "20.630.735-8",
+            email: "usuario2.2024@gmail.cl",
             password: await encryptPassword("user1234"),
             rol: "usuario",
           })
@@ -35,40 +35,57 @@ async function initializeData() {
       ]);
       console.log("* => Usuarios creados exitosamente");
     } else {
-      console.log("* => Usuarios ya existen en la base de datos, omitiendo creación de usuarios.");
-    }
-
-    const expenseCount = await expenseRepository.count();
-    if (expenseCount === 0) {
-      await expenseRepository.save(
-        expenseRepository.create({
-          amount: 500.25,
-          description: "Compra de insumos de cocina",
-          source: "bar",
-        })
+      console.log(
+        "* => Usuarios ya existen en la base de datos, omitiendo creación de usuarios."
       );
-      console.log("* => Gasto creado exitosamente");
-    } else {
-      console.log("* => Gastos ya existen en la base de datos, omitiendo creación de gastos.");
     }
 
-    const incomeCount = await incomeRepository.count();
-    if (incomeCount === 0) {
-      await incomeRepository.save(
-        incomeRepository.create({
-          amount: 1000.50,
-          description: "Ingreso del bar",
-          source: "bar",
-        })
+    // Crear transacciones si no existen
+    const transactionCount = await transactionRepository.count();
+    if (transactionCount === 0) {
+      await Promise.all([
+        transactionRepository.save(
+          transactionRepository.create({
+            amount: 1200.50,
+            description: "Venta de bebidas en el bar",
+            source: "bar",
+            type: "income",
+          })
+        ),
+        transactionRepository.save(
+          transactionRepository.create({
+            amount: 2000.00,
+            description: "Ingreso por eventos especiales",
+            source: "otros",
+            type: "income",
+          })
+        ),
+        transactionRepository.save(
+          transactionRepository.create({
+            amount: 800.75,
+            description: "Compra de ingredientes para la cocina",
+            source: "cocina",
+            type: "expense",
+          })
+        ),
+        transactionRepository.save(
+          transactionRepository.create({
+            amount: 600.00,
+            description: "Pago a proveedores de bebidas",
+            source: "proveedor",
+            type: "expense",
+          })
+        ),
+      ]);
+      console.log("* => Transacciones creadas exitosamente");
+    } else {
+      console.log(
+        "* => Transacciones ya existen en la base de datos, omitiendo creación de transacciones."
       );
-      console.log("* => Ingreso creado exitosamente");
-    } else {
-      console.log("* => Ingresos ya existen en la base de datos, omitiendo creación de ingresos.");
     }
-
   } catch (error) {
-    console.error("Error al inicializar datos:", error);
+    console.error("Error al crear usuarios:", error);
   }
 }
 
-export { initializeData };
+export { createUsers };

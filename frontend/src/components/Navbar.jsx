@@ -9,6 +9,7 @@ const Navbar = () => {
     const user = JSON.parse(sessionStorage.getItem('usuario')) || '';
     const userRole = user?.rol;
     const [menuOpen, setMenuOpen] = useState(false);
+    const [inventoryMenuOpen, setInventoryMenuOpen] = useState(false); // Nuevo estado para el submenú de Inventario
 
     const logoutSubmit = () => {
         try {
@@ -26,6 +27,10 @@ const Navbar = () => {
             addActiveClass();
         }
         setMenuOpen(!menuOpen);
+    };
+
+    const toggleInventoryMenu = () => {
+        setInventoryMenuOpen(!inventoryMenuOpen); // Alterna el estado del submenú de Inventario
     };
 
     const removeActiveClass = () => {
@@ -60,13 +65,13 @@ const Navbar = () => {
                     </li>
                     {userRole === 'administrador' && (
                         <li>
-                            <NavLink
-                                to="/users"
-                                onClick={() => {
-                                    setMenuOpen(false);
+                            <NavLink 
+                                to="/users" 
+                                onClick={() => { 
+                                    setMenuOpen(false); 
                                     addActiveClass();
-                                }}
-                                activeClassName="active"
+                                }} 
+                               activeClassName="active"
                             >
                                 Usuarios
                             </NavLink>

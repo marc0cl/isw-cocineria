@@ -14,7 +14,7 @@ const Navbar = () => {
     const logoutSubmit = () => {
         try {
             logout();
-            navigate('/auth'); 
+            navigate('/auth');
         } catch (error) {
             console.error('Error al cerrar sesión:', error);
         }
@@ -52,12 +52,12 @@ const Navbar = () => {
             <div className={`nav-menu ${menuOpen ? 'activado' : ''}`}>
                 <ul>
                     <li>
-                        <NavLink 
-                            to="/home" 
-                            onClick={() => { 
-                                setMenuOpen(false); 
+                        <NavLink
+                            to="/home"
+                            onClick={() => {
+                                setMenuOpen(false);
                                 addActiveClass();
-                            }} 
+                            }}
                             activeClassName="active"
                         >
                             Inicio
@@ -71,88 +71,47 @@ const Navbar = () => {
                                     setMenuOpen(false); 
                                     addActiveClass();
                                 }} 
-                                activeClassName="active"
+                               activeClassName="active"
                             >
                                 Usuarios
                             </NavLink>
                         </li>
                     )}
-                    {/* Opción de Inventario con submenú */}
-                    <li className={`submenu ${inventoryMenuOpen ? 'open' : ''}`}>
-                        <NavLink 
-                            to="#!" 
-                            onClick={(e) => { 
-                                e.preventDefault(); // Evita la navegación por defecto
-                                toggleInventoryMenu(); // Toggle del submenú
-                            }} 
-                            activeClassName="active"
-                        >
-                            Inventario
-                        </NavLink>
-                        {inventoryMenuOpen && (
-                            <ul className="sub-menu">
-                                {/* Opción para agregar un producto */}
-                                <li>
-                                    <NavLink 
-                                        to="/add-product" // Enlace para agregar producto
-                                        onClick={() => { 
-                                            setMenuOpen(false); 
-                                            addActiveClass();
-                                        }} 
-                                        activeClassName="active"
-                                    >
-                                        Agregar producto
-                                    </NavLink>
-                                </li>
-                                {/* Opción para listar los productos */}
-                                <li>
-                                    <NavLink 
-                                        to="/products" // Enlace para listar productos
-                                        onClick={() => { 
-                                            setMenuOpen(false); 
-                                            addActiveClass();
-                                        }} 
-                                        activeClassName="active"
-                                    >
-                                        Listado de productos
-                                    </NavLink>
-                                </li>
-                                {/* Opción para eliminar un producto */}
-                                <li>
-                                    <NavLink 
-                                        to="/delete-product" // Enlace para eliminar producto
-                                        onClick={() => { 
-                                            setMenuOpen(false); 
-                                            addActiveClass();
-                                        }} 
-                                        activeClassName="active"
-                                    >
-                                        Eliminar producto
-                                    </NavLink>
-                                </li>
-                                {/* Opción para editar un producto */}
-                                <li>
-                                    <NavLink 
-                                        to="/edit-product" // Enlace para editar producto
-                                        onClick={() => { 
-                                            setMenuOpen(false); 
-                                            addActiveClass();
-                                        }} 
-                                        activeClassName="active"
-                                    >
-                                        Editar producto
-                                    </NavLink>
-                                </li>
-                            </ul>
-                        )}
-                    </li>
+                    {userRole === 'administrador' && (
+                        <li>
+                            <NavLink
+                                to="/finanzas"
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    addActiveClass();
+                                }}
+                                activeClassName="active"
+                            >
+                                Finanzas
+                            </NavLink>
+                        </li>
+                    )}
+                    {(userRole === 'administrador' || userRole === 'garzon') && (
+                        <li>
+                            <NavLink
+                                to="/ingresar-ingresos"
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    addActiveClass();
+                                }}
+                                activeClassName="active"
+                            >
+                                Ingresar ingresos
+                            </NavLink>
+                        </li>
+                    )}
                     <li>
-                        <NavLink 
-                            to="/auth" 
-                            onClick={() => { 
-                                logoutSubmit(); 
-                                setMenuOpen(false); 
-                            }} 
+                        <NavLink
+                            to="/auth"
+                            onClick={() => {
+                                logoutSubmit();
+                                setMenuOpen(false);
+                            }}
                             activeClassName="active"
                         >
                             Cerrar sesión

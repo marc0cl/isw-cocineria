@@ -13,6 +13,8 @@ import DeleteProduct from '@pages/DeleteProduct'; // Página para eliminar produ
 import UpdateProduct from '@pages/UpdateProduct'; // Página para actualizar productos
 
 import '@styles/styles.css';
+import Finances from "@pages/Finances.jsx";
+import AddIncome from "@pages/AddIncome.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +33,23 @@ const router = createBrowserRouter([
             <Users />
           </ProtectedRoute>
         ),
-      }
+      },
+      {
+        path: '/finanzas',
+        element: (
+            <ProtectedRoute allowedRoles={['administrador']}>
+              <Finances />
+            </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/ingresar-ingresos',
+        element: (
+            <ProtectedRoute allowedRoles={['administrador', 'garzon']}>
+              <AddIncome />
+            </ProtectedRoute>
+        ),
+      },
     ]
   },
 

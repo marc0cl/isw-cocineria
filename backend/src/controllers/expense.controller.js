@@ -1,22 +1,25 @@
 "use strict";
 import {
-  addExpenseService,
-  deleteExpenseService,
-  getExpenseService,
-  getExpensesService,
-  updateExpenseService,
-} from "../services/expense.service.js";
-import { expenseBodyValidation, expenseQueryValidation } from "../validations/expenseValidation.js";
+  addTransactionService,
+  deleteTransactionService,
+  getTransactionService,
+  getTransactionsService,
+  updateTransactionService,
+} from "../services/transaction.service.js";
+import {
+  transactionBodyValidation,
+  transactionQueryValidation,
+} from "../validations/transaction.validation.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function getExpense(req, res) {
   try {
     const { id } = req.query;
-    const { error } = expenseQueryValidation.validate({ id });
+    const { error } = transactionQueryValidation.validate({ id, type: "expense" });
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [expense, errorExpense] = await getExpenseService({ id });
+    const [expense, errorExpense] = await getTransactionService({ id, type: "expense" });
 
     if (errorExpense) return handleErrorClient(res, 404, errorExpense);
 
@@ -29,7 +32,7 @@ export async function getExpense(req, res) {
 export async function getExpenses(req, res) {
   try {
     const { from, to } = req.query;
-    const [expenses, errorExpenses] = await getExpensesService({ from, to });
+    const [expenses, errorExpenses] = await getTransactionsService({ from, to, type: "expense" });
 
     if (errorExpenses) return handleErrorClient(res, 404, errorExpenses);
 
@@ -42,11 +45,12 @@ export async function getExpenses(req, res) {
 export async function addExpense(req, res) {
   try {
     const { body } = req;
-    const { error } = expenseBodyValidation.validate(body);
+    const data = { ...body, type: "expense" };
+    const { error } = transactionBodyValidation.validate(data);
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [, errorExpense] = await addExpenseService(body);
+    const [, errorExpense] = await addTransactionService(data);
 
     if (errorExpense) return handleErrorClient(res, 400, errorExpense);
 
@@ -60,15 +64,16 @@ export async function updateExpense(req, res) {
   try {
     const { id } = req.query;
     const { body } = req;
-    const { error: queryError } = expenseQueryValidation.validate({ id });
+    const data = { ...body, type: "expense" };
+    const { error: queryError } = transactionQueryValidation.validate({ id });
 
     if (queryError) return handleErrorClient(res, 400, queryError.message);
 
-    const { error: bodyError } = expenseBodyValidation.validate(body);
+    const { error: bodyError } = transactionBodyValidation.validate(data);
 
     if (bodyError) return handleErrorClient(res, 400, bodyError.message);
 
-    const [, errorExpense] = await updateExpenseService({ id }, body);
+    const [, errorExpense] = await updateTransactionService({ id }, data);
 
     if (errorExpense) return handleErrorClient(res, 400, errorExpense);
 
@@ -81,11 +86,11 @@ export async function updateExpense(req, res) {
 export async function deleteExpense(req, res) {
   try {
     const { id } = req.query;
-    const { error } = expenseQueryValidation.validate({ id });
+    const { error } = transactionQueryValidation.validate({ id });
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [, errorExpense] = await deleteExpenseService({ id });
+    const [, errorExpense] = await deleteTransactionService({ id });
 
     if (errorExpense) return handleErrorClient(res, 404, errorExpense);
 

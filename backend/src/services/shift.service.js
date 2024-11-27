@@ -6,16 +6,22 @@ export async function createShiftService(dataShift) {
     try {
     const shiftRepository = AppDataSource.getRepository(shift);
 
-
-
-    const newShift = shiftRepository.create({
+    console.log("Datos que se van a guardar:", {
         date: dataShift.date,
-        startTime: dataShift.startIime,
+        startTime: dataShift.startTime,
         endTime: dataShift.endTime,
         users: dataShift.users,
         manager: dataShift.manager,
     });
     
+    const newShift = shiftRepository.create({
+        date: dataShift.date,
+        startTime: dataShift.startTime,
+        endTime: dataShift.endTime,
+        users: dataShift.users,
+        manager: dataShift.manager,
+    });
+
     const shiftSaved = await shiftRepository.save(newShift);
     
     return [shiftSaved,null];

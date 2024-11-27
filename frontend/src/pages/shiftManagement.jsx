@@ -14,7 +14,6 @@ export default function Shifts() {
         users: '',
     });
 
-
     const fetchShifts = async () => {
         try {
             const response = await getShiftsService();
@@ -118,7 +117,9 @@ export default function Shifts() {
                                 <p>Usuarios: {Array.isArray(shift.users) ? shift.users.join(', ') : shift.users}</p>
                                 <p>Encargado: {shift.manager}</p>
                             </li>
+                            
                             <button className="button__Delete" onClick={() => handleDelete(shift.id)}>Eliminar turno</button>
+                            
                         </div>
                     ))}
                 </ul>

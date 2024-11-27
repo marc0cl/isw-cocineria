@@ -14,7 +14,7 @@ export async function createShiftService() {
 export async function createShiftService(data) {
     try {
         const response = await axios.post("/shift/", data); 
-        console.log('se van a enviar turnos')
+        console.log('se enviaron turnos')
         return response.data.data; 
     } catch (error) {
         console.error('Error al crear turno:', error);

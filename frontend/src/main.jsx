@@ -49,7 +49,7 @@ const router = createBrowserRouter([
       {
         path: '/turnos',
         element: (
-            <ProtectedRoute allowedRoles={['administrador']}>
+            <ProtectedRoute allowedRoles={['administrador','usuario']}>
               <Shifts />
             </ProtectedRoute>
         ),

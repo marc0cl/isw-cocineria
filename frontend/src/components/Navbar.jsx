@@ -100,7 +100,7 @@ const Navbar = () => {
                             </NavLink>
                         </li>
                     )}
-                    {userRole === 'administrador' && (
+                    {(userRole === 'administrador' || userRole === 'usuario') && (
                         <li>
                             <NavLink
                                 to="/turnos"

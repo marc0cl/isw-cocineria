@@ -9,6 +9,17 @@ export async function createShiftService() {
     
 }
     */
+export async function createShiftService(data) {
+    try {
+        const response = await axios.post("/shift/", data); // POST al backend con los datos
+        console.log('se van a enviar turnos')
+        return response.data.data; // Devuelve la respuesta del backend
+    } catch (error) {
+        console.error('Error al crear turno:', error);
+        throw error; // Lanza el error para manejarlo en el componente
+    }
+}
+
 //ADD a formatShiftData function to formatData.js
 export async function getShiftsService() {
     try {

@@ -10,6 +10,7 @@ import ProtectedRoute from '@components/ProtectedRoute';
 import '@styles/styles.css';
 import Finances from "@pages/Finances.jsx";
 import AddIncome from "@pages/AddIncome.jsx";
+import Shifts from '@pages/shiftManagement.jsx';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,14 @@ const router = createBrowserRouter([
         element: (
             <ProtectedRoute allowedRoles={['administrador', 'garzon']}>
               <AddIncome />
+            </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/turnos',
+        element: (
+            <ProtectedRoute allowedRoles={['administrador','usuario']}>
+              <Shifts />
             </ProtectedRoute>
         ),
       },

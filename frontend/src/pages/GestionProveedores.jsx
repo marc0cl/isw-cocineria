@@ -7,6 +7,7 @@ import '../styles/GestionProveedores.css';
 const GestionProveedores = () => {
   const [proveedores, setProveedores] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [selectedProveedor, setSelectedProveedor] = useState(null);
 
   useEffect(() => {
     const fetchProveedores = async () => {
@@ -52,6 +53,29 @@ const GestionProveedores = () => {
 
   };
 
+  const handleDeleteClick = async () => {
+    if (!selectedProveedor) {
+      alert('Seleccione un proveedor para eliminar');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:24338/api/prov/${selectedProveedor.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar proveedor');
+      }
+
+      setProveedores(proveedores.filter(prov => prov.id !== selectedProveedor.id));
+      setSelectedProveedor(null);
+      showSuccessAlert('Eliminación completada', 'Proveedor eliminado correctamente');
+    } catch (error) {
+      console.error('Error eliminando proveedor:', error);
+    }
+  };
+
   const columns = [
     { title: 'ID', field: 'id' },
     { title: 'Nombre', field: 'nombre' },
@@ -67,9 +91,9 @@ const GestionProveedores = () => {
     <div className="gestion-proveedores-container">
       <h1 className="titulo-proveedores">Proveedores</h1>
       <div className="button-container">
-        <button className="delete-button">
+        <button className="delete-button" onClick={handleDeleteClick}>
           <img src="https://img.icons8.com/material-outlined/24/trash--v1.png" alt="Delete" />
-          DELETE
+          Eliminar
         </button>
         <button className="register-button" onClick={handleRegisterClick}>
           <img src="https://img.icons8.com/material-outlined/24/plus--v1.png" alt="Create Icon" />
@@ -84,7 +108,11 @@ const GestionProveedores = () => {
           </div>
         )}
       </div>
-      <Table columns={columns} data={proveedores} />
+      <Table 
+        columns={columns} 
+        data={proveedores} 
+        onSelectionChange={(selectedData) => setSelectedProveedor(selectedData[0])}
+      />
     </div>
   );
 };

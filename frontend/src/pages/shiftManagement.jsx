@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getShiftsService, deleteShiftService, createShiftService } from '@services/shift.service.js';
 import { deleteDataAlert, showSuccessAlert, createShiftDataAlert } from "../helpers/sweetAlert";
-//import '@styles/shift.css';
+import '@styles/shift.css';
+
 
 export default function Shifts() {
     const [shifts, setShifts] = useState([]);
@@ -79,9 +80,8 @@ export default function Shifts() {
 
     return (
         <div>
-            <h1>Gestión de Turnos</h1>
             <div>
-                <h2>Crear Nuevo Turno</h2>
+            <h1>Crear Nuevo Turno</h1>
                 <form>
                     <label>
                         Fecha:
@@ -103,7 +103,7 @@ export default function Shifts() {
                         Usuarios (IDs separados por coma):
                         <input type="text" name="users" value={newShift.users} onChange={handleInputChange} />
                     </label>
-                    <button type="button" onClick={handleCreate}>Crear Turno</button>
+                    <button className="button__Create" type="button" onClick={handleCreate}>Crear Turno</button>
                 </form>
             </div>
 
@@ -118,7 +118,7 @@ export default function Shifts() {
                                 <p>Usuarios: {Array.isArray(shift.users) ? shift.users.join(', ') : shift.users}</p>
                                 <p>Encargado: {shift.manager}</p>
                             </li>
-                            <button onClick={() => handleDelete(shift.id)}>Eliminar turno</button>
+                            <button className="button__Delete" onClick={() => handleDelete(shift.id)}>Eliminar turno</button>
                         </div>
                     ))}
                 </ul>

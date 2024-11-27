@@ -5,10 +5,10 @@ import UsersIcon from '../assets/UsersIcon.svg';
 import ArrowIcon from '../assets/ArrowIcon.svg';
 import '@styles/homenav.css';
 const Home = () => {
-  return (
-      <nav className='nav'>
+    return (
+    <nav className='nav'>
         <ul className='list'>
-          
+    
         <li className="list__item">
     <div className='list__button'>
         <img src={UsersIcon} alt="Usuarios" />
@@ -36,8 +36,8 @@ const Home = () => {
 </li>
 
         </ul>
-      </nav>
-  )
+    </nav>
+)
 }
 
 export default Home

@@ -106,7 +106,7 @@ export default function Shifts() {
                     <button className="button__Create" type="button" onClick={handleCreate}>Crear Turno</button>
                 </form>
             </div>
-
+            <h2>Turnos existentes</h2>
             {shifts.length > 0 ? (
                 <ul>
                     {shifts.map((shift) => (

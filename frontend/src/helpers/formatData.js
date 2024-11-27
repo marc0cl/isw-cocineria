@@ -11,6 +11,7 @@ export function formatUserData(user) {
         createdAt: formatTempo(user.createdAt, "DD-MM-YYYY")
     };
 }
+//ADD a formatShiftData funciton
 
 export function convertirMinusculas(obj) {
     for (let key in obj) {

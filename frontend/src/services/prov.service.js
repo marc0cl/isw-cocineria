@@ -26,3 +26,12 @@ export async function deleteProvService(id) {
         return [null, error.response?.data?.message || error.message];
     }
 }
+
+export async function updateProvService(id, data) {
+    try {
+        const response = await axios.put(`/prov/${id}`, data);
+        return [response.data, null];
+    } catch (error) {
+        return [null, error.response?.data?.message || error.message];
+    }
+}

@@ -26,3 +26,12 @@ export async function addIncomeService(data) {
         return [null, error.response?.data?.message || error.message];
     }
 }
+
+export async function addIncomesService(dataArray) {
+    try {
+        const response = await axios.post('/income/bulk', dataArray);
+        return [response.data, null];
+    } catch (error) {
+        return [null, error.response?.data?.message || error.message];
+    }
+}

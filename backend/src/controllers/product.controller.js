@@ -20,21 +20,21 @@ import{
 // Función para obtener un solo producto
 export async function getProduct(req, res) {
     try {
-      const { id, codigoIdentificador } = req.query;
-  
-      const { error } = productQueryValidation.validate({ id, codigoIdentificador });
-  
-      if (error) return handleErrorClient(res, 400, error.message);
-  
-      const [product, errorProduct] = await getProductService({ id, codigoIdentificador });
-  
-      if (errorProduct) return handleErrorClient(res, 404, errorProduct);
-  
-      handleSuccess(res, 200, "Producto encontrado", product);
+        const { nombreProducto } = req.query;
+
+        const { error } = productQueryValidation.validate({ nombreProducto });
+
+        if (error) return handleErrorClient(res, 400, error.message);
+
+        const [product, errorProduct] = await getProductService({ nombreProducto });
+
+        if (errorProduct) return handleErrorClient(res, 404, errorProduct);
+
+        handleSuccess(res, 200, "Producto encontrado", product);
     } catch (error) {
-      handleErrorServer(res, 500, error.message);
+        handleErrorServer(res, 500, error.message);
     }
-  }
+}
   
   // Función para obtener todos los productos
   export async function getProducts(req, res) {
@@ -96,38 +96,36 @@ export async function updateProduct(req, res) {
 }
 
   
-  // Función para eliminar un producto
-  export async function deleteProduct(req, res) {
-    try {
-      const { id, codigoIdentificador } = req.query;
-  
+// Función para eliminar un producto
+export async function deleteProduct(req, res) {
+  try {
+      const { nombreProducto } = req.query;
+
       const { error: queryError } = productQueryValidation.validate({
-        id,
-        codigoIdentificador,
+          nombreProducto,
       });
-  
+
       if (queryError) {
-        return handleErrorClient(
-          res,
-          400,
-          "Error de validación en la consulta",
-          queryError.message,
-        );
+          return handleErrorClient(
+              res,
+              400,
+              "Error de validación en la consulta",
+              queryError.message
+          );
       }
-  
+
       const [productDelete, errorProductDelete] = await deleteProductService({
-        id,
-        codigoIdentificador,
+          nombreProducto,
       });
-  
+
       if (errorProductDelete)
-        return handleErrorClient(res, 404, "Error eliminando el producto", errorProductDelete);
-  
+          return handleErrorClient(res, 404, "Error eliminando el producto", errorProductDelete);
+
       handleSuccess(res, 200, "Producto eliminado correctamente", productDelete);
-    } catch (error) {
+  } catch (error) {
       handleErrorServer(res, 500, error.message);
-    }
   }
+}
 
 export async function createProduct(req, res) {
   try {

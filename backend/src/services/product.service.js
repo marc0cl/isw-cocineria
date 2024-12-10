@@ -4,19 +4,19 @@ import { AppDataSource } from "../config/configDb.js";
 
 export async function getProductService(query) {
     try {
-        const { id, codigoIdentificador } = query;
+        const { nombreProducto } = query;
 
         const productRepository = AppDataSource.getRepository(Product);
 
         const productFound = await productRepository.findOne({
-            where: [{ id:id }, {codigoIdentificador: codigoIdentificador}],
+            where: { nombreProducto: nombreProducto },
         });
-        if (!productFound) return [null , "producto no encontrado"];
+        if (!productFound) return [null, "producto no encontrado"];
         return [productFound, null];
 
     } catch (error) {
         console.error("Error al obtener el producto:", error);
-        return[null, "error interno del servidor "];
+        return [null, "error interno del servidor"];
     }
 }
 
@@ -80,35 +80,54 @@ export async function updateProductService(query, body) {
 
 
 export async function deleteProductService(query) {
-    try {
-      const { id, codigoIdentificador } = query;
-  
+  try {
+      const { nombreProducto } = query;
+
       const productRepository = AppDataSource.getRepository(Product);
-  
+
       const productFound = await productRepository.findOne({
-        where: [{ id: id }, { codigoIdentificador: codigoIdentificador }],
+          where: { nombreProducto: nombreProducto },
       });
-  
+
       if (!productFound) return [null, "Producto no encontrado"];
-  
+
       const productDeleted = await productRepository.remove(productFound);
-  
+
       return [productDeleted, null];
-    } catch (error) {
+  } catch (error) {
       console.error("Error al eliminar el producto:", error);
       return [null, "Error interno del servidor"];
-    }
   }
+}
+
+
+
+
+
+function generateCodigoIdentificador() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const length = 20; // Longitud del codigoIdentificador
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+  }
+  return result;
+}
+
 
 export async function createProductService(productData) {
   try {
     const productRepository = AppDataSource.getRepository(Product);
-    const { codigoIdentificador, nombreProducto, cantidadProducto, fechaDeCaducidad, tipoDeProducto } = productData;
+    const { nombreProducto, cantidadProducto, fechaDeCaducidad, tipoDeProducto } = productData;
 
     const createErrorMessage = (dataInfo, message) => ({
       dataInfo,
       message,
     });
+
+    // Generar el codigoIdentificador automáticamente
+    const codigoIdentificador = generateCodigoIdentificador();
 
     const existingProduct = await productRepository.findOne({
       where: { codigoIdentificador },

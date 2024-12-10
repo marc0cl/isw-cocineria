@@ -22,6 +22,7 @@ const ProductSchema = new EntitySchema({
         type: "varchar",
         length: 255,
         nullable: false,
+        unique: true,
 
     },
 

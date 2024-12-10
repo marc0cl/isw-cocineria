@@ -3,6 +3,7 @@ import { showSuccessAlert } from "../helpers/sweetAlert";
 import Table from '../components/Table';
 import ProvForm from "../components/ProvForm";
 import '../styles/GestionProveedores.css';
+import { getProvsService, addProvService, deleteProvService } from '../services/prov.service.js';
 
 const GestionProveedores = () => {
   const [proveedores, setProveedores] = useState([]);
@@ -11,12 +12,11 @@ const GestionProveedores = () => {
 
   useEffect(() => {
     const fetchProveedores = async () => {
-      try {
-        const response = await fetch('http://localhost:24338/api/prov/all/t');
-        const data = await response.json();
-        setProveedores(data.data);
-      } catch (error) {
+      const [data, error] = await getProvsService();
+      if (error) {
         console.error('Error fetching proveedores:', error);
+      } else {
+        setProveedores(data.data);
       }
     };
 
@@ -29,28 +29,15 @@ const GestionProveedores = () => {
   
 
   const handleFormSubmit = async (formData) => {
-    try {
-      const response = await fetch('http://localhost:24338/api/prov/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      if (!response.ok) {
-        throw new Error('Error al registrar proveedor');
-      }
-
-      const result = await response.json();
+    const [result, error] = await addProvService(formData);
+    if (error) {
+      console.error('Error registrando proveedor:', error);
+    } else {
       console.log('Proveedor registrado:', result);
       setProveedores([...proveedores, result.data]);
       setShowForm(false);
       showSuccessAlert('Registro completado', 'Proveedor añadido correctamente');
-    } catch (error) {
-      console.error('Error registrando proveedor:', error);
     }
-
   };
 
   const handleDeleteClick = async () => {
@@ -59,20 +46,13 @@ const GestionProveedores = () => {
       return;
     }
 
-    try {
-      const response = await fetch(`http://localhost:24338/api/prov/${selectedProveedor.id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar proveedor');
-      }
-
+    const [result, error] = await deleteProvService(selectedProveedor.id);
+    if (error) {
+      console.error('Error eliminando proveedor:', error);
+    } else {
       setProveedores(proveedores.filter(prov => prov.id !== selectedProveedor.id));
       setSelectedProveedor(null);
       showSuccessAlert('Eliminación completada', 'Proveedor eliminado correctamente');
-    } catch (error) {
-      console.error('Error eliminando proveedor:', error);
     }
   };
 

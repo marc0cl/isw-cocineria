@@ -1,12 +1,13 @@
 "use strict";
-import User from "../entity/user.entity.js";
+import User from "../entity/user.entity.js"
 import Transaction from "../entity/transaction.entity.js";
 import { AppDataSource } from "./configDb.js";
 import { encryptPassword } from "../helpers/bcrypt.helper.js";
 
-async function initializeData() {
+async function createUsers() {
   try {
     const userRepository = AppDataSource.getRepository(User);
+    
     const transactionRepository = AppDataSource.getRepository(Transaction);
 
     // Crear usuarios si no existen
@@ -24,9 +25,9 @@ async function initializeData() {
         ),
         userRepository.save(
           userRepository.create({
-            nombreCompleto: "Diego Sebastián Ampuero Belmar",
-            rut: "21.151.897-9",
-            email: "usuario1.2024@gmail.cl",
+            nombreCompleto: "Alexander Benjamín Marcelo Carrasco Fuentes",
+            rut: "20.630.735-8",
+            email: "usuario2.2024@gmail.cl",
             password: await encryptPassword("user1234"),
             rol: "usuario",
           })
@@ -83,8 +84,8 @@ async function initializeData() {
       );
     }
   } catch (error) {
-    console.error("Error al inicializar datos:", error);
+    console.error("Error al crear usuarios:", error);
   }
 }
 
-export { initializeData };
+export { createUsers };

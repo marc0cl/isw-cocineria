@@ -12,10 +12,12 @@ return (
 
 function PageRoot() {
 return (
-    <>
-        <Navbar />
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Navbar />
+      <div>
         <Outlet />
-    </>
+      </div>
+    </div>
 );
 }
 

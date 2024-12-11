@@ -7,10 +7,12 @@ import Register from '@pages/Register';
 import Error404 from '@pages/Error404';
 import Root from '@pages/Root';
 import ProtectedRoute from '@components/ProtectedRoute';
-import ProductPage from '@pages/ProductPage';  // Página para agregar productos
-import Product from '@pages/Product';        // Página para listar productos
-import DeleteProduct from '@pages/DeleteProduct'; // Página para eliminar productos
-import UpdateProduct from '@pages/UpdateProduct'; // Página para actualizar productos
+
+import ProductPage from '@pages/ProductPage';
+import Product from '@pages/Product';
+import DeleteProduct from '@pages/DeleteProduct';
+import UpdateProduct from '@pages/UpdateProduct';
+import GestionProveedores from '@pages/GestionProveedores';
 
 import '@styles/styles.css';
 import Finances from "@pages/Finances.jsx";
@@ -30,9 +32,11 @@ const router = createBrowserRouter([
       {
         path: '/users',
         element: (
-          <ProtectedRoute allowedRoles={['administrador']}>
-            <Users />
-          </ProtectedRoute>
+
+            <ProtectedRoute allowedRoles={['administrador']}>
+              <Users />
+            </ProtectedRoute>
+
         ),
       },
       {
@@ -52,6 +56,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: '/gestion-proveedores',
+        element: (
+            <ProtectedRoute allowedRoles={['administrador','encargado']}>
+              <GestionProveedores />
+            </ProtectedRoute>
+        )
+      },
+      {
         path: '/turnos',
         element: (
             <ProtectedRoute allowedRoles={['administrador','usuario']}>
@@ -66,31 +78,33 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     children: [
-      { path: '/products', element: <Product /> },       // Ruta para la lista de productos, accesible para todos
-      { 
-        path: '/add-product', 
+
+      { path: '/products', element: <Product /> },
+      {
+        path: '/add-product',
         element: (
-          <ProtectedRoute allowedRoles={['administrador']}>
-            <ProductPage />
-          </ProtectedRoute>
-        ) 
-      }, // Ruta para agregar productos, solo para administradores
-      { 
-        path: '/delete-product', 
+            <ProtectedRoute allowedRoles={['administrador']}>
+              <ProductPage />
+            </ProtectedRoute>
+        )
+      },
+      {
+        path: '/delete-product',
         element: (
-          <ProtectedRoute allowedRoles={['administrador']}>
-            <DeleteProduct />
-          </ProtectedRoute>
-        ) 
-      }, // Ruta para eliminar productos, solo para administradores
-      { 
-        path: '/edit-product', 
+            <ProtectedRoute allowedRoles={['administrador']}>
+              <DeleteProduct />
+            </ProtectedRoute>
+        )
+      },
+      {
+        path: '/edit-product',
         element: (
-          <ProtectedRoute allowedRoles={['administrador']}>
-            <UpdateProduct />
-          </ProtectedRoute>
-        ) 
-      }, // Ruta para editar productos, solo para administradores
+            <ProtectedRoute allowedRoles={['administrador']}>
+              <UpdateProduct />
+            </ProtectedRoute>
+        )
+      },
+
     ]
   },
 
@@ -106,5 +120,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
+
+    <RouterProvider router={router} />
+
 );

@@ -81,6 +81,7 @@ export const productBodyValidation = Joi.object({
       .or("id", "codigoIdentificador", "nombreProducto") // Requiere al menos uno de los tres parámetros
       .unknown(false) // No permite propiedades adicionales
       .messages({
+
         "object.unknown": "No se permiten propiedades adicionales.",
         "object.missing": "Debes proporcionar al menos un parámetro: id, codigoIdentificador o nombreProducto.",
       });
@@ -139,3 +140,4 @@ export const productBodyValidation = Joi.object({
           "object.unknown": "No se permiten propiedades adicionales.",
           "object.missing": "Debe proporcionar al menos un campo válido.",
         });
+

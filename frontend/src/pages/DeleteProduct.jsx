@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+
 import { fetchProducts, deleteProduct } from '@services/inventory.service';  
 import { deleteDataAlert, showErrorAlert, showSuccessAlert } from '@helpers/sweetAlert.js';
+
 import '../styles/DeleteProduct.css'; // Importa el archivo CSS para aplicar estilos
 
 const DeleteProductPage = () => {
@@ -24,6 +26,7 @@ const DeleteProductPage = () => {
     loadProducts();
   }, []);
 
+
   // Manejar la eliminación de un producto por nombreProducto
   const handleDelete = async (nombreProducto) => {
     try {
@@ -42,6 +45,7 @@ const DeleteProductPage = () => {
     } catch (err) {
       console.error('Error al eliminar el producto:', err);
       showErrorAlert('Cancelado', 'Ocurrió un error al eliminar el producto.');  // Muestra un mensaje de error
+
     }
   };
 
@@ -61,12 +65,16 @@ const DeleteProductPage = () => {
       ) : (
         <ul>
           {products.map((product) => (
+
             <li key={product.nombreProducto} className="product-item">
+
               <h3>{product.nombreProducto}</h3>
               <p>Código: {product.codigoIdentificador}</p>
               <p>Cantidad: {product.cantidadProducto}</p>
               <p>Fecha de caducidad: {product.fechaDeCaducidad}</p>
+
               <button onClick={() => handleDelete(product.nombreProducto)}>Eliminar</button>
+
             </li>
           ))}
         </ul>

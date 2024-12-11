@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service'; // Asegúrate de importar ambos servicios
 import '../styles/Product.css';
 
+
+
 const ProductPage = () => {
   const [products, setProducts] = useState([]); // Estado para almacenar los productos
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [searchName, setSearchName] = useState(''); // Estado para almacenar el nombre de búsqueda
+
   const [productDetail, setProductDetail] = useState(null); // Estado para almacenar los detalles de un producto
   const [showDetailModal, setShowDetailModal] = useState(false); // Estado para mostrar el modal de detalles
 
@@ -30,6 +34,7 @@ const ProductPage = () => {
     loadProducts();
   }, []); // El array vacío significa que se ejecutará solo al montar el componente
 
+
   // Filtramos los productos según el nombre ingresado
   const filteredProducts = products
     .filter((product) =>
@@ -41,6 +46,7 @@ const ProductPage = () => {
   const handleProductClick = async (nombreProducto) => {
     try {
       const details = await fetchProductDetail(nombreProducto); // Llamamos al servicio para obtener los detalles
+
       setProductDetail(details); // Almacenamos los detalles en el estado
       setShowDetailModal(true); // Mostramos el modal
     } catch (err) {
@@ -60,14 +66,17 @@ const ProductPage = () => {
       <div className="search-container">
         <input
           type="text"
+
           placeholder="Buscar por nombre de producto"
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)} // Actualizamos el estado con el valor del input
+
         />
       </div>
 
       <div className="product-list">
         {filteredProducts.length === 0 ? (
+
           <p>No se encontraron productos con ese nombre.</p>
         ) : (
           filteredProducts.map((product) => (
@@ -78,6 +87,7 @@ const ProductPage = () => {
             >
               <h2>{product.nombreProducto || 'Producto sin nombre'}</h2>
               {/* Se eliminó la línea que muestra el código del producto */}
+
               <p>Cantidad: {product.cantidadProducto || 0}</p>
               <p>Fecha de Caducidad: {product.fechaDeCaducidad ? new Date(product.fechaDeCaducidad).toLocaleDateString() : 'No disponible'}</p>
               <p>Tipo de Producto: {product.tipoDeProducto || 'No especificado'}</p>
@@ -91,7 +101,9 @@ const ProductPage = () => {
         <div className="product-detail-modal">
           <div className="modal-content">
             <h2>{productDetail.nombreProducto}</h2>
+
             {/* Se eliminó la línea que muestra el código del producto */}
+
             <p><strong>Cantidad:</strong> {productDetail.cantidadProducto}</p>
             <p><strong>Fecha de Caducidad:</strong> {new Date(productDetail.fechaDeCaducidad).toLocaleDateString()}</p>
             <p><strong>Tipo de Producto:</strong> {productDetail.tipoDeProducto}</p>

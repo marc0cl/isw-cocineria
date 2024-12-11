@@ -1,0 +1,26 @@
+.home-container {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 12vh; /* Ajustar para que comience justo debajo de la navbar */
+  }
+  
+  .home-aside {
+    width: 250px;
+    padding: 20px;
+    background: #f4f4f4;
+  }
+  
+  .home-nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .home-nav ul li a {
+    text-decoration: none;
+    color: black;
+  }
+  
+  .home-main {
+    flex: 1;
+    padding: 20px;
+  }

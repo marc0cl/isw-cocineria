@@ -35,6 +35,7 @@ export async function getProductsService() {
 
 export async function updateProductService(query, body) {
   try {
+
     const { nombreProducto } = query;  // Buscamos el producto por nombreProducto
     const productRepository = AppDataSource.getRepository(Product);
 
@@ -45,11 +46,13 @@ export async function updateProductService(query, body) {
     // Buscar el producto por nombreProducto
     const productFound = await productRepository.findOne({
       where: { nombreProducto },
+
     });
 
     if (!productFound) {
       return [null, "Producto no encontrado"];
     }
+
 
     // Función para determinar el estado del producto según el stock
     const getProductStatus = (cantidadProducto) => {
@@ -75,6 +78,7 @@ export async function updateProductService(query, body) {
     const updatedProduct = await productRepository.findOne({
       where: { nombreProducto },
     });
+
 
     return [updatedProduct, null];
   } catch (error) {

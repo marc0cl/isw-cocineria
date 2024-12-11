@@ -1,4 +1,6 @@
+
 import axios from './root.service.js';
+
 
 // Obtener todos los productos
 export async function fetchProducts() {
@@ -6,11 +8,13 @@ export async function fetchProducts() {
     return response.data;
 }
 
+
 // Obtener detalles de un producto por nombreProducto
 export async function fetchProductDetail(nombreProducto) {
   const response = await axios.get(`/product/detail?nombreProducto=${nombreProducto}`); // Cambia el parámetro a nombreProducto
   return response.data;
 }
+
 
 
 // Crear un nuevo producto
@@ -38,7 +42,9 @@ export async function updateProduct(codigoIdentificador, updatedData) {
 }
 
 // Eliminar un producto
+
 export async function deleteProduct(nombreProducto) {
   const response = await axios.delete(`/product/detail?nombreProducto=${nombreProducto}`); // Cambiar el parámetro a nombreProducto
   return response.data;
+
 }

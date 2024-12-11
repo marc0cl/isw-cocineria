@@ -52,7 +52,7 @@ const GestionProveedores = () => {
         showSuccessAlert('Actualización completada', 'Proveedor actualizado correctamente');
       }
     } else {
-    const [result, error] = await addProvService(formData);
+      const [result, error] = await addProvService(formData);
       if (error) {
         console.error('Error registrando proveedor:', error);
       } else {

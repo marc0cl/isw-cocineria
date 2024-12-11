@@ -41,6 +41,19 @@ const ProductSchema = new EntitySchema({
         length: 255,
         nullable: false 
     },
+
+    stock: {  // Nueva columna de stock
+        type: "int",
+        nullable: true,
+      },
+  
+      estado: {  // Nueva columna de estado
+        type: "varchar",
+        length: 10,
+        nullable: true,
+        enum: ['excelente', 'estable', 'critico'],  // Define los tres posibles estados
+        default: 'excelente',  // Valor por defecto
+      },
     
     createdAt:{
         type: "timestamp with time zone",

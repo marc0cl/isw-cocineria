@@ -31,46 +31,51 @@ export async function getProductsService() {
         return[null, "error interno del servidor"];
     }
 }
+
+
 export async function updateProductService(query, body) {
   try {
-    const { codigoIdentificador } = query; // Solo usamos el codigoIdentificador para encontrar el producto
+    const { nombreProducto } = query;  // Buscamos el producto por nombreProducto
     const productRepository = AppDataSource.getRepository(Product);
 
-    if (!codigoIdentificador) {
-      return [null, "El código identificador es requerido para actualizar el producto"];
+    if (!nombreProducto) {
+      return [null, "El nombre del producto es requerido para actualizar el producto"];
     }
 
-    // Buscar el producto por codigoIdentificador
+    // Buscar el producto por nombreProducto
     const productFound = await productRepository.findOne({
-      where: { codigoIdentificador },
+      where: { nombreProducto },
     });
 
     if (!productFound) {
       return [null, "Producto no encontrado"];
     }
 
-    // Validar que el codigoIdentificador no se esté intentando modificar
-    if (body.codigoIdentificador && body.codigoIdentificador !== codigoIdentificador) {
-      return [null, "No se permite cambiar el código identificador"];
-    }
-
-    // Crear el objeto de datos para la actualización (sin incluir codigoIdentificador)
-    const dataProductUpdate = {
-      nombreProducto: body.nombreProducto || productFound.nombreProducto,
-      cantidadProducto: body.cantidadProducto || productFound.cantidadProducto,
-      fechaDeCaducidad: body.fechaDeCaducidad || productFound.fechaDeCaducidad,
-      tipoDeProducto: body.tipoDeProducto || productFound.tipoDeProducto,
-      updatedAt: new Date(), // Marca el tiempo de la actualización
+    // Función para determinar el estado del producto según el stock
+    const getProductStatus = (cantidadProducto) => {
+      if (cantidadProducto > 50) {
+        return 'excelente'; // Si hay más de 50 unidades, el estado es 'excelente'
+      } else if (cantidadProducto <= 50 && cantidadProducto > 10) {
+        return 'estable'; // Si hay entre 10 y 50 unidades, el estado es 'estable'
+      } else {
+        return 'critico'; // Si hay 10 o menos unidades, el estado es 'critico'
+      }
     };
 
-    // Actualizar el producto
-    await productRepository.update({ codigoIdentificador }, dataProductUpdate);
+    // Crear el objeto de datos para la actualización
+    const dataProductUpdate = {
+      stock: body.stock !== undefined ? body.stock : productFound.stock,  // Solo actualizar el stock
+      estado: body.stock !== undefined ? getProductStatus(body.stock) : productFound.estado,  // Actualiza el estado basado en el nuevo stock
+      updatedAt: new Date(),  
+    };
 
-    // Retornar el producto actualizado
-    const updatedProduct = await productRepository.findOne({
-      where: { codigoIdentificador },
-    });
+    await productRepository.update({ nombreProducto }, dataProductUpdate);
+
     
+    const updatedProduct = await productRepository.findOne({
+      where: { nombreProducto },
+    });
+
     return [updatedProduct, null];
   } catch (error) {
     console.error("Error al modificar el producto:", error);
@@ -119,7 +124,7 @@ function generateCodigoIdentificador() {
 export async function createProductService(productData) {
   try {
     const productRepository = AppDataSource.getRepository(Product);
-    const { nombreProducto, cantidadProducto, fechaDeCaducidad, tipoDeProducto } = productData;
+    const { nombreProducto, cantidadProducto, fechaDeCaducidad, tipoDeProducto, estado } = productData;
 
     const createErrorMessage = (dataInfo, message) => ({
       dataInfo,
@@ -136,14 +141,18 @@ export async function createProductService(productData) {
       return [null, createErrorMessage("codigoIdentificador", "Código identificador en uso")];
     }
 
+    // Asignar stock igual a cantidadProducto y estado predeterminado si no se proporciona
     const newProduct = productRepository.create({
       codigoIdentificador,
       nombreProducto,
       cantidadProducto,
+      stock: cantidadProducto,  // Asigna 'stock' igual a 'cantidadProducto'
+      estado: estado || 'excelente',  // Si no se pasa 'estado', se asigna 'excelente'
       fechaDeCaducidad,
       tipoDeProducto,
     });
 
+    // Guardamos el nuevo producto en la base de datos
     await productRepository.save(newProduct);
 
     return [newProduct, null];

@@ -1,0 +1,28 @@
+.prov-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Reduce the gap between form elements */
+  }
+  
+  .prov-form div {
+    margin-bottom: 10px; /* Reduce the margin between form elements */
+  }
+  
+  .prov-form label {
+    display: block;
+    margin-bottom: 5px; /* Reduce the margin below labels */
+    font-size: 14px; /* Reduce the font size of labels */
+  }
+  
+  .prov-form input {
+    width: 100%;
+    padding: 6px; /* Reduce the padding inside input fields */
+    box-sizing: border-box;
+    font-size: 14px; /* Reduce the font size of input text */
+  }
+  
+  .prov-form button {
+    padding: 8px 16px; /* Reduce the padding inside the button */
+    font-size: 14px; /* Reduce the font size of the button text */
+    border-radius: 4px; /* Adjust the border radius if needed */
+  }

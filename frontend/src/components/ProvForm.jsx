@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../styles/provform.css';
 
 const ProvForm = ({ onSubmit, initialData }) => {
   const [formData, setFormData] = useState({

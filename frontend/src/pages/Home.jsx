@@ -1,23 +1,29 @@
 import { Link } from 'react-router-dom';
+import '../styles/home.css';
 
 const Home = () => {
+  const user = JSON.parse(sessionStorage.getItem('usuario')) || '';
+  const userRole = user?.rol;
+
   return (
-    <div style={{ display: 'flex' , minHeight: '100vh'}}>
-      <aside style={{ width: '250px', padding: '20px', background: '#f4f4f4' }}>
-        <nav>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            <li>
-              <Link to="/gestion-proveedores" style={{ textDecoration: 'none', color: 'black' }}>
-                Gestión de proveedores
-              </Link>
-            </li>
+    <div className="home-container">
+      <aside className="home-aside">
+        <nav className="home-nav">
+          <ul>
+            {(userRole === 'administrador' || userRole === 'encargado') && (
+              <li>
+                <Link to="/gestion-proveedores">
+                  Gestión de proveedores
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </aside>
-      <main style={{ flex: 1, padding: '20px' }}>
+      <main className="home-main">
         {}
       </main>
     </div>
-  )
+  );
 }
 export default Home

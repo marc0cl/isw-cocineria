@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const ProvForm = ({ onSubmit }) => {
+const ProvForm = ({ onSubmit, initialData }) => {
   const [formData, setFormData] = useState({
     nombre: '',
     direccion: '',
@@ -9,6 +9,12 @@ const ProvForm = ({ onSubmit }) => {
     medioPago: '',
     productos: ''
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

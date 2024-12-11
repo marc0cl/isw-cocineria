@@ -54,12 +54,9 @@ export async function getProduct(req, res) {
 // Función para actualizar un producto
 export async function updateProduct(req, res) {
   try {
-    // Obtener el codigoIdentificador de los parámetros de la consulta
-    const { codigoIdentificador } = req.query;
+    // Obtener el nombreProducto de los parámetros de la consulta (query)
+    const { nombreProducto } = req.query; // Ahora se usa nombreProducto en lugar de codigoIdentificador
     const { body } = req;
-
-
-
 
     // Validación del cuerpo de la solicitud (producto)
     const { error: bodyError } = productBodyUpdateValidation.validate(body);
@@ -73,9 +70,9 @@ export async function updateProduct(req, res) {
       );
     }
 
-    // Llamada al servicio de actualización, solo con el codigoIdentificador
+    // Llamada al servicio de actualización, ahora usando nombreProducto
     const [product, productError] = await updateProductService(
-      { codigoIdentificador }, // Solo pasamos el codigoIdentificador
+      { nombreProducto }, // Pasamos nombreProducto ahora en lugar de codigoIdentificador
       body
     );
 

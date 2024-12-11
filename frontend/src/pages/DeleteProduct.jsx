@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProducts } from '@services/inventory.service';  
-import { deleteProduct } from '@services/inventory.service';
+
+import { fetchProducts, deleteProduct } from '@services/inventory.service';  
+import { deleteDataAlert, showErrorAlert, showSuccessAlert } from '@helpers/sweetAlert.js';
+
 import '../styles/DeleteProduct.css'; // Importa el archivo CSS para aplicar estilos
 
 const DeleteProductPage = () => {
@@ -24,15 +26,26 @@ const DeleteProductPage = () => {
     loadProducts();
   }, []);
 
-  // Manejar la eliminación de un producto
-  const handleDelete = async (id) => {
+
+  // Manejar la eliminación de un producto por nombreProducto
+  const handleDelete = async (nombreProducto) => {
     try {
-      const response = await deleteProduct(id);  // Llama a la función para eliminar el producto
-      alert('Producto eliminado exitosamente');  // Muestra un mensaje de éxito
-      // Actualiza la lista de productos eliminando el producto
-      setProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
+      const result = await deleteDataAlert();
+      if (result.isConfirmed) {
+        const response = await deleteProduct(nombreProducto);  // Llama a la función para eliminar el producto
+        if(response.status === 'Client error') {
+          return showErrorAlert('Error', response.details);
+        }
+        showSuccessAlert('¡Eliminado!', 'El producto ha sido eliminado correctamente.');  // Muestra un mensaje de éxito
+        // Actualiza la lista de productos eliminando el producto por nombreProducto
+        setProducts((prevProducts) => prevProducts.filter(product => product.nombreProducto !== nombreProducto));
+      } else {
+        showErrorAlert('Cancelado', 'La operación ha sido cancelada.');
+      }
     } catch (err) {
-      alert('Error al eliminar el producto');  // Muestra un mensaje de error
+      console.error('Error al eliminar el producto:', err);
+      showErrorAlert('Cancelado', 'Ocurrió un error al eliminar el producto.');  // Muestra un mensaje de error
+
     }
   };
 
@@ -52,12 +65,16 @@ const DeleteProductPage = () => {
       ) : (
         <ul>
           {products.map((product) => (
-            <li key={product.id} className="product-item">
+
+            <li key={product.nombreProducto} className="product-item">
+
               <h3>{product.nombreProducto}</h3>
               <p>Código: {product.codigoIdentificador}</p>
               <p>Cantidad: {product.cantidadProducto}</p>
               <p>Fecha de caducidad: {product.fechaDeCaducidad}</p>
-              <button onClick={() => handleDelete(product.id)}>Eliminar</button>
+
+              <button onClick={() => handleDelete(product.nombreProducto)}>Eliminar</button>
+
             </li>
           ))}
         </ul>

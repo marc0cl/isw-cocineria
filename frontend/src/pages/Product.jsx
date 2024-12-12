@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service'; // Asegúrate de importar ambos servicios
 import '../styles/Product.css';
+
+
+
 const ProductPage = () => {
   const [products, setProducts] = useState([]); // Estado para almacenar los productos
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchCode, setSearchCode] = useState(''); // Estado para almacenar el código de búsqueda
+
+  const [searchName, setSearchName] = useState(''); // Estado para almacenar el nombre de búsqueda
+
   const [productDetail, setProductDetail] = useState(null); // Estado para almacenar los detalles de un producto
   const [showDetailModal, setShowDetailModal] = useState(false); // Estado para mostrar el modal de detalles
 
@@ -29,15 +34,19 @@ const ProductPage = () => {
     loadProducts();
   }, []); // El array vacío significa que se ejecutará solo al montar el componente
 
-  // Filtramos los productos según el código ingresado
-  const filteredProducts = products.filter((product) =>
-    product.codigoIdentificador.toLowerCase().includes(searchCode.toLowerCase())
-  );
 
-  // Función para obtener los detalles de un producto
-  const handleProductClick = async (productId) => {
+  // Filtramos los productos según el nombre ingresado
+  const filteredProducts = products
+    .filter((product) =>
+      product.nombreProducto.toLowerCase().includes(searchName.toLowerCase())
+    )
+    .reverse(); // Reversamos la lista de productos filtrados
+
+  // Función para obtener los detalles de un producto por nombreProducto
+  const handleProductClick = async (nombreProducto) => {
     try {
-      const details = await fetchProductDetail(productId); // Llamamos al servicio para obtener los detalles
+      const details = await fetchProductDetail(nombreProducto); // Llamamos al servicio para obtener los detalles
+
       setProductDetail(details); // Almacenamos los detalles en el estado
       setShowDetailModal(true); // Mostramos el modal
     } catch (err) {
@@ -57,24 +66,28 @@ const ProductPage = () => {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Buscar por código identificador"
-          value={searchCode}
-          onChange={(e) => setSearchCode(e.target.value)} // Actualizamos el estado con el valor del input
+
+          placeholder="Buscar por nombre de producto"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)} // Actualizamos el estado con el valor del input
+
         />
       </div>
 
       <div className="product-list">
         {filteredProducts.length === 0 ? (
-          <p>No se encontraron productos con ese código.</p>
+
+          <p>No se encontraron productos con ese nombre.</p>
         ) : (
           filteredProducts.map((product) => (
             <div
-              key={product.id}
+              key={product.nombreProducto} // Cambiado de `id` a `nombreProducto`
               className="product-card"
-              onClick={() => handleProductClick(product.id)} // Maneja el clic para obtener los detalles
+              onClick={() => handleProductClick(product.nombreProducto)} // Maneja el clic para obtener los detalles
             >
               <h2>{product.nombreProducto || 'Producto sin nombre'}</h2>
-              <p>Código: {product.codigoIdentificador || 'N/A'}</p>
+              {/* Se eliminó la línea que muestra el código del producto */}
+
               <p>Cantidad: {product.cantidadProducto || 0}</p>
               <p>Fecha de Caducidad: {product.fechaDeCaducidad ? new Date(product.fechaDeCaducidad).toLocaleDateString() : 'No disponible'}</p>
               <p>Tipo de Producto: {product.tipoDeProducto || 'No especificado'}</p>
@@ -88,7 +101,9 @@ const ProductPage = () => {
         <div className="product-detail-modal">
           <div className="modal-content">
             <h2>{productDetail.nombreProducto}</h2>
-            <p><strong>Código:</strong> {productDetail.codigoIdentificador}</p>
+
+            {/* Se eliminó la línea que muestra el código del producto */}
+
             <p><strong>Cantidad:</strong> {productDetail.cantidadProducto}</p>
             <p><strong>Fecha de Caducidad:</strong> {new Date(productDetail.fechaDeCaducidad).toLocaleDateString()}</p>
             <p><strong>Tipo de Producto:</strong> {productDetail.tipoDeProducto}</p>

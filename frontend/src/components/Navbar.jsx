@@ -26,6 +26,17 @@ const Navbar = () => {
 
     const toggleInventoryMenu = () => {
         setInventoryMenuOpen(!inventoryMenuOpen); // Alterna el submenú de Inventario
+
+    };
+
+    const addActiveClass = () => {
+        const links = document.querySelectorAll('.nav-menu ul li a');
+        links.forEach(link => {
+            if (link.getAttribute('href') === location.pathname) {
+                link.classList.add('active');
+            }
+        });
+
     };
 
     return (
@@ -91,7 +102,9 @@ const Navbar = () => {
                             <NavLink
                                 to="#!"
                                 onClick={(e) => {
-                                    e.preventDefault(); // Evita navegación
+
+                                    e.preventDefault();
+
                                     toggleInventoryMenu();
                                 }}
                                 activeClassName="active"

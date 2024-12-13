@@ -6,11 +6,13 @@ import {
 import { getIncomesService, getExpensesService } from '@services/transaction.service.js';
 import '@styles/finances.css';
 import dayjs from 'dayjs';
+import Spinner from '../components/Login/Spinner.jsx';
 
 const Finances = () => {
     const [pieData, setPieData] = useState([]);
     const [transactions, setTransactions] = useState([]);
     const [bestSellingProducts, setBestSellingProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const sourceDisplay = {
         bar: 'Bar',
@@ -55,11 +57,7 @@ const Finances = () => {
             const productSales = {};
             incomesData.forEach(item => {
                 const productName = item.description;
-                if (productSales[productName]) {
-                    productSales[productName] += 1;
-                } else {
-                    productSales[productName] = 1;
-                }
+                productSales[productName] = (productSales[productName] || 0) + 1;
             });
 
             const bestSellers = Object.keys(productSales).map(product => ({
@@ -68,6 +66,8 @@ const Finances = () => {
             }));
 
             setBestSellingProducts(bestSellers);
+
+            setLoading(false);
         };
 
         fetchData();
@@ -75,21 +75,29 @@ const Finances = () => {
 
     const COLORS = ['#00C49F', '#FF0000']; // Verde para ingresos, rojo para gastos
 
+    if (loading) {
+        return (
+            <div className="finances-loading-container">
+                <Spinner />
+            </div>
+        );
+    }
+
     return (
         <div className="finances-container">
             <div className="charts-container">
                 {/* Gráfico de torta */}
-                <div className="chart-item">
+                <div className="chart-item pie-chart-container">
                     <h2>Ingresos vs Gastos</h2>
                     <ResponsiveContainer width="100%" height={400}>
-                        <PieChart>
+                        <PieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                             <Pie
                                 data={pieData}
                                 cx="50%"
                                 cy="50%"
                                 labelLine={false}
-                                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                                outerRadius={120}
+                                //label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                outerRadius={120} // Se reduce para evitar cortar textos
                                 paddingAngle={5}
                                 dataKey="value"
                             >
@@ -104,7 +112,7 @@ const Finances = () => {
                 </div>
 
                 {/* Sección de Transacciones */}
-                <div className="chart-item">
+                <div className="chart-item table-container">
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
                         <table className="transactions-table">

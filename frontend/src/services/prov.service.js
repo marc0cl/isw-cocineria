@@ -1,35 +1,35 @@
 import axios from './root.service.js';
 
-export async function getIncomesService(params = {}) {
+export async function getProvsService(params = {}) {
     try {
-        const response = await axios.get('/income', { params });
+        const response = await axios.get('/prov/all/t', { params });
         return [response.data, null];
     } catch (error) {
         return [null, error.response?.data?.message || error.message];
     }
 }
 
-export async function getExpensesService(params = {}) {
+export async function addProvService(data) {
     try {
-        const response = await axios.get('/expense', { params });
+        const response = await axios.post('/prov/', data);
         return [response.data, null];
     } catch (error) {
         return [null, error.response?.data?.message || error.message];
     }
 }
 
-export async function addIncomeService(data) {
+export async function deleteProvService(id) {
     try {
-        const response = await axios.post('/income', data);
+        const response = await axios.delete(`/prov/${id}`);
         return [response.data, null];
     } catch (error) {
         return [null, error.response?.data?.message || error.message];
     }
 }
 
-export async function addIncomesService(dataArray) {
+export async function updateProvService(id, data) {
     try {
-        const response = await axios.post('/income/bulk', dataArray);
+        const response = await axios.put(`/prov/${id}`, data);
         return [response.data, null];
     } catch (error) {
         return [null, error.response?.data?.message || error.message];

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service';
 import '../styles/Product.css';
 
+
+
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +58,7 @@ const ProductPage = () => {
       <div className="search-container">
         <input
           type="text"
+
           placeholder="Buscar por nombre de producto"
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
@@ -64,6 +67,7 @@ const ProductPage = () => {
 
       <div className="product-list">
         {filteredProducts.length === 0 ? (
+
           <p>No se encontraron productos con ese nombre.</p>
         ) : (
           filteredProducts.map((product) => (

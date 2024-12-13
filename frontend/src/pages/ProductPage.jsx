@@ -5,6 +5,8 @@ import '../styles/product_page.css';
 export default function AddProductPage() {
     // Estado para el formulario de producto
     const [form, setForm] = useState({
+
+
         nombreProducto: '',
         cantidadProducto: '',
         fechaDeCaducidad: '',
@@ -25,6 +27,7 @@ export default function AddProductPage() {
         try {
             // Llamar a la función para crear un nuevo producto
             await createProduct({
+
                 nombreProducto: form.nombreProducto,
                 cantidadProducto: form.cantidadProducto,
                 fechaDeCaducidad: form.fechaDeCaducidad,
@@ -33,6 +36,7 @@ export default function AddProductPage() {
 
             // Limpiar el formulario después de agregar el producto
             setForm({
+
                 nombreProducto: '',
                 cantidadProducto: '',
                 fechaDeCaducidad: '',
@@ -53,6 +57,8 @@ export default function AddProductPage() {
             <form className="product-pageform" onSubmit={handleSubmit}>
                 <input
                     type="text"
+
+
                     name="nombreProducto"
                     placeholder="Nombre del producto"
                     value={form.nombreProducto}
@@ -93,4 +99,6 @@ export default function AddProductPage() {
             </form>
         </div>
     );
+
 }
+

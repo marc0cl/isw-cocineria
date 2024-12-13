@@ -25,18 +25,17 @@ export async function createProduct(productData) {
 }
 
 // Actualizar un producto existente
-export async function updateProduct(codigoIdentificador, updatedData) {
+export async function updateProduct(nombreProducto, updatedData) {
   try {
-    // Corrigiendo la URL para usar codigoIdentificador
-    const response = await axios.patch(`/product/detail?codigoIdentificador=${codigoIdentificador}`, updatedData);
+    // Corrigiendo la URL para usar nombreProducto
+    const response = await axios.patch(`/product/detail?nombreProducto=${nombreProducto}`, updatedData);
 
     // Log para verificar la llamada
-    console.log("Llamada a updateProduct con:", { codigoIdentificador, updatedData });
+    console.log("Llamada a updateProduct con:", { nombreProducto, updatedData });
 
     return response.data;
   } catch (error) {
     console.error("Error en updateProduct:", error.response || error);
-    console.log(data);
     throw error;
   }
 }

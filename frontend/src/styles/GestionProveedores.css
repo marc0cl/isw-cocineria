@@ -74,7 +74,7 @@
   background-color: #3b4a61;
 }
 
-.modal {
+.modalgp {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +89,7 @@
   background-color: rgba(0,0,0,0.4);
 }
 
-.modal-content {
+.modalgp-content {
   background-color: #fefefe;
   margin: auto;
   padding: 20px;

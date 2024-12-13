@@ -113,8 +113,8 @@ const GestionProveedores = () => {
           Editar
         </button>
         {showForm && (
-          <div className="modal">
-            <div className="modal-content">
+          <div className="modalgp">
+            <div className="modalgp-content">
               <span className="close" onClick={() => setShowForm(false)}>&times;</span>
               <ProvForm onSubmit={handleFormSubmit} initialData={isEditing ? selectedProveedor : null}/>
             </div>

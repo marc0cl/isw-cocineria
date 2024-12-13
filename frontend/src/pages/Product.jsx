@@ -8,9 +8,11 @@ const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [searchName, setSearchName] = useState('');
   const [productDetail, setProductDetail] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -32,6 +34,7 @@ const ProductPage = () => {
     loadProducts();
   }, []);
 
+
   const filteredProducts = products
     .filter((product) =>
       product.nombreProducto.toLowerCase().includes(searchName.toLowerCase())
@@ -43,6 +46,7 @@ const ProductPage = () => {
       const details = await fetchProductDetail(nombreProducto);
       setProductDetail(details);
       setShowDetailModal(true);
+
     } catch (err) {
       setError('Error al obtener los detalles del producto.');
     }
@@ -61,7 +65,9 @@ const ProductPage = () => {
 
           placeholder="Buscar por nombre de producto"
           value={searchName}
+
           onChange={(e) => setSearchName(e.target.value)}
+
         />
       </div>
 
@@ -72,11 +78,13 @@ const ProductPage = () => {
         ) : (
           filteredProducts.map((product) => (
             <div
+
               key={product.nombreProducto}
               className="product-card"
               onClick={() => handleProductClick(product.nombreProducto)}
             >
               <h2>{product.nombreProducto || 'Producto sin nombre'}</h2>
+
               <p>Cantidad: {product.cantidadProducto || 0}</p>
               <p>Fecha de Caducidad: {product.fechaDeCaducidad ? new Date(product.fechaDeCaducidad).toLocaleDateString() : 'No disponible'}</p>
               <p>Tipo de Producto: {product.tipoDeProducto || 'No especificado'}</p>
@@ -91,6 +99,8 @@ const ProductPage = () => {
         <div className="product-detail-modal">
           <div className="modal-content">
             <h2>{productDetail.nombreProducto}</h2>
+
+
             <p><strong>Cantidad:</strong> {productDetail.cantidadProducto}</p>
             <p><strong>Fecha de Caducidad:</strong> {new Date(productDetail.fechaDeCaducidad).toLocaleDateString()}</p>
             <p><strong>Tipo de Producto:</strong> {productDetail.tipoDeProducto}</p>

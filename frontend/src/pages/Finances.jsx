@@ -149,7 +149,7 @@ const Finances = () => {
                 </div>
 
                 {/* Sección de Transacciones */}
-                <div className="chart-item table-container">
+                <div className="chart-item tablef-container">
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
                         <table className="transactions-table">

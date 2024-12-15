@@ -1,14 +1,15 @@
 import React, { useEffect, useState} from "react";
-import { showSuccessAlert } from "../helpers/sweetAlert";
+import { showSuccessAlert, deleteDataAlert } from "../helpers/sweetAlert";
 import Table from '../components/Table';
 import ProvForm from "../components/ProvForm";
 import '../styles/GestionProveedores.css';
-import { getProvsService, addProvService, deleteProvService } from '../services/prov.service.js';
+import { getProvsService, addProvService, deleteProvService, updateProvService } from '../services/prov.service.js';
 
 const GestionProveedores = () => {
   const [proveedores, setProveedores] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedProveedor, setSelectedProveedor] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchProveedores = async () => {
@@ -24,25 +25,53 @@ const GestionProveedores = () => {
   }, []);
 
   const handleRegisterClick = () => {
-    setShowForm(!showForm);
+    setShowForm(true);
+    setIsEditing(false);
+    selectedProveedor(null);
   };
   
+  const handleEditClick = () => {
+    if (!selectedProveedor) {
+      alert('Seleccione un proveedor para editar');
+      return;
+    }
+    setShowForm(true);
+    setIsEditing(true);
+  };
 
   const handleFormSubmit = async (formData) => {
-    const [result, error] = await addProvService(formData);
-    if (error) {
-      console.error('Error registrando proveedor:', error);
+    if (isEditing) {
+      const [result, error] = await updateProvService(selectedProveedor.id, formData);
+      if (error) {
+        console.error('Error actualizando proveedor:', error);
+      } else {
+        console.log('Proveedor actualizado:', result);
+        setProveedores(proveedores.map(prov => (prov.id === selectedProveedor.id ? result.data : prov)));
+        setShowForm(false);
+        setSelectedProveedor(null);
+        showSuccessAlert('Actualización completada', 'Proveedor actualizado correctamente');
+      }
     } else {
-      console.log('Proveedor registrado:', result);
-      setProveedores([...proveedores, result.data]);
-      setShowForm(false);
-      showSuccessAlert('Registro completado', 'Proveedor añadido correctamente');
+      const [result, error] = await addProvService(formData);
+      if (error) {
+        console.error('Error registrando proveedor:', error);
+      } else {
+        console.log('Proveedor registrado:', result);
+        setProveedores([...proveedores, result.data]);
+        setShowForm(false);
+        showSuccessAlert('Registro completado', 'Proveedor añadido correctamente');
+      }
     }
   };
 
   const handleDeleteClick = async () => {
     if (!selectedProveedor) {
       alert('Seleccione un proveedor para eliminar');
+      return;
+    }
+
+    const confirm = await deleteDataAlert('¿Estás seguro?', '¡No podrás revertir esto!');
+    if (!confirm.isConfirmed) {
       return;
     }
 
@@ -79,11 +108,15 @@ const GestionProveedores = () => {
           <img src="https://img.icons8.com/material-outlined/24/plus--v1.png" alt="Create Icon" />
           Añadir
         </button>
+        <button className="update-button" onClick={handleEditClick}>
+          <img src="https://img.icons8.com/material-outlined/24/synchronize.png" alt="Update Icon" />
+          Editar
+        </button>
         {showForm && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close" onClick={handleRegisterClick}>&times;</span>
-              <ProvForm onSubmit={handleFormSubmit} />
+          <div className="modalgp">
+            <div className="modalgp-content">
+              <span className="close" onClick={() => setShowForm(false)}>&times;</span>
+              <ProvForm onSubmit={handleFormSubmit} initialData={isEditing ? selectedProveedor : null}/>
             </div>
           </div>
         )}

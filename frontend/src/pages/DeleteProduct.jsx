@@ -1,48 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProducts } from '@services/inventory.service';  
-import { deleteProduct } from '@services/inventory.service';
-import '../styles/DeleteProduct.css'; // Importa el archivo CSS para aplicar estilos
+
+import { fetchProducts, deleteProduct } from '@services/inventory.service';  
+import { deleteDataAlert, showErrorAlert, showSuccessAlert } from '@helpers/sweetAlert.js';
+import '../styles/DeleteProduct.css';
+
 
 const DeleteProductPage = () => {
-  const [products, setProducts] = useState([]);  // Estado para almacenar los productos
-  const [loading, setLoading] = useState(true);  // Estado para controlar el estado de carga
-  const [error, setError] = useState(null);  // Estado para manejar errores
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Cargar los productos cuando el componente se monte
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const productList = await fetchProducts();  // Obtiene la lista de productos
-        setProducts(productList.data);  // Establece los productos en el estado
-        setLoading(false);  // Cambia el estado de carga a false
+        const productList = await fetchProducts();
+        if (productList.status === "Success") {
+          setProducts(productList.data);
+        } else {
+          setError("No se pudieron cargar los productos.");
+        }
+        setLoading(false);
       } catch (err) {
         setError("No se pudieron cargar los productos.");
-        setLoading(false);  // Cambia el estado de carga a false si hay un error
+        setLoading(false);
       }
     };
 
     loadProducts();
   }, []);
 
-  // Manejar la eliminación de un producto
-  const handleDelete = async (id) => {
+
+  const handleDelete = async (nombreProducto) => {
     try {
-      const response = await deleteProduct(id);  // Llama a la función para eliminar el producto
-      alert('Producto eliminado exitosamente');  // Muestra un mensaje de éxito
-      // Actualiza la lista de productos eliminando el producto
-      setProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
+      const result = await deleteDataAlert();
+      if (result.isConfirmed) {
+
+        const response = await deleteProduct(nombreProducto);
+        if(response.status === 'Client error') {
+          return showErrorAlert('Error', response.details);
+        }
+        showSuccessAlert('¡Eliminado!', 'El producto ha sido eliminado correctamente.');
+
+        setProducts((prevProducts) => prevProducts.filter(product => product.nombreProducto !== nombreProducto));
+      } else {
+        showErrorAlert('Cancelado', 'La operación ha sido cancelada.');
+      }
     } catch (err) {
-      alert('Error al eliminar el producto');  // Muestra un mensaje de error
+      console.error('Error al eliminar el producto:', err);
+
+      showErrorAlert('Cancelado', 'Ocurrió un error al eliminar el producto.');
+
     }
   };
 
-  if (loading) {
-    return <p>Cargando productos...</p>;  // Muestra un mensaje mientras se cargan los productos
-  }
-
-  if (error) {
-    return <p>{error}</p>;  // Muestra el error si no se pueden cargar los productos
-  }
+  if (loading) return <p>Cargando productos...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="delete-product-page">
@@ -52,12 +64,18 @@ const DeleteProductPage = () => {
       ) : (
         <ul>
           {products.map((product) => (
-            <li key={product.id} className="product-item">
+
+            <li key={product.nombreProducto} className="product-item">
+
               <h3>{product.nombreProducto}</h3>
-              <p>Código: {product.codigoIdentificador}</p>
               <p>Cantidad: {product.cantidadProducto}</p>
-              <p>Fecha de caducidad: {product.fechaDeCaducidad}</p>
-              <button onClick={() => handleDelete(product.id)}>Eliminar</button>
+
+              <p>Fecha de caducidad: {product.fechaDeCaducidad ? new Date(product.fechaDeCaducidad).toLocaleDateString() : 'No disponible'}</p>
+              <p>Stock: {product.stock !== undefined ? product.stock : 'No disponible'}</p>
+              <p>Estado: {product.estado || 'No disponible'}</p>
+
+              <button onClick={() => handleDelete(product.nombreProducto)}>Eliminar</button>
+
             </li>
           ))}
         </ul>

@@ -7,11 +7,13 @@ import Register from '@pages/Register';
 import Error404 from '@pages/Error404';
 import Root from '@pages/Root';
 import ProtectedRoute from '@components/ProtectedRoute';
+
 import ProductPage from '@pages/ProductPage';
 import Product from '@pages/Product';
 import DeleteProduct from '@pages/DeleteProduct';
 import UpdateProduct from '@pages/UpdateProduct';
 import GestionProveedores from '@pages/GestionProveedores';
+
 import '@styles/styles.css';
 import Finances from "@pages/Finances.jsx";
 import AddIncome from "@pages/AddIncome.jsx";
@@ -30,9 +32,11 @@ const router = createBrowserRouter([
       {
         path: '/users',
         element: (
+
             <ProtectedRoute allowedRoles={['administrador']}>
               <Users />
             </ProtectedRoute>
+
         ),
       },
       {
@@ -74,6 +78,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     children: [
+
       { path: '/products', element: <Product /> },
       {
         path: '/add-product',
@@ -99,6 +104,7 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         )
       },
+
     ]
   },
 
@@ -114,5 +120,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
+
     <RouterProvider router={router} />
+
 );

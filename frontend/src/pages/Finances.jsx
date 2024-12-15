@@ -90,7 +90,7 @@ const Finances = () => {
                 <div className="chart-item pie-chart-container">
                     <h2>Ingresos vs Gastos</h2>
                     <ResponsiveContainer width="100%" height={400}>
-                        <PieChart>
+                        <PieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                             <Pie
                                 data={pieData}
                                 cx="50%"

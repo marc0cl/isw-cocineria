@@ -11,6 +11,7 @@ import {
   transactionQueryValidation,
 } from "../validations/transaction.validation.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
+import { transactionsArrayValidation } from "../validations/transaction.validation.js";
 
 export async function getIncome(req, res) {
   try {
@@ -46,15 +47,32 @@ export async function addIncome(req, res) {
   try {
     const { body } = req;
     const data = { ...body, type: "income" };
-    const { error } = transactionBodyValidation.validate(data);
+
+    const { error } = transactionsArrayValidation.validate([data]);
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [, errorIncome] = await addTransactionService(data);
-
+    const [, errorIncome] = await addTransactionService([data]);
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
     res.status(201).send("Ingreso añadido correctamente");
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
+  }
+}
+
+export async function addMultipleIncomes(req, res) {
+  try {
+    const { body } = req;
+    const data = body.map(item => ({ ...item, type: "income" }));
+
+    const { error } = transactionsArrayValidation.validate(data);
+    if (error) return handleErrorClient(res, 400, error.message);
+
+    const [, errorIncome] = await addTransactionService(data);
+    if (errorIncome) return handleErrorClient(res, 400, errorIncome);
+
+    res.status(201).send("Ingresos añadidos correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }

@@ -124,7 +124,6 @@ const Finances = () => {
     return (
         <div className="finances-container">
             <div className="charts-container">
-                {/* Gráfico de torta */}
                 <div className="chart-item pie-chart-container">
                     <h2>Ingresos vs Gastos</h2>
                     <ResponsiveContainer width="100%" height={400}>
@@ -147,8 +146,6 @@ const Finances = () => {
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-
-                {/* Sección de Transacciones */}
                 <div className="chart-item table-container">
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
@@ -176,8 +173,6 @@ const Finances = () => {
                         </table>
                     </div>
                 </div>
-
-                {/* Tabla de productos críticos */}
                 {criticalProducts && criticalProducts.length > 0 && (
                     <div className="chart-item table-container">
                         <h2>Productos Críticos</h2>
@@ -187,9 +182,9 @@ const Finances = () => {
                                 <tr>
                                     <th>Producto</th>
                                     <th>Cantidad Actual</th>
-                                    <th>Mínimo Permitido</th> {/* Nueva columna */}
+                                    <th>Mínimo Permitido</th>
                                     <th>Unidad</th>
-                                    <th>Proveedor</th> {/* Ahora en lugar del ID, mostraremos el nombre */}
+                                    <th>Proveedor</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -197,9 +192,9 @@ const Finances = () => {
                                     <tr key={idx}>
                                         <td>{prod.nombreProducto}</td>
                                         <td>{prod.cantidadProducto}</td>
-                                        <td>{prod.minThreshold}</td> {/* Mostrar el umbral mínimo */}
+                                        <td>{prod.minThreshold}</td>
                                         <td>{prod.stockUnit}</td>
-                                        <td>{prod.supplierName}</td> {/* Mostrar el nombre del proveedor */}
+                                        <td>{prod.supplierName}</td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -208,7 +203,6 @@ const Finances = () => {
                     </div>
                 )}
 
-                {/* Gráfico de líneas - ventas por fuente */}
                 <div className="chart-item">
                     <h2>Ventas por Fuente (últimos {selectedRange} días)</h2>
                     <div style={{ marginBottom: '10px' }}>

@@ -30,24 +30,43 @@ const ProvForm = ({ onSubmit, initialData }) => {
 
   const validate = () => {
     let newErrors = {};
+
     if (!formData.nombre) {
       newErrors = { ...newErrors, nombre: 'El nombre es requerido' };
+    } else if (formData.nombre.length < 3) {
+      newErrors = { ...newErrors, nombre: 'El nombre debe tener al menos 3 caracteres' };
+    } else if (formData.nombre.length > 50) {
+      newErrors = { ...newErrors, nombre: 'El nombre debe tener como máximo 50 caracteres' };
     }
+
     if (!formData.direccion) {
       newErrors = { ...newErrors, direccion: 'La dirección es requerida' };
     }
+
     if (!formData.telefono) {
       newErrors = { ...newErrors, telefono: 'El teléfono es requerido' };
+    } else if (formData.telefono.length !== 12) {
+      newErrors = { ...newErrors, telefono: 'El teléfono debe tener 12 caracteres' };
+    } else if (!formData.telefono.startsWith('+56')) {
+      newErrors = { ...newErrors, telefono: 'El teléfono debe comenzar con +56' };
     }
+
     if (!formData.email) {
       newErrors = { ...newErrors, email: 'El email es requerido' };
+    } else if (!formData.email.endsWith('@gmail.cl')) {
+      newErrors = { ...newErrors, email: 'El email debe terminar en @gmail.cl' };
     }
+
     if (!formData.medioPago) {
       newErrors = { ...newErrors, medioPago: 'El medio de pago es requerido' };
+    } else if (formData.medioPago.length > 50) {
+      newErrors = { ...newErrors, medioPago: 'El medio de pago debe tener como máximo 50 caracteres' };
     }
+
     if (!formData.productos) {
       newErrors = { ...newErrors, productos: 'Los productos son requeridos' };
     }
+    
     return newErrors;
   }
 

@@ -90,7 +90,7 @@ const Finances = () => {
                 <div className="chart-item pie-chart-container">
                     <h2>Ingresos vs Gastos</h2>
                     <ResponsiveContainer width="100%" height={400}>
-                        <PieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                        <PieChart>
                             <Pie
                                 data={pieData}
                                 cx="50%"
@@ -144,7 +144,7 @@ const Finances = () => {
                 <div className="chart-item">
                     <h2>Productos más vendidos</h2>
                     <ResponsiveContainer width="100%" height={400}>
-                        <BarChart data={bestSellingProducts} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                        <BarChart data={bestSellingProducts}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis allowDecimals={false} />

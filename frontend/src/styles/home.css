@@ -1,26 +1,144 @@
 .home-container {
-    display: flex;
-    min-height: 100vh;
-    padding-top: 12vh; /* Ajustar para que comience justo debajo de la navbar */
+  display: flex;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.aside-open .home-aside {
+  width: 250px;
+}
+
+.aside-closed .home-aside {
+  width: 60px;
+}
+
+.home-aside {
+  background: #f4f4f4;
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ddd;
+}
+
+.aside-header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  background: #003366;
+  color: white;
+  padding: 0 10px;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.3em;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.aside-title {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.home-nav {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.home-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.home-nav ul li {
+  border-bottom: 1px solid #ddd;
+}
+
+.home-nav ul li a {
+  display: block;
+  padding: 15px;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-nav ul li a:hover {
+  background: #ddeeff;
+}
+
+.home-nav ul li a.active {
+  font-weight: bold;
+  background: #eef7ff;
+  color: #002651;
+}
+
+/* Submenú */
+.submenu > a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submenu.open > a {
+  background: #ddeeff;
+}
+
+.sub-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f0f0f0;
+}
+
+.sub-menu li a {
+  font-size: 0.85em;
+  padding-left: 30px;
+}
+
+/* Contenido principal centrado */
+.home-main {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+  align-items: center; /* centra verticalmente, puedes ajustar a tu gusto */
+  background: white;
+}
+
+.main-content {
+  max-width: 800px; /* ancho máximo para centrar el contenido */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  /* Modo móvil: la barra puede ocultarse con la hamburguesa */
+  .aside-open .home-aside {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 2000;
   }
-  
-  .home-aside {
-    width: 250px;
-    padding: 20px;
-    background: #f4f4f4;
+
+  .aside-closed .home-aside {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    height: 100vh;
+    z-index: 2000;
   }
-  
-  .home-nav ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .home-nav ul li a {
-    text-decoration: none;
-    color: black;
-  }
-  
+
   .home-main {
-    flex: 1;
+    margin-left: 0;
     padding: 20px;
   }
+}

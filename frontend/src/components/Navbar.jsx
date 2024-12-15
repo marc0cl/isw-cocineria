@@ -26,17 +26,6 @@ const Navbar = () => {
 
     const toggleInventoryMenu = () => {
         setInventoryMenuOpen(!inventoryMenuOpen); // Alterna el submenú de Inventario
-
-    };
-
-    const addActiveClass = () => {
-        const links = document.querySelectorAll('.nav-menu ul li a');
-        links.forEach(link => {
-            if (link.getAttribute('href') === location.pathname) {
-                link.classList.add('active');
-            }
-        });
-
     };
 
     return (
@@ -47,7 +36,7 @@ const Navbar = () => {
                         <NavLink
                             to="/home"
                             onClick={() => setMenuOpen(false)}
-                            activeClassName="active"
+                            className={({ isActive }) => (isActive ? 'active' : '')}
                         >
                             Inicio
                         </NavLink>
@@ -58,7 +47,7 @@ const Navbar = () => {
                                 <NavLink
                                     to="/users"
                                     onClick={() => setMenuOpen(false)}
-                                    activeClassName="active"
+                                    className={({ isActive }) => (isActive ? 'active' : '')}
                                 >
                                     Usuarios
                                 </NavLink>
@@ -67,7 +56,7 @@ const Navbar = () => {
                                 <NavLink
                                     to="/finanzas"
                                     onClick={() => setMenuOpen(false)}
-                                    activeClassName="active"
+                                    className={({ isActive }) => (isActive ? 'active' : '')}
                                 >
                                     Finanzas
                                 </NavLink>
@@ -79,7 +68,7 @@ const Navbar = () => {
                             <NavLink
                                 to="/ingresar-ingresos"
                                 onClick={() => setMenuOpen(false)}
-                                activeClassName="active"
+                                className={({ isActive }) => (isActive ? 'active' : '')}
                             >
                                 Ingresar ingresos
                             </NavLink>
@@ -90,34 +79,32 @@ const Navbar = () => {
                             <NavLink
                                 to="/turnos"
                                 onClick={() => setMenuOpen(false)}
-                                activeClassName="active"
+                                className={({ isActive }) => (isActive ? 'active' : '')}
                             >
                                 Turnos
                             </NavLink>
                         </li>
                     )}
-                    {/* Submenú de Inventario */}
                     {userRole === 'administrador' && (
                         <li className={`submenu ${inventoryMenuOpen ? 'open' : ''}`}>
-                            <NavLink
-                                to="#!"
+                            {/* Usamos href="#" en lugar de "#!" para evitar conflicto con NavLink */}
+                            <a
+                                href="#"
                                 onClick={(e) => {
-
                                     e.preventDefault();
-
                                     toggleInventoryMenu();
                                 }}
-                                activeClassName="active"
+                                className={inventoryMenuOpen ? 'active' : ''}
                             >
                                 Inventario
-                            </NavLink>
+                            </a>
                             {inventoryMenuOpen && (
                                 <ul className="sub-menu">
                                     <li>
                                         <NavLink
                                             to="/add-product"
                                             onClick={() => setMenuOpen(false)}
-                                            activeClassName="active"
+                                            className={({ isActive }) => (isActive ? 'active' : '')}
                                         >
                                             Agregar producto
                                         </NavLink>
@@ -126,7 +113,7 @@ const Navbar = () => {
                                         <NavLink
                                             to="/products"
                                             onClick={() => setMenuOpen(false)}
-                                            activeClassName="active"
+                                            className={({ isActive }) => (isActive ? 'active' : '')}
                                         >
                                             Listado de productos
                                         </NavLink>
@@ -135,7 +122,7 @@ const Navbar = () => {
                                         <NavLink
                                             to="/delete-product"
                                             onClick={() => setMenuOpen(false)}
-                                            activeClassName="active"
+                                            className={({ isActive }) => (isActive ? 'active' : '')}
                                         >
                                             Eliminar producto
                                         </NavLink>
@@ -144,7 +131,7 @@ const Navbar = () => {
                                         <NavLink
                                             to="/edit-product"
                                             onClick={() => setMenuOpen(false)}
-                                            activeClassName="active"
+                                            className={({ isActive }) => (isActive ? 'active' : '')}
                                         >
                                             Editar producto
                                         </NavLink>
@@ -160,7 +147,7 @@ const Navbar = () => {
                                 logoutSubmit();
                                 setMenuOpen(false);
                             }}
-                            activeClassName="active"
+                            className={({ isActive }) => (isActive ? 'active' : '')}
                         >
                             Cerrar sesión
                         </NavLink>
@@ -177,4 +164,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

@@ -66,3 +66,47 @@ export const transactionQueryValidation = Joi.object({
     "object.unknown": "No se permiten propiedades adicionales.",
     "object.missing": "Debes proporcionar al menos un parámetro: id, source o type.",
   });
+
+const singleTransactionValidation = Joi.object({
+  amount: Joi.number()
+    .positive()
+    .precision(2)
+    .required()
+    .messages({
+      "number.base": "El monto debe ser un número.",
+      "number.positive": "El monto debe ser un número positivo.",
+      "number.precision": "El monto debe tener como máximo dos decimales.",
+      "any.required": "El monto es obligatorio.",
+    }),
+  description: Joi.string()
+    .max(255)
+    .allow("")
+    .messages({
+      "string.base": "La descripción debe ser de tipo string.",
+      "string.max": "La descripción debe tener como máximo 255 caracteres.",
+    }),
+  source: Joi.string()
+    .valid("cocina", "bar", "proveedor", "otros")
+    .required()
+    .messages({
+      "any.only": "La fuente debe ser 'cocina', 'bar', 'proveedor' o 'otros'.",
+      "any.required": "La fuente es obligatoria.",
+    }),
+  type: Joi.string()
+    .valid("income", "expense")
+    .required()
+    .messages({
+      "any.only": "El tipo debe ser 'income' o 'expense'.",
+      "any.required": "El tipo es obligatorio.",
+    }),
+})
+  .required()
+  .unknown(false)
+  .messages({
+    "object.unknown": "No se permiten propiedades adicionales.",
+  });
+
+export const transactionsArrayValidation = Joi.array().items(singleTransactionValidation).min(1).messages({
+  "array.min": "Debe proporcionar al menos una transacción.",
+});
+

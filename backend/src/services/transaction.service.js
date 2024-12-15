@@ -56,13 +56,13 @@ export async function getTransactionsService(query = {}) {
   }
 }
 
-export async function addTransactionService(body) {
+export async function addTransactionService(transactions) {
   try {
     const transactionRepository = AppDataSource.getRepository(Transaction);
-    const newTransaction = transactionRepository.create(body);
-    await transactionRepository.save(newTransaction);
+    const newTransactions = transactionRepository.create(transactions);
+    await transactionRepository.save(newTransactions);
 
-    return [newTransaction, null];
+    return [newTransactions, null];
   } catch (error) {
     console.error("Error al agregar la transacción:", error);
     return [null, "Error interno del servidor"];

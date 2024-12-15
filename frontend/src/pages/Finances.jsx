@@ -112,7 +112,7 @@ const Finances = () => {
                 </div>
 
                 {/* Sección de Transacciones */}
-                <div className="chart-item tablef-container">
+                <div className="chart-item table-container">
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
                         <table className="transactions-table">
@@ -144,7 +144,7 @@ const Finances = () => {
                 <div className="chart-item">
                     <h2>Productos más vendidos</h2>
                     <ResponsiveContainer width="100%" height={400}>
-                        <BarChart data={bestSellingProducts} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                        <BarChart data={bestSellingProducts}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis allowDecimals={false} />

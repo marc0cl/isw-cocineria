@@ -1,64 +1,75 @@
 "use strict";
 import {
+  checkAvailabilityService,
   createProductService,
   deleteProductService,
+  getCriticalProductsService,
   getProductService,
   getProductsService,
   updateProductService,
+  updateStockService
 } from "../services/product.service.js";
-import{
-    productBodyValidation,
-    productBodyUpdateValidation,
-    productQueryValidation,
-}from "../validations/product.validation.js";
-import{
-    handleErrorClient,
-    handleErrorServer,
-    handleSuccess,
+import {
+  productBodyUpdateValidation,
+  productBodyValidation,
+  productQueryValidation,
+} from "../validations/product.validation.js";
+import {
+  handleErrorClient,
+  handleErrorServer,
+  handleSuccess,
 } from "../handlers/responseHandlers.js";
 
-// Función para obtener un solo producto
+// Obtener un producto
 export async function getProduct(req, res) {
-    try {
-        const { nombreProducto } = req.query;
+  try {
+    const { id, codigoIdentificador } = req.query;
+    const { error } = productQueryValidation.validate({ id, codigoIdentificador });
 
-        const { error } = productQueryValidation.validate({ nombreProducto });
+    if (error) return handleErrorClient(res, 400, error.message);
 
-        if (error) return handleErrorClient(res, 400, error.message);
+    const [product, errorProduct] = await getProductService({ id, codigoIdentificador });
 
-        const [product, errorProduct] = await getProductService({ nombreProducto });
+    if (errorProduct) return handleErrorClient(res, 404, errorProduct);
 
-        if (errorProduct) return handleErrorClient(res, 404, errorProduct);
-
-        handleSuccess(res, 200, "Producto encontrado", product);
-    } catch (error) {
-        handleErrorServer(res, 500, error.message);
-    }
-}
-  
-  // Función para obtener todos los productos
-  export async function getProducts(req, res) {
-    try {
-      const [products, errorProducts] = await getProductsService();
-  
-      if (errorProducts) return handleErrorClient(res, 404, errorProducts);
-  
-      products.length === 0
-        ? handleSuccess(res, 204)
-        : handleSuccess(res, 200, "Productos encontrados", products);
-    } catch (error) {
-      handleErrorServer(res, 500, error.message);
-    }
+    handleSuccess(res, 200, "Producto encontrado", product);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
   }
-  
-// Función para actualizar un producto
+}
+
+// Obtener todos los productos
+export async function getProducts(req, res) {
+  try {
+    const [products, errorProducts] = await getProductsService();
+
+    if (errorProducts) return handleErrorClient(res, 404, errorProducts);
+
+    products.length === 0
+      ? handleSuccess(res, 204)
+      : handleSuccess(res, 200, "Productos encontrados", products);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
+  }
+}
+
+// Obtener productos críticos
+export async function getCriticalProducts(req, res) {
+  try {
+    const [criticalProducts, errorCritical] = await getCriticalProductsService();
+    if (errorCritical) return handleErrorClient(res, 404, errorCritical);
+    handleSuccess(res, 200, "Productos críticos encontrados", criticalProducts);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
+  }
+}
+
+// Actualizar un producto
 export async function updateProduct(req, res) {
   try {
-    // Obtener el nombreProducto de los parámetros de la consulta (query)
-    const { nombreProducto } = req.query; // Ahora se usa nombreProducto en lugar de codigoIdentificador
+    const { codigoIdentificador } = req.query;
     const { body } = req;
 
-    // Validación del cuerpo de la solicitud (producto)
     const { error: bodyError } = productBodyUpdateValidation.validate(body);
 
     if (bodyError) {
@@ -70,9 +81,8 @@ export async function updateProduct(req, res) {
       );
     }
 
-    // Llamada al servicio de actualización, ahora usando nombreProducto
     const [product, productError] = await updateProductService(
-      { nombreProducto }, // Pasamos nombreProducto ahora en lugar de codigoIdentificador
+      { codigoIdentificador },
       body
     );
 
@@ -85,60 +95,94 @@ export async function updateProduct(req, res) {
       );
     }
 
-    // Respuesta exitosa
     handleSuccess(res, 200, "Producto modificado correctamente", product);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
 }
 
-  
-// Función para eliminar un producto
+// Eliminar un producto
 export async function deleteProduct(req, res) {
   try {
-      const { nombreProducto } = req.query;
+    const { id, codigoIdentificador } = req.query;
 
-      const { error: queryError } = productQueryValidation.validate({
-          nombreProducto,
-      });
+    const { error: queryError } = productQueryValidation.validate({
+      id,
+      codigoIdentificador,
+    });
 
-      if (queryError) {
-          return handleErrorClient(
-              res,
-              400,
-              "Error de validación en la consulta",
-              queryError.message
-          );
-      }
+    if (queryError) {
+      return handleErrorClient(
+        res,
+        400,
+        "Error de validación en la consulta",
+        queryError.message,
+      );
+    }
 
-      const [productDelete, errorProductDelete] = await deleteProductService({
-          nombreProducto,
-      });
+    const [productDelete, errorProductDelete] = await deleteProductService({
+      id,
+      codigoIdentificador,
+    });
 
-      if (errorProductDelete)
-          return handleErrorClient(res, 404, "Error eliminando el producto", errorProductDelete);
+    if (errorProductDelete)
+      return handleErrorClient(res, 404, "Error eliminando el producto", errorProductDelete);
 
-      handleSuccess(res, 200, "Producto eliminado correctamente", productDelete);
+    handleSuccess(res, 200, "Producto eliminado correctamente", productDelete);
   } catch (error) {
-      handleErrorServer(res, 500, error.message);
+    handleErrorServer(res, 500, error.message);
   }
 }
 
 export async function createProduct(req, res) {
   try {
     const { body } = req;
-
-     const { error } = productBodyValidation.validate(body);
-     if (error)
-       return handleErrorClient(res, 400, "Error de validación", error.message);
+    const { error } = productBodyValidation.validate(body);
+    if (error)
+      return handleErrorClient(res, 400, "Error de validación", error.message);
 
     const [newProduct, errorNewProduct] = await createProductService(body);
 
-     if (errorNewProduct)
-     return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message);
+    if (errorNewProduct)
+      return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message || errorNewProduct);
 
     handleSuccess(res, 201, "Producto insertado con éxito", newProduct);
-   } catch (error) {
+  } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
 }
+
+export async function updateStockAfterSale(req, res) {
+  try {
+    const { ingredients } = req.body;
+    if (!Array.isArray(ingredients) || ingredients.length === 0) {
+      return handleErrorClient(res, 400, "No se proporcionaron ingredientes.");
+    }
+
+    const [updated, errorUpdate] = await updateStockService(ingredients);
+    if (errorUpdate) return handleErrorClient(res, 400, errorUpdate);
+
+    handleSuccess(res, 200, "Stock actualizado correctamente", updated);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
+  }
+}
+
+
+export async function checkAvailability(req, res) {
+  try {
+    const { products } = req.body;
+
+    if (!Array.isArray(products) || products.length === 0) {
+      return handleErrorClient(res, 400, "Debes proporcionar un arreglo de productos");
+    }
+
+    const [results, errorResults] = await checkAvailabilityService(products);
+    if (errorResults) return handleErrorClient(res, 400, errorResults);
+
+    handleSuccess(res, 200, "Disponibilidad verificada", results);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
+  }
+}
+

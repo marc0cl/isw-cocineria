@@ -12,6 +12,27 @@
     z-index: 2000;
 }
 
+.hamburger-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.3em;
+    cursor: pointer;
+    margin-right: 10px;
+    padding: 5px; /* padding constante */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger-btn:hover {
+    background: #002651; /* un color fijo para el hover */
+}
+
+.hamburger-btn svg {
+    vertical-align: middle;
+}
+
 .navbar ul {
     list-style: none;
     margin: 0;
@@ -19,6 +40,7 @@
     display: flex;
     gap: 20px;
     align-items: center;
+    margin-left: auto; /* Esto empujará la lista a la derecha */
 }
 
 .navbar li {

@@ -6,79 +6,77 @@ const ProductSchema = new EntitySchema({
   tableName: "products",
   columns: {
     id: {
-        type: "int",
-        primary: true,
-        generated: true,
+      type: "int",
+      primary: true,
+      generated: true,
     },
-    
     codigoIdentificador: {
-        type: "varchar",
-        length: 20,
-        nullable: false,
-        unique: true,
+      type: "varchar",
+      length: 20,
+      nullable: false,
+      unique: true,
     },
-
-    nombreProducto:{
-        type: "varchar",
-        length: 255,
-        nullable: false,
-        unique: true,
-
+    nombreProducto: {
+      type: "varchar",
+      length: 255,
+      nullable: false,
     },
-
-    cantidadProducto:{
-        type: "int",
-        nullable: false,
+    cantidadProducto: {
+      type: "int",
+      nullable: false,
     },
-
-    fechaDeCaducidad:{
-        type: "date",
-        nullable: false,
+    fechaDeCaducidad: {
+      type: "date",
+      nullable: false,
     },
-
-    tipoDeProducto:{
-        type: "varchar",
-        length: 255,
-        nullable: false 
+    tipoDeProducto: {
+      type: "varchar",
+      length: 255,
+      nullable: false,
     },
-
-    stock: {  // Nueva columna de stock
-        type: "int",
-        nullable: true,
-      },
-  
-      estado: {  // Nueva columna de estado
-        type: "varchar",
-        length: 10,
-        nullable: true,
-        enum: ['excelente', 'estable', 'critico'],  // Define los tres posibles estados
-        default: 'excelente',  // Valor por defecto
-      },
-    
-    createdAt:{
-        type: "timestamp with time zone",
-        default: () => "CURRENT_TIMESTAMP",
-        nullable: false,
+    stockUnit: {
+      type: "varchar",
+      length: 50,
+      nullable: false,
+      default: "g"
     },
-    
+    minThreshold: {
+      type: "int",
+      nullable: false,
+      default: 100
+    },
+    supplierId: {
+      type: "int",
+      nullable: true,
+    },
+    expenseId: { // NUEVA COLUMNA
+      type: "int",
+      nullable: true,
+    },
+    createdAt: {
+      type: "timestamp with time zone",
+      default: () => "CURRENT_TIMESTAMP",
+      nullable: false,
+    },
     updatedAt: {
-        type: "timestamp with time zone",
-        default: () => "CURRENT_TIMESTAMP",
-        onUpdate: "CURRENT_TIMESTAMP",
-        nullable: false,
-      },
+      type: "timestamp with time zone",
+      default: () => "CURRENT_TIMESTAMP",
+      onUpdate: "CURRENT_TIMESTAMP",
+      nullable: false,
+    },
   },
   indices: [
     {
-        name: "IDX_PRODUCT_ID",
-        columns: ["id"],
-        unique:true,
+      name: "IDX_PRODUCT_ID",
+      columns: ["id"],
+      unique: true,
     },
     {
-        name: "IDX_PRODUCT_CODIGO",
-        columns: ["codigoIdentificador"],
-        unique:true
+      name: "IDX_PRODUCT_CODIGO",
+      columns: ["codigoIdentificador"],
+      unique: true
     },
-  ],  
+  ],
 });
+
 export default ProductSchema;

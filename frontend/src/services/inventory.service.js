@@ -1,49 +1,67 @@
-
 import axios from './root.service.js';
-
 
 // Obtener todos los productos
 export async function fetchProducts() {
-    const response = await axios.get('/product'); // Se mantiene /product para que coincida con el backend
+    const response = await axios.get('/product');
+    return response.data.data || [];
+}
+
+// Obtener detalles de un producto
+export async function fetchProductDetail(nombreProducto) {
+    const response = await axios.get(`/product/detail?nombreProducto=${nombreProducto}`);
     return response.data;
 }
 
-
-// Obtener detalles de un producto por nombreProducto
-export async function fetchProductDetail(nombreProducto) {
-  const response = await axios.get(`/product/detail?nombreProducto=${nombreProducto}`); // Cambia el parámetro a nombreProducto
-  return response.data;
-}
-
-
-
 // Crear un nuevo producto
 export async function createProduct(productData) {
-    const response = await axios.post('/product', productData); // Se mantiene /product para que coincida con el backend
-    console.log(productData);
+    const response = await axios.post('/product', productData);
     return response.data;
 }
 
 // Actualizar un producto existente
 export async function updateProduct(nombreProducto, updatedData) {
-  try {
-    // Corrigiendo la URL para usar nombreProducto
-    const response = await axios.patch(`/product/detail?nombreProducto=${nombreProducto}`, updatedData);
-
-    // Log para verificar la llamada
-    console.log("Llamada a updateProduct con:", { nombreProducto, updatedData });
-
+    const response = await axios.patch(`/product/detail?codigoIdentificador=${updatedData.codigoIdentificador}`, updatedData);
     return response.data;
-  } catch (error) {
-    console.error("Error en updateProduct:", error.response || error);
-    throw error;
-  }
 }
 
 // Eliminar un producto
-
 export async function deleteProduct(nombreProducto) {
-  const response = await axios.delete(`/product/detail?nombreProducto=${nombreProducto}`); // Cambiar el parámetro a nombreProducto
-  return response.data;
+    const response = await axios.delete(`/product/detail?nombreProducto=${nombreProducto}`);
+    return response.data;
+}
 
+// Obtener productos críticos
+export async function getCriticalProductsService() {
+    try {
+        const response = await axios.get('/product/critical');
+        return [response.data, null];
+    } catch (error) {
+        return [null, error.response?.data?.message || error.message];
+    }
+}
+
+// Actualizar stock de productos tras una venta
+export async function updateProductStock(ingredientsArray) {
+    try {
+        const response = await axios.post('/product/update-stock', { ingredients: ingredientsArray });
+        return [response.data, null];
+    } catch (error) {
+        return [null, error.response?.data?.message || error.message];
+    }
+}
+
+export async function checkAvailabilityService(menu) {
+    const body = {
+        products: menu.map(item => ({
+            name: item.name,
+            ingredients: item.ingredients
+        }))
+    };
+
+    try {
+        const response = await axios.post('/product/check-availability', body);
+        return [response.data.data, null];
+    } catch (error) {
+        return [null, error.response?.data?.message || error.message];
+    }
 }

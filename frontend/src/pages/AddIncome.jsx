@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import menuData from '../../menu.json';
 import { addIncomesService } from '@services/transaction.service.js';
+import { updateProductStock, checkAvailabilityService } from '@services/inventory.service.js';
 import Spinner from '@components/Login/Spinner';
 import SuccessTick from '@components/Login/SuccessTick';
 import ErrorX from '@components/Login/ErrorX';
@@ -17,8 +18,28 @@ const AddIncome = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
 
     useEffect(() => {
-        setMenuItems(menuData);
+        updateMenuItems();
     }, []);
+
+    const updateMenuItems = async () => {
+        const [availability, errorAvail] = await checkAvailabilityService(menuData);
+        if (errorAvail) {
+            console.error("Error verificando disponibilidad:", errorAvail);
+            const updated = menuData.map(item => ({ ...item, disabled: true }));
+            setMenuItems(updated);
+            return;
+        }
+
+        const updatedMenu = menuData.map(item => {
+            const found = availability.find(a => a.name === item.name);
+            if (found) {
+                return { ...item, disabled: !found.available };
+            }
+            return { ...item, disabled: true };
+        });
+
+        setMenuItems(updatedMenu);
+    };
 
     const handleAddProduct = (data) => {
         const selectedItem = menuItems.find(item => item.name === data.product);
@@ -26,22 +47,36 @@ const AddIncome = () => {
             setError('product', { type: 'manual', message: 'Producto no válido' });
             return;
         }
-        const newProduct = {
+
+        const qty = parseInt(data.quantity, 10);
+        if (!qty || qty <= 0) {
+            setError('quantity', { type: 'manual', message: 'Cantidad no válida' });
+            return;
+        }
+
+        // Crear múltiples entradas individuales del mismo producto
+        const newProducts = Array.from({ length: qty }).map(() => ({
             amount: selectedItem.price,
             description: selectedItem.name,
             source: selectedItem.source,
-        };
-        setSelectedProducts([...selectedProducts, newProduct]);
-        reset({ product: '' });
+            ingredients: selectedItem.ingredients
+        }));
+
+        setSelectedProducts(prev => [...prev, ...newProducts]);
+        reset({ product: '', quantity: '' });
     };
 
-    const handleRemoveProduct = (index) => {
-        const updatedList = [...selectedProducts];
-        updatedList.splice(index, 1);
-        setSelectedProducts(updatedList);
+    // Ahora, en vez de index, eliminaremos un producto por su nombre (eliminando de a uno)
+    const handleRemoveProduct = (description) => {
+        const indexToRemove = selectedProducts.findIndex(prod => prod.description === description);
+        if (indexToRemove > -1) {
+            const updatedList = [...selectedProducts];
+            updatedList.splice(indexToRemove, 1);
+            setSelectedProducts(updatedList);
+        }
     };
 
-    const onSubmit = () => {
+    const finalSubmit = () => {
         if (selectedProducts.length === 0) {
             setError('general', { type: 'manual', message: 'No has agregado ningún producto.' });
             return;
@@ -56,17 +91,48 @@ const AddIncome = () => {
         setIsError(false);
 
         try {
-            const [ , errorTransaction] = await addIncomesService(selectedProducts);
+            // Filtramos las propiedades para no incluir ingredients ni quantity
+            const incomeProducts = selectedProducts.map(prod => ({
+                amount: prod.amount,
+                description: prod.description,
+                source: prod.source,
+                type: 'income'
+            }));
+
+            const [ , errorTransaction] = await addIncomesService(incomeProducts);
             if (errorTransaction) {
                 setIsError(true);
                 setIsLoading(false);
                 setError('general', { type: 'server', message: errorTransaction });
             } else {
+                // Descontar inventario basado en ingredientes
+                const ingredientsToDeduct = {};
+                selectedProducts.forEach(prod => {
+                    prod.ingredients.forEach(ing => {
+                        const key = ing.name;
+                        if (!ingredientsToDeduct[key]) {
+                            ingredientsToDeduct[key] = { name: ing.name, amount: 0, unit: ing.unit };
+                        }
+                        ingredientsToDeduct[key].amount += ing.amount;
+                    });
+                });
+
+                const ingredientsArray = Object.values(ingredientsToDeduct);
+                const [updateResp, updateErr] = await updateProductStock(ingredientsArray);
+                if (updateErr) {
+                    console.error("Error actualizando stock:", updateErr);
+                    setIsError(true);
+                    setIsLoading(false);
+                    return;
+                }
+
                 setIsSuccess(true);
                 setIsLoading(false);
+                setSelectedProducts([]);
+                await updateMenuItems();
+
                 setTimeout(() => {
                     reset();
-                    setSelectedProducts([]);
                     setIsSuccess(false);
                 }, 2000);
             }
@@ -82,6 +148,18 @@ const AddIncome = () => {
         setShowConfirmation(false);
     };
 
+    // Agrupar productos por descripción para visualizarlos x2, x10, etc.
+    const groupedProducts = selectedProducts.reduce((acc, product) => {
+        const key = product.description;
+        if (!acc[key]) {
+            acc[key] = { product: product, count: 0 };
+        }
+        acc[key].count += 1;
+        return acc;
+    }, {});
+
+    const productEntries = Object.values(groupedProducts);
+
     return (
         <main className="container">
             <form className="form" onSubmit={handleSubmit(handleAddProduct)}>
@@ -95,13 +173,26 @@ const AddIncome = () => {
                     >
                         <option value="">Seleccionar producto</option>
                         {menuItems.map((item, index) => (
-                            <option key={index} value={item.name}>
-                                {item.name} - ${item.price}
+                            <option key={index} value={item.name} disabled={item.disabled}>
+                                {item.name} - ${item.price} {item.disabled ? '(Sin stock suficiente)' : ''}
                             </option>
                         ))}
                     </select>
                     <div className={`error-message ${errors.product ? 'visible' : ''}`}>
                         {errors.product?.message}
+                    </div>
+                </div>
+                <div className="container_inputs">
+                    <label htmlFor="quantity">Cantidad</label>
+                    <input
+                        type="number"
+                        min={1}
+                        {...register('quantity', { required: 'Debes ingresar una cantidad', min: 1 })}
+                        name="quantity"
+                        placeholder="Ej: 1"
+                    />
+                    <div className={`error-message ${errors.quantity ? 'visible' : ''}`}>
+                        {errors.quantity?.message}
                     </div>
                 </div>
                 <button type="submit" disabled={isLoading}>
@@ -112,34 +203,37 @@ const AddIncome = () => {
                 </div>
             </form>
 
-            {selectedProducts.length > 0 && (
+            {productEntries.length > 0 && (
                 <div className="form" style={{ marginTop: '20px' }}>
                     <h2>Productos seleccionados</h2>
-                    <ul>
-                        {selectedProducts.map((prod, idx) => (
-                            <li key={idx}>
-                                {prod.description} - ${prod.amount} ({prod.source})
-                                <button
-                                    type="button"
-                                    onClick={() => handleRemoveProduct(idx)}
-                                    style={{
-                                        marginLeft: '10px',
-                                        backgroundColor: 'red',
-                                        color: '#fff',
-                                        borderRadius: '5px',
-                                        border: 'none',
-                                        padding: '5px'
-                                    }}
-                                >
-                                    Eliminar
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+                    {/* Contenedor scrollable */}
+                    <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
+                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                            {productEntries.map((entry, idx) => (
+                                <li key={idx} style={{ marginBottom: '10px' }}>
+                                    {entry.product.description} x {entry.count} = ${entry.product.amount * entry.count} ({entry.product.source})
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveProduct(entry.product.description)}
+                                        style={{
+                                            marginLeft: '10px',
+                                            backgroundColor: 'red',
+                                            color: '#fff',
+                                            borderRadius: '5px',
+                                            border: 'none',
+                                            padding: '5px'
+                                        }}
+                                    >
+                                        Eliminar una unidad
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     <button
                         type="button"
-                        onClick={onSubmit}
-                        disabled={isLoading || selectedProducts.length === 0}
+                        onClick={finalSubmit}
+                        disabled={isLoading || productEntries.length === 0}
                         style={{ marginTop: '20px' }}
                     >
                         {isLoading ? <Spinner /> :

@@ -8,19 +8,24 @@ import {
   getProduct,
   getProducts,
   updateProduct,
+  getCriticalProducts,
+  updateStockAfterSale,
+  checkAvailability // nuevo controlador
 } from "../controllers/product.controller.js";
 
 const router = Router();
 
-// Rutas públicas, accesibles para todos los usuarios autenticados
-router.use(authenticateJwt); // Solo usuarios autenticados pueden acceder
-router.get("/", getProducts);  // Obtener todos los productos (accesible para todos los usuarios autenticados)
-router.get("/detail/", getProduct); // Obtener un solo producto (accesible para todos los usuarios autenticados)
+router.use(authenticateJwt);
+router.get("/", getProducts);
+router.get("/detail/", getProduct);
+router.get("/critical", isAdmin, getCriticalProducts);
+router.post("/update-stock", isAdmin, updateStockAfterSale);
 
-// Rutas protegidas por admin
-router.use(isAdmin); // Solo los administradores pueden acceder a estas rutas protegidas
-router.post("/", createProduct);        // Crear un nuevo producto
-router.patch("/detail/", updateProduct);  // Actualizar un producto
-router.delete("/detail/", deleteProduct); // Eliminar un producto
+router.post("/check-availability", checkAvailability);
+
+router.use(isAdmin);
+router.post("/", createProduct);
+router.patch("/detail/", updateProduct);
+router.delete("/detail/", deleteProduct);
 
 export default router;

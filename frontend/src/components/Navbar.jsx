@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from '@services/auth.service.js';
 import { FaBars } from 'react-icons/fa';
+import '../styles/navbar.css'
 
 const Navbar = ({ onToggleMenu }) => {
     const navigate = useNavigate();

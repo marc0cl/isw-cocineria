@@ -3,10 +3,10 @@ import axios from './root.service.js';
 // Obtener todos los productos
 export async function fetchProducts() {
     const response = await axios.get('/product');
-    return response.data.data || [];
+    return response.data;
 }
 
-// Obtener detalles de un producto
+// Obtener detalles de un producto por nombreProducto
 export async function fetchProductDetail(nombreProducto) {
     const response = await axios.get(`/product/detail?nombreProducto=${nombreProducto}`);
     return response.data;
@@ -18,13 +18,13 @@ export async function createProduct(productData) {
     return response.data;
 }
 
-// Actualizar un producto existente
+// Actualizar un producto existente por nombreProducto
 export async function updateProduct(nombreProducto, updatedData) {
-    const response = await axios.patch(`/product/detail?codigoIdentificador=${updatedData.codigoIdentificador}`, updatedData);
+    const response = await axios.patch(`/product/detail?nombreProducto=${nombreProducto}`, updatedData);
     return response.data;
 }
 
-// Eliminar un producto
+// Eliminar un producto por nombreProducto
 export async function deleteProduct(nombreProducto) {
     const response = await axios.delete(`/product/detail?nombreProducto=${nombreProducto}`);
     return response.data;
@@ -40,7 +40,7 @@ export async function getCriticalProductsService() {
     }
 }
 
-// Actualizar stock de productos tras una venta
+// Actualizar stock tras venta
 export async function updateProductStock(ingredientsArray) {
     try {
         const response = await axios.post('/product/update-stock', { ingredients: ingredientsArray });
@@ -50,6 +50,7 @@ export async function updateProductStock(ingredientsArray) {
     }
 }
 
+// Verificar disponibilidad
 export async function checkAvailabilityService(menu) {
     const body = {
         products: menu.map(item => ({

@@ -65,7 +65,7 @@ const DeleteProductPage = () => {
         <ul>
           {products.map((product) => (
 
-            <li key={product.nombreProducto} className="product-item">
+            <li key={product.id} className="product-item">
 
               <h3>{product.nombreProducto}</h3>
               <p>Cantidad: {product.cantidadProducto}</p>

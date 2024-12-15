@@ -23,12 +23,13 @@ import {
 // Obtener un producto
 export async function getProduct(req, res) {
   try {
-    const { id, codigoIdentificador } = req.query;
-    const { error } = productQueryValidation.validate({ id, codigoIdentificador });
+    const { nombreProducto } = req.query;
+
+    const { error } = productQueryValidation.validate({ nombreProducto });
 
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [product, errorProduct] = await getProductService({ id, codigoIdentificador });
+    const [product, errorProduct] = await getProductService({ nombreProducto });
 
     if (errorProduct) return handleErrorClient(res, 404, errorProduct);
 
@@ -67,11 +68,20 @@ export async function getCriticalProducts(req, res) {
 // Actualizar un producto
 export async function updateProduct(req, res) {
   try {
-    const { codigoIdentificador } = req.query;
+    const { nombreProducto } = req.query;
     const { body } = req;
 
-    const { error: bodyError } = productBodyUpdateValidation.validate(body);
+    const { error: queryError } = productQueryValidation.validate({ nombreProducto });
+    if (queryError) {
+      return handleErrorClient(
+        res,
+        400,
+        "Error de validación en la consulta",
+        queryError.message
+      );
+    }
 
+    const { error: bodyError } = productBodyUpdateValidation.validate(body);
     if (bodyError) {
       return handleErrorClient(
         res,
@@ -81,18 +91,9 @@ export async function updateProduct(req, res) {
       );
     }
 
-    const [product, productError] = await updateProductService(
-      { codigoIdentificador },
-      body
-    );
-
+    const [product, productError] = await updateProductService({ nombreProducto }, body);
     if (productError) {
-      return handleErrorClient(
-        res,
-        400,
-        "Error modificando el producto",
-        productError
-      );
+      return handleErrorClient(res, 400, "Error modificando el producto", productError);
     }
 
     handleSuccess(res, 200, "Producto modificado correctamente", product);
@@ -104,11 +105,10 @@ export async function updateProduct(req, res) {
 // Eliminar un producto
 export async function deleteProduct(req, res) {
   try {
-    const { id, codigoIdentificador } = req.query;
+    const { nombreProducto } = req.query;
 
     const { error: queryError } = productQueryValidation.validate({
-      id,
-      codigoIdentificador,
+      nombreProducto,
     });
 
     if (queryError) {
@@ -121,8 +121,7 @@ export async function deleteProduct(req, res) {
     }
 
     const [productDelete, errorProductDelete] = await deleteProductService({
-      id,
-      codigoIdentificador,
+      nombreProducto,
     });
 
     if (errorProductDelete)
@@ -134,6 +133,7 @@ export async function deleteProduct(req, res) {
   }
 }
 
+// Crear un producto
 export async function createProduct(req, res) {
   try {
     const { body } = req;
@@ -152,6 +152,7 @@ export async function createProduct(req, res) {
   }
 }
 
+// Actualizar stock tras venta
 export async function updateStockAfterSale(req, res) {
   try {
     const { ingredients } = req.body;
@@ -168,7 +169,7 @@ export async function updateStockAfterSale(req, res) {
   }
 }
 
-
+// Verificar disponibilidad
 export async function checkAvailability(req, res) {
   try {
     const { products } = req.body;
@@ -185,4 +186,3 @@ export async function checkAvailability(req, res) {
     handleErrorServer(res, 500, error.message);
   }
 }
-

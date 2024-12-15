@@ -49,7 +49,7 @@ const ProductSchema = new EntitySchema({
       type: "int",
       nullable: true,
     },
-    expenseId: { // NUEVA COLUMNA
+    expenseId: {
       type: "int",
       nullable: true,
     },

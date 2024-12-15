@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service';
+import { getProvsService } from '@services/prov.service';
 import '../styles/Product.css';
-
-
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
+  const [providersMap, setProvidersMap] = useState({}); // Mapa de proveedores
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -13,38 +13,57 @@ const ProductPage = () => {
   const [productDetail, setProductDetail] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
+  // Mapa para el tipo de producto
+  const tipoMap = {
+    "bebestible": "bar",
+    "comestible": "cocina",
+    "insumo": "otro"
+  };
 
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadData = async () => {
       try {
+        // Cargar productos
         const response = await fetchProducts();
         if (response.status === "Success") {
-          console.log(response.data)
           setProducts(response.data);
         } else {
           setError('No se encontraron productos.');
         }
+
+        // Cargar proveedores
+        const [provs, provsError] = await getProvsService();
+        if (provsError) {
+          // Si ocurre un error, lo guardamos en error, pero que siga mostrando productos
+          setError(provsError);
+        } else if (provs && Array.isArray(provs.data)) {
+          // Crear un mapa { [supplierId]: supplierName }
+          const map = {};
+          provs.data.forEach(prov => {
+            map[prov.id] = prov.nombre;
+          });
+          setProvidersMap(map);
+        }
       } catch (err) {
-        setError('Error al cargar los productos.');
+        setError('Error al cargar los productos o proveedores.');
       } finally {
         setLoading(false);
       }
     };
 
-    loadProducts();
+    loadData();
   }, []);
 
-
   const filteredProducts = products
-    .filter((product) =>
-      product.nombreProducto.toLowerCase().includes(searchName.toLowerCase())
-    )
-    .reverse();
+      .filter((product) =>
+          product.nombreProducto.toLowerCase().includes(searchName.toLowerCase())
+      )
+      .reverse();
 
   const handleProductClick = async (nombreProducto) => {
     try {
       const details = await fetchProductDetail(nombreProducto);
-      setProductDetail(details);
+      setProductDetail(details.data);
       setShowDetailModal(true);
 
     } catch (err) {
@@ -55,65 +74,70 @@ const ProductPage = () => {
   if (loading) return <p>...Cargando productos...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
+  // Función para obtener el nombre del proveedor a partir del supplierId
+  const getProviderName = (supplierId) => {
+    if (!supplierId) return 'No disponible';
+    return providersMap[supplierId] || `Proveedor ID: ${supplierId}`;
+  };
+
   return (
-    <div className="product-page">
-      <h1>Listado de Productos</h1>
+      <div className="product-page">
+        <h1>Listado de Productos</h1>
 
-      <div className="search-container">
-        <input
-          type="text"
+        <div className="search-container">
+          <input
+              type="text"
+              placeholder="Buscar por nombre de producto"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+          />
+        </div>
 
-          placeholder="Buscar por nombre de producto"
-          value={searchName}
+        <div className="product-list">
+          {filteredProducts.length === 0 ? (
+              <p>No se encontraron productos con ese nombre.</p>
+          ) : (
+              filteredProducts.map((product) => (
+                  <div
+                      key={product.id}
+                      className="product-card"
+                      onClick={() => handleProductClick(product.nombreProducto)}
+                  >
+                    <h2>{product.nombreProducto || 'Producto sin nombre'}</h2>
+                    <p>
+                      <span className="stock-label">Cantidad de Stock: </span>
+                      <span
+                          className={product.cantidadProducto <= product.minThreshold ? 'stock-value stock-value-low' : 'stock-value stock-value-high'}
+                      > {product.cantidadProducto} {product.stockUnit}
+                      </span>
+                    </p>
+                    <p className="min-line">
+                      <span className="min-label">Cantidad Mínima: </span>
+                      <span className="min-value">{product.minThreshold} {product.stockUnit}</span>
+                    </p>
 
-          onChange={(e) => setSearchName(e.target.value)}
+                  </div>
+              ))
+          )}
+        </div>
 
-        />
-      </div>
-
-      <div className="product-list">
-        {filteredProducts.length === 0 ? (
-
-          <p>No se encontraron productos con ese nombre.</p>
-        ) : (
-          filteredProducts.map((product) => (
-            <div
-
-              key={product.nombreProducto}
-              className="product-card"
-              onClick={() => handleProductClick(product.nombreProducto)}
-            >
-              <h2>{product.nombreProducto || 'Producto sin nombre'}</h2>
-
-              <p>Cantidad: {product.cantidadProducto || 0}</p>
-              <p>Fecha de Caducidad: {product.fechaDeCaducidad ? new Date(product.fechaDeCaducidad).toLocaleDateString() : 'No disponible'}</p>
-              <p>Tipo de Producto: {product.tipoDeProducto || 'No especificado'}</p>
-              <p>Stock: {product.stock !== undefined ? product.stock : 'No disponible'}</p> {/* Mostrar el stock */}
-              <p>Estado: {product.estado || 'No disponible'}</p> {/* Mostrar el estado */}
+        {showDetailModal && productDetail && (
+            <div className="product-detail-modal">
+              <div className="modal-content">
+                <h2>{productDetail.nombreProducto}</h2>
+                <p><strong>Fecha
+                  Ingreso:</strong> {productDetail.createdAt ? new Date(productDetail.createdAt).toLocaleDateString() : 'No disponible'}
+                </p>
+                <p><strong>Última Actualización:</strong> {productDetail.updatedAt ? new Date(productDetail.updatedAt).toLocaleDateString() : 'No disponible'}</p>
+                <p><strong>Stock:</strong> {productDetail.cantidadProducto} {productDetail.stockUnit}</p>
+                <p><strong>Tipo de Producto:</strong> {tipoMap[productDetail.tipoDeProducto] || productDetail.tipoDeProducto || 'No especificado'}</p>
+                <p><strong>Proveedor:</strong> {getProviderName(productDetail.supplierId)}</p>
+                <button onClick={() => setShowDetailModal(false)}>Cerrar</button>
+              </div>
             </div>
-          ))
         )}
       </div>
-
-      {showDetailModal && productDetail && (
-        <div className="product-detail-modal">
-          <div className="modal-content">
-            <h2>{productDetail.nombreProducto}</h2>
-
-
-            <p><strong>Cantidad:</strong> {productDetail.cantidadProducto}</p>
-            <p><strong>Fecha de Caducidad:</strong> {new Date(productDetail.fechaDeCaducidad).toLocaleDateString()}</p>
-            <p><strong>Tipo de Producto:</strong> {productDetail.tipoDeProducto}</p>
-            <p><strong>Descripción:</strong> {productDetail.descripcion || 'No disponible'}</p>
-            <p><strong>Stock:</strong> {productDetail.stock !== undefined ? productDetail.stock : 'No disponible'}</p> {/* Mostrar el stock en el detalle */}
-            <p><strong>Estado:</strong> {productDetail.estado || 'No disponible'}</p> {/* Mostrar el estado en el detalle */}
-            <button onClick={() => setShowDetailModal(false)}>Cerrar</button>
-          </div>
-        </div>
-      )}
-    </div>
   );
 };
 
 export default ProductPage;
-

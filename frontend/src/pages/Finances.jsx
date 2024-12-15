@@ -1,23 +1,30 @@
 import { useEffect, useState } from 'react';
 import {
     PieChart, Pie, Cell, Tooltip, Legend,
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
+    LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 import { getIncomesService, getExpensesService } from '@services/transaction.service.js';
+import { getCriticalProductsService } from '@services/inventory.service.js';
 import '@styles/finances.css';
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import Spinner from '../components/Login/Spinner.jsx';
+dayjs.extend(isBetween);
 
 const Finances = () => {
     const [pieData, setPieData] = useState([]);
     const [transactions, setTransactions] = useState([]);
-    const [bestSellingProducts, setBestSellingProducts] = useState([]);
+    const [criticalProducts, setCriticalProducts] = useState([]);
+    const [lineChartData, setLineChartData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedRange, setSelectedRange] = useState(7);
+
+    const COLORS = ['#00C49F', '#FF0000']; // Verde para ingresos, rojo para gastos
 
     const sourceDisplay = {
         bar: 'Bar',
         cocina: 'Cocina',
-        otro: 'Otro',
+        otros: 'Otros',
     };
 
     useEffect(() => {
@@ -53,27 +60,58 @@ const Finances = () => {
                 { name: 'Gastos', value: expenseTotal },
             ]);
 
-            // Calcular productos más vendidos
-            const productSales = {};
-            incomesData.forEach(item => {
-                const productName = item.description;
-                productSales[productName] = (productSales[productName] || 0) + 1;
-            });
+            // Obtener productos críticos
+            const [criticalData, criticalError] = await getCriticalProductsService();
+            if (!criticalError && criticalData) {
+                setCriticalProducts(criticalData.data);
+            }
 
-            const bestSellers = Object.keys(productSales).map(product => ({
-                name: product,
-                cantidad: productSales[product],
-            }));
-
-            setBestSellingProducts(bestSellers);
+            // Preparar datos para el gráfico de líneas
+            const lineData = prepareLineChartData(incomesData, selectedRange);
+            setLineChartData(lineData);
 
             setLoading(false);
         };
 
         fetchData();
-    }, []);
+    }, [selectedRange]);
 
-    const COLORS = ['#00C49F', '#FF0000']; // Verde para ingresos, rojo para gastos
+    const prepareLineChartData = (incomesData, range) => {
+        // Obtenemos la fecha actual
+        const endDate = dayjs();
+        // Fecha inicial basada en el rango
+        const startDate = endDate.subtract(range - 1, 'day');
+
+        // Filtrar ingresos dentro del rango
+        const filteredIncomes = incomesData.filter(inc => {
+            const date = dayjs(inc.createdAt);
+            return date.isBetween(startDate, endDate, 'day', '[]');
+        });
+
+        // Agrupar por día y fuente
+        const daySourceMap = {};
+        for (let i = 0; i < range; i++) {
+            const currentDay = startDate.add(i, 'day');
+            const dayStr = currentDay.format('DD/MM');
+            daySourceMap[dayStr] = { day: dayStr, bar: 0, cocina: 0, otros: 0 };
+        }
+
+        filteredIncomes.forEach(item => {
+            const dayStr = dayjs(item.createdAt).format('DD/MM');
+            const src = item.source || 'otros';
+            if (!daySourceMap[dayStr]) {
+                daySourceMap[dayStr] = { day: dayStr, bar: 0, cocina: 0, otros: 0 };
+            }
+            // Sumar montos por fuente
+            if (sourceDisplay[src]) {
+                daySourceMap[dayStr][src] += parseFloat(item.amount);
+            } else {
+                daySourceMap[dayStr]['otros'] += parseFloat(item.amount);
+            }
+        });
+
+        return Object.values(daySourceMap);
+    };
 
     if (loading) {
         return (
@@ -86,18 +124,16 @@ const Finances = () => {
     return (
         <div className="finances-container">
             <div className="charts-container">
-                {/* Gráfico de torta */}
                 <div className="chart-item pie-chart-container">
                     <h2>Ingresos vs Gastos</h2>
                     <ResponsiveContainer width="100%" height={400}>
-                        <PieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                        <PieChart>
                             <Pie
                                 data={pieData}
                                 cx="50%"
                                 cy="50%"
                                 labelLine={false}
-                                //label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                                outerRadius={120} // Se reduce para evitar cortar textos
+                                outerRadius={120}
                                 paddingAngle={5}
                                 dataKey="value"
                             >
@@ -110,8 +146,6 @@ const Finances = () => {
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-
-                {/* Sección de Transacciones */}
                 <div className="chart-item table-container">
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
@@ -132,25 +166,64 @@ const Finances = () => {
                                     <td className={`amount ${t.type === 'income' ? 'income' : 'expense'}`}>
                                         ${parseFloat(t.amount).toFixed(2)}
                                     </td>
-                                    <td>{sourceDisplay[t.source] || t.source}</td>
+                                    <td>{sourceDisplay[t.source] || 'Otros'}</td>
                                 </tr>
                             ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
+                {criticalProducts && criticalProducts.length > 0 && (
+                    <div className="chart-item table-container">
+                        <h2>Productos Críticos</h2>
+                        <div className="transactions-container">
+                            <table className="transactions-table">
+                                <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad Actual</th>
+                                    <th>Mínimo Permitido</th>
+                                    <th>Unidad</th>
+                                    <th>Proveedor</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {criticalProducts.map((prod, idx) => (
+                                    <tr key={idx}>
+                                        <td>{prod.nombreProducto}</td>
+                                        <td>{prod.cantidadProducto}</td>
+                                        <td>{prod.minThreshold}</td>
+                                        <td>{prod.stockUnit}</td>
+                                        <td>{prod.supplierName}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
 
-                {/* Productos más vendidos */}
                 <div className="chart-item">
-                    <h2>Productos más vendidos</h2>
+                    <h2>Ventas por Fuente (últimos {selectedRange} días)</h2>
+                    <div style={{ marginBottom: '10px' }}>
+                        <label>Rango de días: </label>
+                        <select value={selectedRange} onChange={e => setSelectedRange(parseInt(e.target.value))}>
+                            <option value={7}>7 días</option>
+                            <option value={14}>14 días</option>
+                            <option value={30}>30 días</option>
+                        </select>
+                    </div>
                     <ResponsiveContainer width="100%" height={400}>
-                        <BarChart data={bestSellingProducts} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                        <LineChart data={lineChartData}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
+                            <XAxis dataKey="day" />
                             <YAxis allowDecimals={false} />
                             <Tooltip />
-                            <Bar dataKey="cantidad" fill="#82ca9d" />
-                        </BarChart>
+                            <Legend />
+                            <Line type="monotone" dataKey="bar" stroke="#82ca9d" name="Bar" />
+                            <Line type="monotone" dataKey="cocina" stroke="#8884d8" name="Cocina" />
+                            <Line type="monotone" dataKey="otros" stroke="#FF0000" name="Otros" />
+                        </LineChart>
                     </ResponsiveContainer>
                 </div>
             </div>

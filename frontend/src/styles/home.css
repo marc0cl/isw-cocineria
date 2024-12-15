@@ -1,0 +1,194 @@
+.home-container {
+  display: flex;
+  flex-direction: column; /* Ahora la navbar estará encima, aside y main abajo */
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #003366;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 2000; /* Asegurar que quede por encima del aside */
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.3em;
+  cursor: pointer;
+  margin-right: 10px;
+  padding: 5px; /* padding constante */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-btn:hover {
+  background: #002651; /* un color fijo para el hover */
+}
+
+.hamburger-btn svg {
+  vertical-align: middle;
+}
+
+.navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.navbar li {
+  display: flex;
+  align-items: center;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: normal;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.navbar a:hover {
+  background-color: #002651;
+}
+
+.navbar a.active {
+  font-weight: bold;
+  background-color: #eef7ff;
+  color: #002651;
+}
+
+.home-aside {
+  position: fixed;
+  top: 50px; /* debajo de la navbar */
+  left: 0;
+  background: #f4f4f4;
+  height: calc(100vh - 50px);
+  border-right: 1px solid #ddd;
+  width: 250px;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  z-index: 1999;
+}
+
+/* Cuando está cerrado (por ejemplo, .aside-closed), lo desplazamos fuera de la vista en pantallas pequeñas */
+.aside-closed .home-aside {
+  transform: translateX(-250px);
+}
+
+.aside-open .home-aside {
+  transform: translateX(0);
+}
+
+.home-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.home-nav ul li {
+  border-bottom: 1px solid #ddd;
+}
+
+.home-nav ul li a {
+  display: block;
+  padding: 15px;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-nav ul li a:hover {
+  background: #ddeeff;
+}
+
+.home-nav ul li a.active {
+  font-weight: bold;
+  background: #eef7ff;
+  color: #002651;
+}
+
+/* Submenú */
+.submenu > a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submenu.open > a {
+  background: #ddeeff;
+}
+
+.sub-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f0f0f0;
+}
+
+.sub-menu li a {
+  font-size: 0.85em;
+  padding-left: 30px;
+}
+
+.home-main {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+  align-items: center; /* centra verticalmente */
+  background: white;
+  padding-top: 50px; /* Para que el contenido principal no quede debajo de la navbar */
+  margin-left: 0; /* Ajuste inicial */
+  transition: margin-left 0.3s ease;
+}
+
+/* Cuando el menú está abierto en pantallas grandes, empujar el main */
+@media (min-width: 769px) {
+  .aside-open .home-main {
+    margin-left: 250px;
+  }
+}
+
+.main-content {
+  width: 100%;
+  box-sizing: border-box
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .aside-open .home-aside {
+    position: fixed;
+    left: 0;
+    top: 50px;
+    height: calc(100vh - 50px);
+    width: 250px;
+    z-index: 1999;
+    transform: translateX(0);
+  }
+
+  .aside-closed .home-aside {
+    transform: translateX(-250px);
+  }
+
+  /* El main no se mueve a la derecha en pantallas pequeñas, se queda igual */
+  .home-main {
+    margin-left: 0;
+  }
+}

@@ -1,44 +1,459 @@
 [
-  { "name": "Pisco Sour", "price": 4500, "source": "bar" },
-  { "name": "Sour Sabor", "price": 5000, "source": "bar" },
-  { "name": "Sour Peruano", "price": 5000, "source": "bar" },
-  { "name": "Amaretto Sour", "price": 5000, "source": "bar" },
-  { "name": "Jack Sour", "price": 6500, "source": "bar" },
-  { "name": "Chardonnay Sour", "price": 5000, "source": "bar" },
-  { "name": "Cosmopolitan", "price": 5500, "source": "bar" },
-  { "name": "Kir Royal", "price": 4500, "source": "bar" },
-  { "name": "Martini Dry", "price": 5500, "source": "bar" },
-  { "name": "Martini Extra Dry", "price": 5500, "source": "bar" },
-  { "name": "Almendrado", "price": 5000, "source": "bar" },
-  { "name": "Negroni", "price": 6500, "source": "bar" },
-  { "name": "Ruso Blanco", "price": 5500, "source": "bar" },
-  { "name": "Ruso Negro", "price": 5500, "source": "bar" },
-  { "name": "Mimosa Frambuesa", "price": 5000, "source": "bar" },
-  { "name": "Caipirinha", "price": 5500, "source": "bar" },
-  { "name": "Caipiroska", "price": 5500, "source": "bar" },
-  { "name": "Old Fashioned", "price": 6500, "source": "bar" },
-  { "name": "Tequila Sunrise", "price": 5000, "source": "bar" },
-  { "name": "T. Margarita", "price": 5500, "source": "bar" },
-  { "name": "Margarita Blue", "price": 5500, "source": "bar" },
-  { "name": "Margarita Sabor", "price": 6000, "source": "bar" },
-  { "name": "Tequilinha", "price": 5000, "source": "bar" },
-  { "name": "Tom Collins", "price": 5500, "source": "bar" },
-  { "name": "John Collins", "price": 6500, "source": "bar" },
-  { "name": "Daiquiri Sabores", "price": 5500, "source": "bar" },
-  { "name": "Laguna Azul", "price": 6500, "source": "bar" },
-  { "name": "Manhattan", "price": 6500, "source": "bar" },
-  { "name": "Espresso Martini", "price": 6500, "source": "bar" },
-  { "name": "Orgasmo", "price": 5500, "source": "bar" },
-  { "name": "Big Sour Tradicional", "price": 8000, "source": "bar" },
-  { "name": "Big Sour Peruano", "price": 9000, "source": "bar" },
-  { "name": "Pizza Vegetariana", "price": 11900, "source": "cocina" },
-  { "name": "Pizza Amador", "price": 11900, "source": "cocina" },
-  { "name": "Pizza Margarita", "price": 11900, "source": "cocina" },
-  { "name": "Pizza Pollo", "price": 11900, "source": "cocina" },
-  { "name": "Pizza Mediterranea", "price": 11900, "source": "cocina" },
-  { "name": "Hamburguesa Casera", "price": 8500, "source": "cocina" },
-  { "name": "Sándwich Amador", "price": 11900, "source": "cocina" },
-  { "name": "Sándwich Sauce Cheese", "price": 9900, "source": "cocina" },
-  { "name": "Sándwich Italiano", "price": 9900, "source": "cocina" },
-  { "name": "Sándwich Roasted", "price": 9900, "source": "cocina" }
+  {
+    "name": "Pisco Sour",
+    "price": 4500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Pisco", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Sour Sabor",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vodka", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Sour Peruano",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Pisco", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Amaretto Sour",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Amaretto", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Jack Sour",
+    "price": 6500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Whisky", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Chardonnay Sour",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vino Chardonnay", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Cosmopolitan",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vodka", "amount": 50, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 20, "unit": "ml" },
+      { "name": "Limon", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Kir Royal",
+    "price": 4500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Espumante", "amount": 60, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" }
+    ]
+  },
+  {
+    "name": "Martini Dry",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Gin", "amount": 50, "unit": "ml" },
+      { "name": "Vermut Seco", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 80, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Martini Extra Dry",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Gin", "amount": 50, "unit": "ml" },
+      { "name": "Vermut Seco", "amount": 5, "unit": "ml" },
+      { "name": "Hielo", "amount": 80, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Almendrado",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Amaretto", "amount": 50, "unit": "ml" },
+      { "name": "Leche", "amount": 50, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Negroni",
+    "price": 6500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Gin", "amount": 30, "unit": "ml" },
+      { "name": "Campari", "amount": 30, "unit": "ml" },
+      { "name": "Vermut Dulce", "amount": 30, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Ruso Blanco",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vodka", "amount": 40, "unit": "ml" },
+      { "name": "Licor de Cafe", "amount": 20, "unit": "ml" },
+      { "name": "Leche", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 80, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Ruso Negro",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vodka", "amount": 40, "unit": "ml" },
+      { "name": "Licor de Cafe", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 80, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Mimosa Frambuesa",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Espumante", "amount": 60, "unit": "ml" },
+      { "name": "Jugo Naranja", "amount": 30, "unit": "ml" },
+      { "name": "Frambuesa", "amount": 20, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Caipirinha",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Cachaca", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Azucar", "amount": 10, "unit": "g" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Caipiroska",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vodka", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Azucar", "amount": 10, "unit": "g" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Old Fashioned",
+    "price": 6500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Whisky", "amount": 50, "unit": "ml" },
+      { "name": "Azucar", "amount": 5, "unit": "g" },
+      { "name": "Angostura", "amount": 5, "unit": "ml" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Tequila Sunrise",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Tequila", "amount": 50, "unit": "ml" },
+      { "name": "Jugo Naranja", "amount": 50, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 80, "unit": "g" }
+    ]
+  },
+  {
+    "name": "T Margarita",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Tequila", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Margarita Blue",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Tequila", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Curacao Azul", "amount": 15, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Margarita Sabor",
+    "price": 6000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Tequila", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Tequilinha",
+    "price": 5000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Tequila", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Azucar", "amount": 10, "unit": "g" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Tom Collins",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Gin", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Azucar", "amount": 10, "unit": "g" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "John Collins",
+    "price": 6500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Whisky", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Azucar", "amount": 10, "unit": "g" },
+      { "name": "Hielo", "amount": 100, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Daiquiri Sabores",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Ron", "amount": 50, "unit": "ml" },
+      { "name": "Limon", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Laguna Azul",
+    "price": 6500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vodka", "amount": 50, "unit": "ml" },
+      { "name": "Curacao Azul", "amount": 15, "unit": "ml" },
+      { "name": "Limon", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Manhattan",
+    "price": 6500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Whisky", "amount": 50, "unit": "ml" },
+      { "name": "Vermut Dulce", "amount": 20, "unit": "ml" },
+      { "name": "Angostura", "amount": 5, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Espresso Martini",
+    "price": 6500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Vodka", "amount": 50, "unit": "ml" },
+      { "name": "Cafe Espresso", "amount": 30, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 10, "unit": "ml" },
+      { "name": "Hielo", "amount": 90, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Orgasmo",
+    "price": 5500,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Amaretto", "amount": 20, "unit": "ml" },
+      { "name": "Baileys", "amount": 20, "unit": "ml" },
+      { "name": "Vodka", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 80, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Big Sour Tradicional",
+    "price": 8000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Pisco", "amount": 80, "unit": "ml" },
+      { "name": "Limon", "amount": 50, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 150, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Big Sour Peruano",
+    "price": 9000,
+    "source": "bar",
+    "ingredients": [
+      { "name": "Pisco", "amount": 80, "unit": "ml" },
+      { "name": "Limon", "amount": 50, "unit": "ml" },
+      { "name": "Jarabe Saborizante", "amount": 20, "unit": "ml" },
+      { "name": "Hielo", "amount": 150, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Pizza Vegetariana",
+    "price": 11900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Masa", "amount": 200, "unit": "g" },
+      { "name": "Queso", "amount": 100, "unit": "g" },
+      { "name": "Tomate", "amount": 50, "unit": "g" },
+      { "name": "Pimenton", "amount": 30, "unit": "g" },
+      { "name": "Cebolla", "amount": 30, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Pizza Amador",
+    "price": 11900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Masa", "amount": 200, "unit": "g" },
+      { "name": "Queso", "amount": 100, "unit": "g" },
+      { "name": "Jamon", "amount": 50, "unit": "g" },
+      { "name": "Tomate", "amount": 50, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Pizza Margarita",
+    "price": 11900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Masa", "amount": 200, "unit": "g" },
+      { "name": "Queso", "amount": 100, "unit": "g" },
+      { "name": "Tomate", "amount": 50, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Pizza Pollo",
+    "price": 11900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Masa", "amount": 200, "unit": "g" },
+      { "name": "Queso", "amount": 100, "unit": "g" },
+      { "name": "Pollo", "amount": 80, "unit": "g" },
+      { "name": "Tomate", "amount": 50, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Pizza Mediterranea",
+    "price": 11900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Masa", "amount": 200, "unit": "g" },
+      { "name": "Queso", "amount": 100, "unit": "g" },
+      { "name": "Tomate", "amount": 50, "unit": "g" },
+      { "name": "Aceitunas", "amount": 30, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Hamburguesa Casera",
+    "price": 8500,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Pan", "amount": 80, "unit": "g" },
+      { "name": "Carne", "amount": 120, "unit": "g" },
+      { "name": "Queso", "amount": 30, "unit": "g" },
+      { "name": "Lechuga", "amount": 20, "unit": "g" },
+      { "name": "Tomate", "amount": 30, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Sandwich Amador",
+    "price": 11900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Pan", "amount": 100, "unit": "g" },
+      { "name": "Queso", "amount": 50, "unit": "g" },
+      { "name": "Jamon", "amount": 50, "unit": "g" },
+      { "name": "Tomate", "amount": 30, "unit": "g" },
+      { "name": "Lechuga", "amount": 20, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Sandwich Sauce Cheese",
+    "price": 9900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Pan", "amount": 100, "unit": "g" },
+      { "name": "Queso", "amount": 50, "unit": "g" },
+      { "name": "Salsa", "amount": 20, "unit": "g" },
+      { "name": "Carne", "amount": 80, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Sandwich Italiano",
+    "price": 9900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Pan", "amount": 100, "unit": "g" },
+      { "name": "Queso", "amount": 50, "unit": "g" },
+      { "name": "Tomate", "amount": 30, "unit": "g" },
+      { "name": "Palta", "amount": 50, "unit": "g" }
+    ]
+  },
+  {
+    "name": "Sandwich Roasted",
+    "price": 9900,
+    "source": "cocina",
+    "ingredients": [
+      { "name": "Pan", "amount": 100, "unit": "g" },
+      { "name": "Queso", "amount": 50, "unit": "g" },
+      { "name": "Carne", "amount": 80, "unit": "g" },
+      { "name": "Cebolla", "amount": 30, "unit": "g" }
+    ]
+  }
 ]

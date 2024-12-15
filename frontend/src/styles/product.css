@@ -119,3 +119,35 @@ button:hover {
 button:focus {
     outline: none;
 }
+
+/* Estilo para la etiqueta de Cantidad de Stock */
+.stock-label {
+    font-weight: bold;
+    color: #000; /* negro */
+}
+
+/* Estilo para el valor de Cantidad de Stock en caso de ser menor o igual que la mínima */
+.stock-value {
+    font-weight: bold;
+}
+.stock-value-low {
+    color: red;
+}
+.stock-value-high {
+    color: green;
+}
+
+/* Estilo para la línea de Cantidad Mínima */
+.min-line {
+    color: grey;
+}
+
+.min-label {
+    font-weight: normal;
+    color: grey;
+}
+
+.min-value {
+    font-weight: normal;
+    color: grey;
+}

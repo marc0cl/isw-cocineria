@@ -1,26 +1,15 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { logout } from '@services/auth.service.js';
 import '../styles/home.css';
-import { FaBars, FaChevronRight, FaChevronDown } from 'react-icons/fa';
+import { FaChevronRight, FaChevronDown } from 'react-icons/fa';
+import Navbar from '../components/Navbar.jsx'; // importar el navbar
 
 const Home = () => {
     const user = JSON.parse(sessionStorage.getItem('usuario')) || '';
     const userRole = user?.rol;
-    const navigate = useNavigate();
-
+    useNavigate();
     const [menuOpen, setMenuOpen] = useState(true);    // Controla el aside (expandido/colapsado)
     const [inventoryOpen, setInventoryOpen] = useState(false); // Submenú Inventario
-
-    const logoutSubmit = () => {
-        try {
-            logout();
-            navigate('/auth');
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        }
-    };
-
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
@@ -32,16 +21,10 @@ const Home = () => {
 
     return (
         <div className={`home-container ${menuOpen ? 'aside-open' : 'aside-closed'}`}>
+            <Navbar onToggleMenu={toggleMenu} />
             <aside className="home-aside">
-                <div className="aside-header">
-                    <button className="hamburger-btn" onClick={toggleMenu}>
-                        <FaBars />
-                    </button>
-                    {menuOpen && <span className="aside-title">Menú</span>}
-                </div>
                 <nav className="home-nav">
                     <ul>
-                        {/* Esto es opcional según rol, puedes adaptar la lógica */}
                         {userRole === 'administrador' && (
                             <li>
                                 <NavLink to="/users" className={({ isActive }) => (isActive ? 'active' : '')}>

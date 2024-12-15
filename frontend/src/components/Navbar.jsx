@@ -1,39 +1,26 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from '@services/auth.service.js';
-import '@styles/navbar.css';
+import { FaBars } from 'react-icons/fa';
 
-const Navbar = () => {
+const Navbar = ({ onToggleMenu }) => {
     const navigate = useNavigate();
-    const user = JSON.parse(sessionStorage.getItem('usuario')) || '';
 
     const logoutSubmit = () => {
-        try {
-            logout();
-            navigate('/auth');
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        }
+        logout();
+        navigate('/auth');
     };
 
     return (
         <nav className="navbar">
+            <button className="hamburger-btn" onClick={onToggleMenu}>
+                <FaBars />
+            </button>
             <ul>
                 <li>
-                    <NavLink
-                        to="/home"
-                        className={({ isActive }) => (isActive ? 'active' : '')}
-                    >
-                        Inicio
-                    </NavLink>
+                    <NavLink to="/home">Inicio</NavLink>
                 </li>
                 <li>
-                    <NavLink
-                        to="/auth"
-                        onClick={logoutSubmit}
-                        className={({ isActive }) => (isActive ? 'active' : '')}
-                    >
-                        Cerrar sesión
-                    </NavLink>
+                    <NavLink to="/auth" onClick={logoutSubmit}>Cerrar sesión</NavLink>
                 </li>
             </ul>
         </nav>

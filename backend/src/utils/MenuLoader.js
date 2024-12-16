@@ -38,10 +38,16 @@ export class MenuLoader {
     }
 
     for (const item of this.menu) {
-      const { name, price, ingredients } = item;
+      const { name, price, ingredients, source } = item;
 
       if (!Array.isArray(ingredients) || ingredients.length === 0) {
-        this.finalMenu.menu.out_of_stock.push({ name, price, amount: 0 });
+        this.finalMenu.menu.out_of_stock.push({
+          name,
+          price,
+          amount: 0,
+          source,
+          ingredients: ingredients ? ingredients.map(ing => ing.name) : []
+        });
         continue;
       }
 
@@ -66,9 +72,21 @@ export class MenuLoader {
       }
 
       if (canMake && maxQuantity > 0) {
-        this.finalMenu.menu.on_stock.push({ name, price, amount: maxQuantity });
+        this.finalMenu.menu.on_stock.push({
+          name,
+          price,
+          amount: maxQuantity,
+          source,
+          ingredients: ingredients.map(ing => ing.name)
+        });
       } else {
-        this.finalMenu.menu.out_of_stock.push({ name, price, amount: 0 });
+        this.finalMenu.menu.out_of_stock.push({
+          name,
+          price,
+          amount: 0,
+          source,
+          ingredients: ingredients.map(ing => ing.name)
+        });
       }
     }
   }

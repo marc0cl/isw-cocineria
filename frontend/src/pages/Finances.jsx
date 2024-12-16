@@ -4,7 +4,7 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 import { getIncomesService, getExpensesService } from '@services/transaction.service.js';
-import { getCriticalProductsService } from '@services/inventory.service.js';
+import { fetchProducts } from '@services/inventory.service.js';
 import '@styles/finances.css';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -29,52 +29,54 @@ const Finances = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            // Obtener ingresos
-            const [incomesData, incomesError] = await getIncomesService();
-            if (incomesError) {
-                console.error('Error al obtener ingresos:', incomesError);
-                return;
+            try {
+                // Obtener ingresos
+                const [incomesData, incomesError] = await getIncomesService();
+                if (incomesError) {
+                    console.error('Error al obtener ingresos:', incomesError);
+                    return;
+                }
+
+                // Obtener gastos
+                const [expensesData, expensesError] = await getExpensesService();
+                if (expensesError) {
+                    console.error('Error al obtener gastos:', expensesError);
+                    return;
+                }
+
+                // Calcular totales y transacciones
+                const allTransactions = [
+                    ...incomesData.map(item => ({ ...item, type: 'income' })),
+                    ...expensesData.map(item => ({ ...item, type: 'expense' })),
+                ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                setTransactions(allTransactions);
+
+                const incomeTotal = incomesData.reduce((sum, item) => sum + parseFloat(item.amount), 0);
+                const expenseTotal = expensesData.reduce((sum, item) => sum + parseFloat(item.amount), 0);
+
+                setPieData([
+                    { name: 'Ingresos', value: incomeTotal },
+                    { name: 'Gastos', value: expenseTotal },
+                ]);
+
+                const allProducts = await fetchProducts();
+                const criticos = allProducts.data.filter(p => p.cantidadProducto < p.minThreshold);
+                setCriticalProducts(criticos);
+
+                const lineData = prepareLineChartData(incomesData, selectedRange);
+                setLineChartData(lineData);
+
+                setLoading(false);
+            } catch (error) {
+                console.error("Error en fetchData:", error);
+                setLoading(false);
             }
-
-            // Obtener gastos
-            const [expensesData, expensesError] = await getExpensesService();
-            if (expensesError) {
-                console.error('Error al obtener gastos:', expensesError);
-                return;
-            }
-
-            // Combinar transacciones y ordenar por fecha descendente
-            const allTransactions = [
-                ...incomesData.map(item => ({ ...item, type: 'income' })),
-                ...expensesData.map(item => ({ ...item, type: 'expense' })),
-            ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-            setTransactions(allTransactions);
-
-            // Calcular totales para el gráfico de torta
-            const incomeTotal = incomesData.reduce((sum, item) => sum + parseFloat(item.amount), 0);
-            const expenseTotal = expensesData.reduce((sum, item) => sum + parseFloat(item.amount), 0);
-
-            setPieData([
-                { name: 'Ingresos', value: incomeTotal },
-                { name: 'Gastos', value: expenseTotal },
-            ]);
-
-            // Obtener productos críticos
-            const [criticalData, criticalError] = await getCriticalProductsService();
-            if (!criticalError && criticalData) {
-                setCriticalProducts(criticalData.data);
-            }
-
-            // Preparar datos para el gráfico de líneas
-            const lineData = prepareLineChartData(incomesData, selectedRange);
-            setLineChartData(lineData);
-
-            setLoading(false);
         };
 
         fetchData();
     }, [selectedRange]);
+
 
     const prepareLineChartData = (incomesData, range) => {
         // Obtenemos la fecha actual
@@ -124,7 +126,6 @@ const Finances = () => {
     return (
         <div className="finances-container">
             <div className="charts-container">
-                {/* Gráfico de torta */}
                 <div className="chart-item pie-chart-container">
                     <h2>Ingresos vs Gastos</h2>
                     <ResponsiveContainer width="100%" height={400}>
@@ -150,6 +151,7 @@ const Finances = () => {
 
                 {/* Sección de Transacciones */}
                 <div className="chart-item tablef-container">
+
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
                         <table className="transactions-table">
@@ -176,8 +178,6 @@ const Finances = () => {
                         </table>
                     </div>
                 </div>
-
-                {/* Tabla de productos críticos */}
                 {criticalProducts && criticalProducts.length > 0 && (
                     <div className="chart-item table-container">
                         <h2>Productos Críticos</h2>
@@ -187,9 +187,9 @@ const Finances = () => {
                                 <tr>
                                     <th>Producto</th>
                                     <th>Cantidad Actual</th>
-                                    <th>Mínimo Permitido</th> {/* Nueva columna */}
+                                    <th>Mínimo Permitido</th>
                                     <th>Unidad</th>
-                                    <th>Proveedor</th> {/* Ahora en lugar del ID, mostraremos el nombre */}
+                                    <th>Proveedor</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -197,9 +197,9 @@ const Finances = () => {
                                     <tr key={idx}>
                                         <td>{prod.nombreProducto}</td>
                                         <td>{prod.cantidadProducto}</td>
-                                        <td>{prod.minThreshold}</td> {/* Mostrar el umbral mínimo */}
+                                        <td>{prod.minThreshold}</td>
                                         <td>{prod.stockUnit}</td>
-                                        <td>{prod.supplierName}</td> {/* Mostrar el nombre del proveedor */}
+                                        <td>{prod.supplierName || 'N/A'}</td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -208,7 +208,6 @@ const Finances = () => {
                     </div>
                 )}
 
-                {/* Gráfico de líneas - ventas por fuente */}
                 <div className="chart-item">
                     <h2>Ventas por Fuente (últimos {selectedRange} días)</h2>
                     <div style={{ marginBottom: '10px' }}>

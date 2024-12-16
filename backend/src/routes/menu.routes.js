@@ -6,9 +6,9 @@ import { getAvailableMenuController, getFinalMenuController } from "../controlle
 
 const router = Router();
 
-router.use(authenticateJwt);
-
-router.get("/", isAdmin, isGarzon, getFinalMenuController);
 router.get("/available", getAvailableMenuController);
+
+router.use(authenticateJwt);
+router.get("/", isGarzon, getFinalMenuController);
 
 export default router;

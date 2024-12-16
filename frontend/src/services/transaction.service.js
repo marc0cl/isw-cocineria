@@ -18,20 +18,12 @@ export async function getExpensesService(params = {}) {
     }
 }
 
-export async function addIncomeService(data) {
-    try {
-        const response = await axios.post('/income', data);
-        return [response.data, null];
-    } catch (error) {
-        return [null, error.response?.data?.message || error.message];
-    }
-}
-
 export async function addIncomesService(dataArray) {
     try {
         const response = await axios.post('/income/bulk', dataArray);
         return [response.data, null];
     } catch (error) {
+        console.log(error)
         return [null, error.response?.data?.message || error.message];
     }
 }

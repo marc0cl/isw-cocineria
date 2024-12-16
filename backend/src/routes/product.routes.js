@@ -7,10 +7,7 @@ import {
   deleteProduct,
   getProduct,
   getProducts,
-  updateProduct,
-  getCriticalProducts,
-  updateStockAfterSale,
-  checkAvailability // nuevo controlador
+  updateProduct
 } from "../controllers/product.controller.js";
 
 const router = Router();
@@ -18,10 +15,6 @@ const router = Router();
 router.use(authenticateJwt);
 router.get("/", getProducts);
 router.get("/detail/", getProduct);
-router.get("/critical", isAdmin, getCriticalProducts);
-router.post("/update-stock", isAdmin, updateStockAfterSale);
-
-router.post("/check-availability", checkAvailability);
 
 router.use(isAdmin);
 router.post("/", createProduct);

@@ -10,6 +10,7 @@ import {
   transactionBodyValidation,
   transactionQueryValidation,
 } from "../validations/transaction.validation.js";
+import { getFinalMenuService } from "../services/menu.service.js"
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 import { transactionsArrayValidation } from "../validations/transaction.validation.js";
 
@@ -43,24 +44,6 @@ export async function getIncomes(req, res) {
   }
 }
 
-export async function addIncome(req, res) {
-  try {
-    const { body } = req;
-    const data = { ...body, type: "income" };
-
-    const { error } = transactionsArrayValidation.validate([data]);
-
-    if (error) return handleErrorClient(res, 400, error.message);
-
-    const [, errorIncome] = await addTransactionService([data]);
-    if (errorIncome) return handleErrorClient(res, 400, errorIncome);
-
-    res.status(201).send("Ingreso añadido correctamente");
-  } catch (error) {
-    handleErrorServer(res, 500, error.message);
-  }
-}
-
 export async function addMultipleIncomes(req, res) {
   try {
     const { body } = req;
@@ -69,11 +52,42 @@ export async function addMultipleIncomes(req, res) {
     const { error } = transactionsArrayValidation.validate(data);
     if (error) return handleErrorClient(res, 400, error.message);
 
+    const [menuData, errorMenu] = await getFinalMenuService();
+    if (errorMenu) return handleErrorClient(res, 500, errorMenu);
+
+    // Agrupar productos solicitados
+    const productCount = data.reduce((acc, prod) => {
+      acc[prod.description] = (acc[prod.description] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Validar con stock
+    const insufficientProducts = [];
+    for (const [productName, requestedQty] of Object.entries(productCount)) {
+      const productInStock = menuData.menu.on_stock.find(item => item.name === productName);
+
+      // Si no existe el producto en on_stock o su cantidad es menor a la solicitada
+      if (!productInStock || productInStock.amount < requestedQty) {
+        insufficientProducts.push({
+          product: productName,
+          requested: requestedQty,
+          available: productInStock ? productInStock.amount : 0
+        });
+      }
+    }
+
+    if (insufficientProducts.length > 0) {
+      // Retorna un arreglo con los productos que no se pueden surtir totalmente
+      return res.status(200).send(insufficientProducts);
+    }
+
+    // Si no hay insuficientes, proceder con la creación del ingreso
     const [, errorIncome] = await addTransactionService(data);
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
-    res.status(201).send("Ingresos añadidos correctamente");
+    res.status(201).send([]);
   } catch (error) {
+    console.log("Error: " + error)
     handleErrorServer(res, 500, error.message);
   }
 }

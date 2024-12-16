@@ -1,3 +1,4 @@
+// src/index.js
 "use strict";
 import cors from "cors";
 import morgan from "morgan";
@@ -10,11 +11,11 @@ import { cookieKey, HOST, PORT } from "./config/configEnv.js";
 import { connectDB } from "./config/configDb.js";
 import { createUsers } from "./config/initialSetup.js";
 import { passportJwtSetup } from "./auth/passport.auth.js";
+import { MenuLoader } from "./utils/MenuLoader.js";
 
 async function setupServer() {
   try {
     const app = express();
-
     app.disable("x-powered-by");
 
     app.use(
@@ -38,7 +39,6 @@ async function setupServer() {
     );
 
     app.use(cookieParser());
-
     app.use(morgan("dev"));
 
     app.use(
@@ -59,7 +59,10 @@ async function setupServer() {
 
     passportJwtSetup();
 
+    await MenuLoader.init();
+
     app.use("/api", indexRoutes);
+
 
     app.listen(PORT, () => {
       console.log(`=> Servidor corriendo en ${HOST}:${PORT}/api`);

@@ -4,7 +4,6 @@ import Prov from "../entity/prov.entity.js";
 import { AppDataSource } from "../config/configDb.js";
 import { addTransactionService } from "./transaction.service.js";
 
-// Funciones auxiliares para conversión de unidades a la base (g o ml)
 function convertToGrams(value, unit) {
   switch (unit) {
     case "g":
@@ -79,7 +78,6 @@ export async function updateProductService(query, body) {
       return [null, "Producto no encontrado"];
     }
 
-    // Transformación de stockUnit si se envía
     let finalStockUnit = productFound.stockUnit;
     let finalCantidadProducto = productFound.cantidadProducto;
 
@@ -102,10 +100,6 @@ export async function updateProductService(query, body) {
           return [null, "Unidad de medida no válida. Use g/kg/mg/t o ml/l."];
         }
       } else {
-        // Si no se manda cantidadProducto pero sí la unidad, solo actualizamos la unidad
-        // sin cambiar la cantidad, pues no hay valor nuevo que convertir.
-        // Sin embargo, esto puede resultar en inconsistencia si la unidad cambia
-        // sin cambiar la cantidad. Podrías decidir no permitir esto.
         return [null, "Debe enviar cantidadProducto al cambiar la unidad de medida"];
       }
     } else if (body.cantidadProducto !== undefined) {
@@ -182,19 +176,7 @@ export async function deleteProductService(query) {
   }
 }
 
-function generateCodigoIdentificador() {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  const length = 20;
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters.charAt(randomIndex);
-  }
-  return result;
-}
-
 // Crear producto
-
 export async function createProductService(productData) {
   const productRepository = AppDataSource.getRepository(Product);
   const provRepository = AppDataSource.getRepository(Prov);
@@ -323,112 +305,4 @@ export async function createProductService(productData) {
   await productRepository.save(newProduct);
 
   return [newProduct, null];
-}
-
-export async function getCriticalProductsService() {
-  try {
-    const productRepository = AppDataSource.getRepository(Product);
-    const provRepository = AppDataSource.getRepository(Prov);
-
-    const products = await productRepository.find();
-    if (!products || products.length === 0) return [[], null];
-
-    const critical = products.filter(p => p.cantidadProducto < p.minThreshold);
-
-    if (critical.length === 0) {
-      return [[], null];
-    }
-
-    const provs = await provRepository.find();
-    const provMap = {};
-    provs.forEach(prov => {
-      provMap[prov.id] = prov.nombre;
-    });
-
-    const criticalWithProvName = critical.map(prod => ({
-      ...prod,
-      supplierName: prod.supplierId ? provMap[prod.supplierId] || "N/A" : "N/A"
-    }));
-
-    return [criticalWithProvName, null];
-  } catch (error) {
-    console.error("Error al obtener productos críticos:", error);
-    return [null, "Error interno del servidor"];
-  }
-}
-
-export async function updateStockService(ingredients) {
-  try {
-    const productRepository = AppDataSource.getRepository(Product);
-
-    for (const ing of ingredients) {
-      const productFound = await productRepository.findOne({
-        where: { nombreProducto: ing.name }
-      });
-      if (productFound) {
-        const newAmount = productFound.cantidadProducto - ing.amount;
-        if (newAmount < 0) {
-          return [null, `Stock insuficiente para ${ing.name}`];
-        }
-        productFound.cantidadProducto = newAmount;
-        productFound.updatedAt = new Date();
-        await productRepository.save(productFound);
-      } else {
-        return [null, `Producto ${ing.name} no encontrado en inventario`];
-      }
-    }
-
-    return ["OK", null];
-  } catch (error) {
-    console.error("Error al actualizar el stock:", error);
-    return [null, "Error interno del servidor"];
-  }
-}
-
-export async function checkAvailabilityService(products) {
-  try {
-    const productRepository = AppDataSource.getRepository(Product);
-    const results = [];
-
-    for (const prod of products) {
-      const { name, ingredients } = prod;
-
-      if (!Array.isArray(ingredients) || ingredients.length === 0) {
-        results.push({ name, available: false, maxQuantity: 0 });
-        continue;
-      }
-
-      let maxQuantity = Infinity;
-
-      for (const ing of ingredients) {
-        const ingName = ing.name.trim();
-        const ingAmount = ing.amount;
-
-        const stockItem = await productRepository.findOne({
-          where: { nombreProducto: ingName }
-        });
-
-        if (!stockItem || stockItem.cantidadProducto < ingAmount) {
-          maxQuantity = 0;
-          break;
-        } else {
-          const currentMax = Math.floor(stockItem.cantidadProducto / ingAmount);
-          if (currentMax < maxQuantity) {
-            maxQuantity = currentMax;
-          }
-        }
-      }
-
-      results.push({
-        name,
-        available: maxQuantity > 0,
-        maxQuantity: maxQuantity > 0 ? maxQuantity : 0
-      });
-    }
-
-    return [results, null];
-  } catch (error) {
-    console.error("Error al verificar disponibilidad:", error);
-    return [null, "Error interno del servidor"];
-  }
 }

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import menuData from '../../menu.json';
+import { fetchMenu } from '@services/menu.service.js';
 import { addIncomesService } from '@services/transaction.service.js';
-import { updateProductStock, checkAvailabilityService } from '@services/inventory.service.js';
 import Spinner from '@components/Login/Spinner';
 import SuccessTick from '@components/Login/SuccessTick';
 import ErrorX from '@components/Login/ErrorX';
@@ -16,27 +15,19 @@ const AddIncome = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [stockErrors, setStockErrors] = useState([]); // Nuevo estado para manejar errores de stock
 
     useEffect(() => {
         updateMenuItems();
     }, []);
 
     const updateMenuItems = async () => {
-        const [availability, errorAvail] = await checkAvailabilityService(menuData);
-        if (errorAvail) {
-            console.error("Error verificando disponibilidad:", errorAvail);
-            const updated = menuData.map(item => ({ ...item, disabled: true }));
-            setMenuItems(updated);
-            return;
-        }
+        const menuResponse = await fetchMenu();
+        // { menu: { on_stock: [...], out_of_stock: [...] } }
 
-        const updatedMenu = menuData.map(item => {
-            const found = availability.find(a => a.name === item.name);
-            if (found) {
-                return { ...item, disabled: !found.available };
-            }
-            return { ...item, disabled: true };
-        });
+        const stockItems = menuResponse.menu.on_stock.map(item => ({ ...item, disabled: false }));
+        const outOfStockItems = menuResponse.menu.out_of_stock.map(item => ({ ...item, disabled: true }));
+        const updatedMenu = [...stockItems, ...outOfStockItems];
 
         setMenuItems(updatedMenu);
     };
@@ -54,19 +45,17 @@ const AddIncome = () => {
             return;
         }
 
-        // Crear múltiples entradas individuales del mismo producto
         const newProducts = Array.from({ length: qty }).map(() => ({
             amount: selectedItem.price,
             description: selectedItem.name,
-            source: selectedItem.source,
-            ingredients: selectedItem.ingredients
+            source: selectedItem.source || 'otros',
+            ingredients: []
         }));
 
         setSelectedProducts(prev => [...prev, ...newProducts]);
         reset({ product: '', quantity: '' });
     };
 
-    // Ahora, en vez de index, eliminaremos un producto por su nombre (eliminando de a uno)
     const handleRemoveProduct = (description) => {
         const indexToRemove = selectedProducts.findIndex(prod => prod.description === description);
         if (indexToRemove > -1) {
@@ -89,9 +78,9 @@ const AddIncome = () => {
         setIsLoading(true);
         setIsSuccess(false);
         setIsError(false);
+        setStockErrors([]); // Reiniciar errores de stock antes de la petición
 
         try {
-            // Filtramos las propiedades para no incluir ingredients ni quantity
             const incomeProducts = selectedProducts.map(prod => ({
                 amount: prod.amount,
                 description: prod.description,
@@ -99,42 +88,29 @@ const AddIncome = () => {
                 type: 'income'
             }));
 
-            const [ , errorTransaction] = await addIncomesService(incomeProducts);
+            const [result, errorTransaction] = await addIncomesService(incomeProducts);
+            console.log(result)
+            setIsLoading(false);
+            setShowConfirmation(false);
+
             if (errorTransaction) {
                 setIsError(true);
-                setIsLoading(false);
                 setError('general', { type: 'server', message: errorTransaction });
+            } else if (Array.isArray(result) && result.length > 0) {
+                setStockErrors(result);
+                setSelectedProducts([]);
+                setIsLoading(false);
             } else {
-                // Descontar inventario basado en ingredientes
-                const ingredientsToDeduct = {};
-                selectedProducts.forEach(prod => {
-                    prod.ingredients.forEach(ing => {
-                        const key = ing.name;
-                        if (!ingredientsToDeduct[key]) {
-                            ingredientsToDeduct[key] = { name: ing.name, amount: 0, unit: ing.unit };
-                        }
-                        ingredientsToDeduct[key].amount += ing.amount;
-                    });
-                });
-
-                const ingredientsArray = Object.values(ingredientsToDeduct);
-                const [updateResp, updateErr] = await updateProductStock(ingredientsArray);
-                if (updateErr) {
-                    console.error("Error actualizando stock:", updateErr);
-                    setIsError(true);
-                    setIsLoading(false);
-                    return;
-                }
-
+                // Éxito (arreglo vacío)
                 setIsSuccess(true);
                 setIsLoading(false);
                 setSelectedProducts([]);
                 await updateMenuItems();
-
                 setTimeout(() => {
                     reset();
                     setIsSuccess(false);
                 }, 2000);
+                setStockErrors([]); // Aseguramos limpiar errores de stock
             }
         } catch (error) {
             console.error('Error al registrar el ingreso:', error);
@@ -148,7 +124,6 @@ const AddIncome = () => {
         setShowConfirmation(false);
     };
 
-    // Agrupar productos por descripción para visualizarlos x2, x10, etc.
     const groupedProducts = selectedProducts.reduce((acc, product) => {
         const key = product.description;
         if (!acc[key]) {
@@ -174,7 +149,7 @@ const AddIncome = () => {
                         <option value="">Seleccionar producto</option>
                         {menuItems.map((item, index) => (
                             <option key={index} value={item.name} disabled={item.disabled}>
-                                {item.name} - ${item.price} {item.disabled ? '(Sin stock suficiente)' : ''}
+                                {item.name} - ${item.price} {item.disabled ? '(Sin stock)' : ''}
                             </option>
                         ))}
                     </select>
@@ -206,7 +181,6 @@ const AddIncome = () => {
             {productEntries.length > 0 && (
                 <div className="form" style={{ marginTop: '20px' }}>
                     <h2>Productos seleccionados</h2>
-                    {/* Contenedor scrollable */}
                     <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
                         <ul style={{ listStyle: 'none', padding: 0 }}>
                             {productEntries.map((entry, idx) => (
@@ -241,6 +215,22 @@ const AddIncome = () => {
                                 isError ? <ErrorX /> :
                                     'Registrar Ingreso'}
                     </button>
+                </div>
+            )}
+
+            {stockErrors.length > 0 && (
+                <div className="stock-info-container">
+                    <div className="stock-info-header">
+                        <h3>Stock no disponible</h3>
+                        <button onClick={() => setStockErrors([])} className="close-button">X</button>
+                    </div>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        {stockErrors.map((item, idx) => (
+                            <li key={idx} style={{ marginBottom: '10px' }}>
+                                {item.product} - Disponible: {item.available}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
 

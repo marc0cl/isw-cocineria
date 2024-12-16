@@ -1,72 +1,69 @@
-.main-container {
+.users-container {
+    padding-top: 50px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: stretch;
     width: 100%;
 }
 
-.table-container {
+.users-table-container {
     width: 90%;
     max-width: 1400px;
     margin: 0 auto;
 }
 
-.top-table {
+.users-top-table {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
-.title-table {
+.users-title-table {
     color: #003366;
-    margin-left: 70px;
+    margin: 0;
 }
 
-.filter-actions {
+.users-filter-actions {
     display: flex;
     gap: 10px;
-    button {
-        background: rgba(255, 255, 255, 0.87);
-        border: #fff;
-        cursor: pointer;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        
-    }
 }
 
-.delete-user-button {
-    margin-right: 70px;
+.users-filter-actions button {
+    background: rgba(255, 255, 255, 0.87);
+    border: none;
+    cursor: pointer;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.users-delete-user-button {
+    margin: 0;
 }
 
 @media (max-width: 767px) {
-    .title-table {
+    .users-title-table {
         margin: 0;
     }
-    .top-table {
-        display: flex;
+    .users-top-table {
         flex-direction: column;
         gap: 10px;
     }
 
-    .delete-user-button {
-        margin-right: 0;
-    }
-
-    .filter-actions {
+    .users-filter-actions {
         margin-bottom: 10px;
     }
-    .table-container {
+
+    .users-table-container {
         margin: 0;
         width: 352px;
         height: 500px;
     }
+
     .popup {
         width: 350px;
         height: 600px;
     }
+
     .popup .form {
         padding: 20px;
     }
@@ -81,11 +78,4 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    .title-table {
-        margin-left: 35px;
-    }
-
-    .delete-user-button {
-        margin-right: 35px;
-    }
 }

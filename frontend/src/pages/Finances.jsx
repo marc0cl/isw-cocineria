@@ -61,7 +61,7 @@ const Finances = () => {
                 ]);
 
                 const allProducts = await fetchProducts();
-                const criticos = allProducts.data.filter(p => p.cantidadProducto < p.minThreshold);
+                const criticos = allProducts.data.filter(p => p.cantidadProducto <= p.minThreshold);
                 setCriticalProducts(criticos);
 
                 const lineData = prepareLineChartData(incomesData, selectedRange);

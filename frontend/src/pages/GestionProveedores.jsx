@@ -110,7 +110,6 @@ const GestionProveedores = () => {
 
   return (
     <div className="gestion-proveedores-container">
-      <h1 className="titulo-proveedores">Proveedores</h1>
       <ProvSearch
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

@@ -148,7 +148,10 @@ const Finances = () => {
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="chart-item table-container">
+
+                {/* Sección de Transacciones */}
+                <div className="chart-item tablef-container">
+
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
                         <table className="transactions-table">

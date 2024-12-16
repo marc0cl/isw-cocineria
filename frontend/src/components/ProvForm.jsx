@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/provform.css';
+import { getProvsService } from '../services/prov.service.js';
 
 
 const ProvForm = ({ onSubmit, initialData }) => {
@@ -28,7 +29,21 @@ const ProvForm = ({ onSubmit, initialData }) => {
     });
   };
 
-  const validate = () => {
+  const isEmailUnique = async (email) => {
+    const [response, error] = await getProvsService();
+    if (error) {
+      console.error('Error fetching providers:', error);
+      return false;
+    }
+    if (!response || !Array.isArray(response.data)) {
+      console.error('Invalid data format for providers:', response);
+      return false;
+    }
+    const provs = response.data;
+    return !provs.some((prov) => prov.email === email);
+  };
+
+  const validate = async () => {
     let newErrors = {};
 
     if (!formData.nombre) {
@@ -55,6 +70,8 @@ const ProvForm = ({ onSubmit, initialData }) => {
       newErrors = { ...newErrors, email: 'El email es requerido' };
     } else if (!formData.email.endsWith('@gmail.cl')) {
       newErrors = { ...newErrors, email: 'El email debe terminar en @gmail.cl' };
+    } else if (!(await isEmailUnique(formData.email))) {
+      newErrors = { ...newErrors, email: 'El email ya está en uso' };
     }
 
     if (!formData.medioPago) {
@@ -70,9 +87,9 @@ const ProvForm = ({ onSubmit, initialData }) => {
     return newErrors;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
+    const validationErrors = await validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {

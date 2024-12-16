@@ -1,5 +1,6 @@
 "use strict";
 import { Router } from "express";
+import menuRoutes from "./menu.routes.js";
 import userRoutes from "./user.routes.js";
 import authRoutes from "./auth.routes.js";
 import provRoutes from "./prov.routes.js";
@@ -17,6 +18,7 @@ router
   .use("/user", userRoutes)
   .use("/expense", expensesRoutes)
   .use("/income", incomeRoutes)
-  .use("/shift",shiftRoutes);
+  .use("/shift",shiftRoutes)
+  .use("/menu", menuRoutes);
 
 export default router;

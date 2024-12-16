@@ -3,7 +3,6 @@ import { Router } from "express";
 import { isAdmin } from "../middlewares/authorization.middleware.js";
 import { authenticateJwt } from "../middlewares/authentication.middleware.js";
 import {
-  addIncome,
   addMultipleIncomes,
   deleteIncome,
   getIncome,
@@ -15,7 +14,6 @@ const router = Router();
 
 router.use(authenticateJwt);
 
-router.post("/", addIncome);
 router.post("/bulk", addMultipleIncomes);
 
 router

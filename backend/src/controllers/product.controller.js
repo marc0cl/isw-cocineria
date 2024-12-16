@@ -1,13 +1,10 @@
 "use strict";
 import {
-  checkAvailabilityService,
   createProductService,
   deleteProductService,
-  getCriticalProductsService,
   getProductService,
   getProductsService,
   updateProductService,
-  updateStockService
 } from "../services/product.service.js";
 import {
   productBodyUpdateValidation,
@@ -49,17 +46,6 @@ export async function getProducts(req, res) {
     products.length === 0
       ? handleSuccess(res, 204)
       : handleSuccess(res, 200, "Productos encontrados", products);
-  } catch (error) {
-    handleErrorServer(res, 500, error.message);
-  }
-}
-
-// Obtener productos críticos
-export async function getCriticalProducts(req, res) {
-  try {
-    const [criticalProducts, errorCritical] = await getCriticalProductsService();
-    if (errorCritical) return handleErrorClient(res, 404, errorCritical);
-    handleSuccess(res, 200, "Productos críticos encontrados", criticalProducts);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }
@@ -147,41 +133,6 @@ export async function createProduct(req, res) {
       return handleErrorClient(res, 400, "Error al insertar el producto", errorNewProduct.message || errorNewProduct);
 
     handleSuccess(res, 201, "Producto insertado con éxito", newProduct);
-  } catch (error) {
-    handleErrorServer(res, 500, error.message);
-  }
-}
-
-// Actualizar stock tras venta
-export async function updateStockAfterSale(req, res) {
-  try {
-    const { ingredients } = req.body;
-    if (!Array.isArray(ingredients) || ingredients.length === 0) {
-      return handleErrorClient(res, 400, "No se proporcionaron ingredientes.");
-    }
-
-    const [updated, errorUpdate] = await updateStockService(ingredients);
-    if (errorUpdate) return handleErrorClient(res, 400, errorUpdate);
-
-    handleSuccess(res, 200, "Stock actualizado correctamente", updated);
-  } catch (error) {
-    handleErrorServer(res, 500, error.message);
-  }
-}
-
-// Verificar disponibilidad
-export async function checkAvailability(req, res) {
-  try {
-    const { products } = req.body;
-
-    if (!Array.isArray(products) || products.length === 0) {
-      return handleErrorClient(res, 400, "Debes proporcionar un arreglo de productos");
-    }
-
-    const [results, errorResults] = await checkAvailabilityService(products);
-    if (errorResults) return handleErrorClient(res, 400, errorResults);
-
-    handleSuccess(res, 200, "Disponibilidad verificada", results);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service';
 import { getProvsService } from '@services/prov.service';
+import useDeleteProduct from '../hooks/product/proDelete';
+import DeleteIcon from '../assets/deleteIcon.svg';
 import '../styles/Product.css';
 
 const ProductPage = () => {
@@ -19,6 +21,8 @@ const ProductPage = () => {
     "comestible": "cocina",
     "insumo": "otro"
   };
+
+  const { handleDelete } = useDeleteProduct(setProducts);
 
   useEffect(() => {
     const loadData = async () => {
@@ -65,7 +69,6 @@ const ProductPage = () => {
       const details = await fetchProductDetail(nombreProducto);
       setProductDetail(details.data);
       setShowDetailModal(true);
-
     } catch (err) {
       setError('Error al obtener los detalles del producto.');
     }
@@ -98,24 +101,41 @@ const ProductPage = () => {
               <p>No se encontraron productos con ese nombre.</p>
           ) : (
               filteredProducts.map((product) => (
-                  <div
-                      key={product.id}
-                      className="product-card"
+                  <div key={product.id} className="product-card">
+                    <div
+                      className="product-info"
                       onClick={() => handleProductClick(product.nombreProducto)}
-                  >
-                    <h2>{product.nombreProducto || 'Producto sin nombre'}</h2>
-                    <p>
-                      <span className="stock-label">Cantidad de Stock: </span>
-                      <span
-                          className={product.cantidadProducto <= product.minThreshold ? 'stock-value stock-value-low' : 'stock-value stock-value-high'}
-                      > {product.cantidadProducto} {product.stockUnit}
-                      </span>
-                    </p>
-                    <p className="min-line">
-                      <span className="min-label">Cantidad Mínima: </span>
-                      <span className="min-value">{product.minThreshold} {product.stockUnit}</span>
-                    </p>
-
+                    >
+                      <h2>{product.nombreProducto || 'Producto sin nombre'}</h2>
+                      <p>
+                        <span className="stock-label">Cantidad de Stock: </span>
+                        <span
+                          className={
+                            product.cantidadProducto <= product.minThreshold
+                              ? 'stock-value stock-value-low'
+                              : 'stock-value stock-value-high'
+                          }
+                        >
+                          {product.cantidadProducto} {product.stockUnit}
+                        </span>
+                      </p>
+                      <p className="min-line">
+                        <span className="min-label">Cantidad Mínima: </span>
+                        <span className="min-value">{product.minThreshold} {product.stockUnit}</span>
+                      </p>
+                    </div>
+                    <div className="product-actions">
+                      {}
+                      <button
+                        className="delete-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(product.nombreProducto);
+                        }}
+                      >
+                        <img src={DeleteIcon} alt="delete" />
+                      </button>
+                    </div>
                   </div>
               ))
           )}
@@ -125,9 +145,7 @@ const ProductPage = () => {
             <div className="product-detail-modal">
               <div className="modal-content">
                 <h2>{productDetail.nombreProducto}</h2>
-                <p><strong>Fecha
-                  Ingreso:</strong> {productDetail.createdAt ? new Date(productDetail.createdAt).toLocaleDateString() : 'No disponible'}
-                </p>
+                <p><strong>Fecha Ingreso:</strong> {productDetail.createdAt ? new Date(productDetail.createdAt).toLocaleDateString() : 'No disponible'}</p>
                 <p><strong>Última Actualización:</strong> {productDetail.updatedAt ? new Date(productDetail.updatedAt).toLocaleDateString() : 'No disponible'}</p>
                 <p><strong>Stock:</strong> {productDetail.cantidadProducto} {productDetail.stockUnit}</p>
                 <p><strong>Tipo de Producto:</strong> {tipoMap[productDetail.tipoDeProducto] || productDetail.tipoDeProducto || 'No especificado'}</p>

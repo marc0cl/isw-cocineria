@@ -1,3 +1,4 @@
+
 .psearch-container {
     display: flex;
     align-items: center;
@@ -11,6 +12,7 @@
     font-size: 16px;
     margin-right: 8px;
 }
+
 
 .psearch-input-table {
     padding: 8px 16px;

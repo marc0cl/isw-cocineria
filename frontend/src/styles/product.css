@@ -2,7 +2,6 @@
 .product-page {
     font-family: Arial, sans-serif;
     padding: 20px;
-    background-color: #f5f5f5;
 }
 
 h1 {
@@ -39,9 +38,9 @@ h1 {
     background-color: white;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .product-card:hover {

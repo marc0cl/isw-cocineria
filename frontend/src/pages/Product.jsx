@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service';
 import { getProvsService } from '@services/prov.service';
-import '../styles/Product.css';
+import '../styles/product.css';
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);

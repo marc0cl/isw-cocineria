@@ -2,14 +2,18 @@ import React, { useEffect, useState} from "react";
 import { showSuccessAlert, deleteDataAlert } from "../helpers/sweetAlert";
 import Table from '../components/Table';
 import ProvForm from "../components/ProvForm";
+import ProvSearch from "../components/ProvSearch";
 import '../styles/GestionProveedores.css';
 import { getProvsService, addProvService, deleteProvService, updateProvService } from '../services/prov.service.js';
 
 const GestionProveedores = () => {
   const [proveedores, setProveedores] = useState([]);
+  const [filteredProveedores, setFilteredProveedores] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedProveedor, setSelectedProveedor] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchBy, setSearchBy] = useState('nombre');
 
   useEffect(() => {
     const fetchProveedores = async () => {
@@ -18,11 +22,19 @@ const GestionProveedores = () => {
         console.error('Error fetching proveedores:', error);
       } else {
         setProveedores(data.data);
+        setFilteredProveedores(data.data);
       }
     };
 
     fetchProveedores();
   }, []);
+
+  useEffect(() => {
+    const results = proveedores.filter(prov =>
+      prov[searchBy].toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProveedores(results);
+  }, [searchTerm, searchBy, proveedores]);
 
   const handleRegisterClick = () => {
     setShowForm(true);
@@ -98,7 +110,13 @@ const GestionProveedores = () => {
 
   return (
     <div className="gestion-proveedores-container">
-      <h1 className="titulo-proveedores">Proveedores</h1>
+      <ProvSearch
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Buscar..."
+        searchBy={searchBy}
+        onSearchByChange={(e) => setSearchBy(e.target.value)}
+      />
       <div className="button-container">
         <button className="delete-button" onClick={handleDeleteClick}>
           <img src="https://img.icons8.com/material-outlined/24/trash--v1.png" alt="Delete" />
@@ -123,7 +141,7 @@ const GestionProveedores = () => {
       </div>
       <Table 
         columns={columns} 
-        data={proveedores} 
+        data={filteredProveedores} 
         onSelectionChange={(selectedData) => setSelectedProveedor(selectedData[0])}
       />
     </div>

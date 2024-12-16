@@ -151,19 +151,15 @@
 .home-main {
   flex: 1;
   display: flex;
-  justify-content: center; /* centra horizontalmente */
-  align-items: center; /* centra verticalmente */
+  flex-direction: column;  /* nuevo */
   background: white;
-  padding-top: 50px; /* Para que el contenido principal no quede debajo de la navbar */
-  margin-left: 0; /* Ajuste inicial */
+  margin-left: 0;
   transition: margin-left 0.3s ease;
+  /* Eliminar justify-content y align-items */
 }
 
-/* Cuando el menú está abierto en pantallas grandes, empujar el main */
-@media (min-width: 769px) {
-  .aside-open .home-main {
-    margin-left: 250px;
-  }
+.aside-open .home-main {
+  margin-left: clamp(120px, 20vw, 100px);
 }
 
 .main-content {
@@ -186,9 +182,25 @@
   .aside-closed .home-aside {
     transform: translateX(-250px);
   }
+}
 
-  /* El main no se mueve a la derecha en pantallas pequeñas, se queda igual */
-  .home-main {
-    margin-left: 0;
-  }
+.menu-container {
+  margin: 0;
+}
+
+.menu-section {
+  margin-bottom: 40px;
+}
+
+.menu-section h2 {
+  margin-bottom: 20px;
+  color: #003366;
+}
+
+.menu-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
 }

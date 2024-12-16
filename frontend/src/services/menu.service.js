@@ -7,4 +7,12 @@ export async function fetchMenu() {
     return response.data; // Esto devolverá { menu: { on_stock: [...], out_of_stock: [...] } }
 }
 
+export async function fetchMenuDefault() {
+    const response = await axios.get('/menu/available');
+    console.log(response);
+    return response.data; // Esto devolverá { menu: { on_stock: [...], out_of_stock: [...] } }
+}
+
+
+
 

@@ -43,39 +43,39 @@ const Users = () => {
   ];
 
   return (
-    <div className='main-container'>
-      <div className='table-container'>
-        <div className='top-table'>
-          <h1 className='title-table'>Usuarios</h1>
-          <div className='filter-actions'>
-            <Search value={filterRut} onChange={handleRutFilterChange} placeholder={'Filtrar por rut'} />
-            <button onClick={handleClickUpdate} disabled={dataUser.length === 0}>
-              {dataUser.length === 0 ? (
-                <img src={UpdateIconDisable} alt="edit-disabled" />
-              ) : (
-                <img src={UpdateIcon} alt="edit" />
-              )}
-            </button>
-            <button className='delete-user-button' disabled={dataUser.length === 0} onClick={() => handleDelete(dataUser)}>
-              {dataUser.length === 0 ? (
-                <img src={DeleteIconDisable} alt="delete-disabled" />
-              ) : (
-                <img src={DeleteIcon} alt="delete" />
-              )}
-            </button>
+      <div className='users-container'>
+        <div className='users-table-container'>
+          <div className='users-top-table'>
+            <h1 className='users-title-table'>Usuarios</h1>
+            <div className='users-filter-actions'>
+              <Search value={filterRut} onChange={handleRutFilterChange} placeholder={'Filtrar por rut'} />
+              <button onClick={handleClickUpdate} disabled={dataUser.length === 0}>
+                {dataUser.length === 0 ? (
+                    <img src={UpdateIconDisable} alt="edit-disabled" />
+                ) : (
+                    <img src={UpdateIcon} alt="edit" />
+                )}
+              </button>
+              <button className='users-delete-user-button' disabled={dataUser.length === 0} onClick={() => handleDelete(dataUser)}>
+                {dataUser.length === 0 ? (
+                    <img src={DeleteIconDisable} alt="delete-disabled" />
+                ) : (
+                    <img src={DeleteIcon} alt="delete" />
+                )}
+              </button>
+            </div>
           </div>
+          <Table
+              data={users}
+              columns={columns}
+              filter={filterRut}
+              dataToFilter={'rut'}
+              initialSortName={'nombreCompleto'}
+              onSelectionChange={handleSelectionChange}
+          />
         </div>
-        <Table
-          data={users}
-          columns={columns}
-          filter={filterRut}
-          dataToFilter={'rut'}
-          initialSortName={'nombreCompleto'}
-          onSelectionChange={handleSelectionChange}
-        />
+        <Popup show={isPopupOpen} setShow={setIsPopupOpen} data={dataUser} action={handleUpdate} />
       </div>
-      <Popup show={isPopupOpen} setShow={setIsPopupOpen} data={dataUser} action={handleUpdate} />
-    </div>
   );
 };
 

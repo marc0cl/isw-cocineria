@@ -54,6 +54,7 @@ const ProductPage = () => {
   } = useUpdateProduct(reloadProducts, updateProductListOrder);
 
 
+
   const tipoMap = {
     "bebestible": "bar",
     "comestible": "cocina",

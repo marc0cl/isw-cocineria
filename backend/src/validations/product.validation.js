@@ -6,11 +6,13 @@ export const productBodyValidation = Joi.object({
     .min(3)
     .max(255)
     .required()
+    .regex(/^[A-Za-zÁáÉéÍíÓóÚú]+( [A-Za-zÁáÉéÍíÓóÚú]+)*$/)
     .messages({
       "string.base": "El nombre del producto debe ser de tipo string.",
       "string.empty": "El nombre del producto no puede estar vacío.",
       "string.min": "El nombre del producto debe tener al menos 3 caracteres.",
       "string.max": "El nombre del producto no puede exceder los 255 caracteres.",
+      "string.pattern.base": "El nombre del producto solo puede contener letras y un solo espacio entre palabras.",
       "any.required": "El nombre del producto es obligatorio."
     }),
   cantidadProducto: Joi.number()

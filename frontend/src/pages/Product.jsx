@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service';
 import { getProvsService } from '@services/prov.service';
+
 import useDeleteProduct from '../hooks/product/proDelete';
 import useUpdateProduct from '../hooks/product/proUpdate';
 import DeleteIcon from '../assets/deleteIcon.svg';
 import UpdateIcon from '../assets/updateIcon.svg';
 import '../styles/Product.css';
+
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);

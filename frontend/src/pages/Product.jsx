@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts, fetchProductDetail } from '@services/inventory.service';
 import { getProvsService } from '@services/prov.service';
+
 import useDeleteProduct from '../hooks/product/proDelete';
 import DeleteIcon from '../assets/deleteIcon.svg';
 import '../styles/Product.css';
+
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);

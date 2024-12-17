@@ -3,9 +3,11 @@ import { fetchProducts, fetchProductDetail } from '@services/inventory.service';
 import { getProvsService } from '@services/prov.service';
 
 import useDeleteProduct from '../hooks/product/proDelete';
+
 import useUpdateProduct from '../hooks/product/proUpdate';
 import DeleteIcon from '../assets/deleteIcon.svg';
 import UpdateIcon from '../assets/updateIcon.svg';
+
 import '../styles/Product.css';
 
 
@@ -58,6 +60,8 @@ const ProductPage = () => {
     "comestible": "cocina",
     "insumo": "otro"
   };
+
+  const { handleDelete } = useDeleteProduct(setProducts);
 
   useEffect(() => {
     const loadData = async () => {
@@ -123,6 +127,7 @@ const ProductPage = () => {
     <div className="product-page">
       <h1>Listado de Productos</h1>
 
+
       <div className="search-container">
         <input
           type="text"
@@ -180,6 +185,7 @@ const ProductPage = () => {
                 >
                   <img src={UpdateIcon} alt="update" />
                 </button>
+
               </div>
             </div>
           ))

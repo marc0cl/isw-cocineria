@@ -20,6 +20,8 @@ const ProductPage = () => {
   const [productDetail, setProductDetail] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [lowStockAlert, setLowStockAlert] = useState(false);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
 
   const reloadProducts = async () => {
     const response = await fetchProducts();
@@ -93,6 +95,23 @@ const ProductPage = () => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    const checkLowStock = () => {
+      const lowStock = products.filter(
+        (product) => product.cantidadProducto <= product.minThreshold
+      );
+      if (lowStock.length > 0) {
+        setLowStockAlert(true);
+        setLowStockProducts(lowStock);  // obj : Actualiza la lista de productos con stock bajo
+      } else {
+        setLowStockAlert(false);
+        setLowStockProducts([]);
+      }
+    };
+
+    checkLowStock();
+  }, [products]);
+
   const filteredProducts = products
     .filter((product) =>
       product.nombreProducto.toLowerCase().includes(searchName.toLowerCase())
@@ -128,6 +147,28 @@ const ProductPage = () => {
       <h1>Listado de Productos</h1>
 
 
+      {lowStockAlert && (
+        <div className="low-stock-alert">
+          <p style={{ color: 'red', fontWeight: 'bold' }}>
+            ¡Alerta! Algunos productos tienen stock Bajo.
+          </p>
+        </div>
+      )}
+
+
+      {lowStockProducts.length > 0 && (
+        <div className="low-stock-products">
+          <h2>Productos con Stock Bajo:</h2>
+          <ul>
+            {lowStockProducts.map((product) => (
+              <li key={product.id}>
+                {product.nombreProducto} - Stock: {product.cantidadProducto} {product.stockUnit} (Mínimo: {product.minThreshold} {product.stockUnit})
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="search-container">
         <input
           type="text"
@@ -151,7 +192,7 @@ const ProductPage = () => {
                 <p>
                   <span className="stock-label">Cantidad de Stock: </span>
                   <span
-                    className={
+                    className={ 
                       product.cantidadProducto <= product.minThreshold
                         ? 'stock-value stock-value-low'
                         : 'stock-value stock-value-high'

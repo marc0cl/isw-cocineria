@@ -95,7 +95,7 @@ const GestionProveedores = () => {
             <div className="modalgp">
               <div className="modalgp-content">
                 <span className="close" onClick={() => setShowForm(false)}>&times;</span>
-                <ProvForm onSubmit={handleFormSubmit} initialData={isEditing ? selectedProveedor : null}/>
+                <ProvForm onSubmit={handleFormSubmit} initialData={isEditing ? selectedProveedor : null} isEditing={isEditing}/>
               </div>
             </div>
         )}

@@ -3,7 +3,7 @@ import '../styles/provform.css';
 import { getProvsService } from '../services/prov.service.js';
 
 
-const ProvForm = ({ onSubmit, initialData }) => {
+const ProvForm = ({ onSubmit, initialData, isEditing }) => {
   const [formData, setFormData] = useState({
     nombre: '',
     direccion: '',
@@ -70,7 +70,7 @@ const ProvForm = ({ onSubmit, initialData }) => {
       newErrors = { ...newErrors, email: 'El email es requerido' };
     } else if (!formData.email.endsWith('@gmail.cl')) {
       newErrors = { ...newErrors, email: 'El email debe terminar en @gmail.cl' };
-    } else if (!(await isEmailUnique(formData.email))) {
+    } else if (!isEditing && !(await isEmailUnique(formData.email))) {
       newErrors = { ...newErrors, email: 'El email ya está en uso' };
     }
 

@@ -71,16 +71,6 @@ const Aside = ({ menuOpen }) => {
                                             Listado de productos
                                         </NavLink>
                                     </li>
-                                    <li>
-                                        <NavLink to="/delete-product" className={({ isActive }) => (isActive ? 'active' : '')}>
-                                            Eliminar producto
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/edit-product" className={({ isActive }) => (isActive ? 'active' : '')}>
-                                            Editar producto
-                                        </NavLink>
-                                    </li>
                                 </ul>
                             )}
                         </li>

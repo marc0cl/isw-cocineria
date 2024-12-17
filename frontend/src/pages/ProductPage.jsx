@@ -38,8 +38,19 @@ export default function AddProductPage() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+
+    const validateName = (name) => {
+        const regex = /^[A-Za-zÁáÉéÍíÓóÚú]+( [A-Za-zÁáÉéÍíÓóÚú]+)*$/;
+        return regex.test(name);
+    };
+
     const validateForm = () => {
-        const { cantidadProducto, cost, minThreshold, fechaDeCaducidad, stockUnit, minThresholdUnit } = form;
+        const { nombreProducto, cantidadProducto, cost, minThreshold, fechaDeCaducidad, stockUnit, minThresholdUnit } = form;
+
+        if (!validateName(nombreProducto)) {
+            alert("El nombre del producto solo puede contener letras y un único espacio entre las palabras.");
+            return false;
+        }
 
         // Cantidad, costo y umbral mínimo no pueden ser negativos
         if (Number(cantidadProducto) < 0) {
@@ -57,7 +68,7 @@ export default function AddProductPage() {
 
         // Fecha de caducidad no puede ser futura
         const today = new Date();
-        today.setHours(0,0,0,0);
+        today.setHours(0, 0, 0, 0);
         const caducidadDate = new Date(fechaDeCaducidad);
         if (caducidadDate > today) {
             alert("La fecha de caducidad no puede ser en el futuro.");

@@ -6,13 +6,13 @@ const useDeleteProduct = (setProducts) => {
     try {
       const result = await deleteDataAlert();
       if (result.isConfirmed) {
-        const response = await deleteProduct(nombreProducto); // Cambiado a usar nombreProducto
+        const response = await deleteProduct(nombreProducto);
         if (response.status === 'Client error') {
           return showErrorAlert('Error', response.details);
         }
         showSuccessAlert('¡Eliminado!', 'El producto ha sido eliminado correctamente.');
 
-        // Actualizar la lista de productos después de eliminar por nombreProducto
+        
         setProducts((prevProducts) =>
           prevProducts.filter(product => product.nombreProducto !== nombreProducto)
         );

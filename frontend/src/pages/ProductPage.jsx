@@ -39,7 +39,7 @@ export default function AddProductPage() {
     };
 
     const validateForm = () => {
-        const { cantidadProducto, cost, minThreshold, fechaDeCaducidad } = form;
+        const { cantidadProducto, cost, minThreshold, fechaDeCaducidad, stockUnit, minThresholdUnit } = form;
 
         // Cantidad, costo y umbral mínimo no pueden ser negativos
         if (Number(cantidadProducto) < 0) {
@@ -61,6 +61,12 @@ export default function AddProductPage() {
         const caducidadDate = new Date(fechaDeCaducidad);
         if (caducidadDate > today) {
             alert("La fecha de caducidad no puede ser en el futuro.");
+            return false;
+        }
+
+        // Validación de unidad de cantidad y umbral mínimo
+        if (stockUnit !== minThresholdUnit) {
+            alert("La unidad de cantidad y el umbral mínimo deben ser iguales.");
             return false;
         }
 

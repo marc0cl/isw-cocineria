@@ -10,8 +10,6 @@ import ProtectedRoute from '@components/ProtectedRoute';
 
 import ProductPage from '@pages/ProductPage';
 import Product from '@pages/Product';
-import DeleteProduct from '@pages/DeleteProduct';
-import UpdateProduct from '@pages/UpdateProduct';
 import GestionProveedores from '@pages/GestionProveedores';
 
 import '@styles/styles.css';
@@ -83,22 +81,6 @@ const router = createBrowserRouter([
             element: (
                 <ProtectedRoute allowedRoles={['administrador']}>
                   <ProductPage />
-                </ProtectedRoute>
-            )
-          },
-          {
-            path: 'delete-product',
-            element: (
-                <ProtectedRoute allowedRoles={['administrador']}>
-                  <DeleteProduct />
-                </ProtectedRoute>
-            )
-          },
-          {
-            path: 'edit-product',
-            element: (
-                <ProtectedRoute allowedRoles={['administrador']}>
-                  <UpdateProduct />
                 </ProtectedRoute>
             )
           },

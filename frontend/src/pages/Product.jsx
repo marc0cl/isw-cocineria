@@ -53,7 +53,6 @@ const ProductPage = () => {
     handleSubmit,
   } = useUpdateProduct(reloadProducts, updateProductListOrder);
 
-  const { handleDelete } = useDeleteProduct(setProducts);
 
   const tipoMap = {
     "bebestible": "bar",

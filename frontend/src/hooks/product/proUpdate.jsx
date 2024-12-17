@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { fetchProducts, updateProduct } from '@services/inventory.service';
 import { getProvsService } from '@services/prov.service';
 
-const useUpdateProduct = () => {
+
+const useUpdateProduct = (reloadProducts, updateProductListOrder) => {
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchName, setSearchName] = useState('');
@@ -79,6 +81,10 @@ const useUpdateProduct = () => {
     try {
       await updateProduct(searchName, updateData);
       alert('Producto actualizado exitosamente');
+
+      await reloadProducts(); // Recargar la lista de productos
+      updateProductListOrder(searchName); // Mover el producto actualizado al inicio de la lista
+
     } catch (err) {
       alert('Error al actualizar el producto');
     }

@@ -4,15 +4,15 @@ import { getProvsService } from '../services/prov.service';
 import '../styles/product_page.css';
 
 export default function AddProductPage() {
-    // Estado para el formulario de producto
+
     const [form, setForm] = useState({
         nombreProducto: '',
         cantidadProducto: '',
         fechaDeCaducidad: '',
-        tipoDeProducto: 'bar', // valor por defecto
-        stockUnit: 'g', // valor por defecto
+        tipoDeProducto: 'bar',
+        stockUnit: 'g',
         minThreshold: '',
-        minThresholdUnit: 'g', // Nueva unidad para el umbral mínimo
+        minThresholdUnit: 'g',
         cost: '',
         supplierId: ''
     });
@@ -21,7 +21,7 @@ export default function AddProductPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        // Cargar lista de proveedores
+
         async function fetchProviders() {
             const [data, error] = await getProvsService();
             if (!error && data && data.data) {
@@ -33,7 +33,7 @@ export default function AddProductPage() {
         fetchProviders();
     }, []);
 
-    // Maneja los cambios en el formulario
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -52,7 +52,7 @@ export default function AddProductPage() {
             return false;
         }
 
-        // Cantidad, costo y umbral mínimo no pueden ser negativos
+
         if (Number(cantidadProducto) < 0) {
             alert("La cantidad no puede ser negativa.");
             return false;
@@ -66,7 +66,7 @@ export default function AddProductPage() {
             return false;
         }
 
-        // Fecha de caducidad no puede ser futura
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const caducidadDate = new Date(fechaDeCaducidad);
@@ -75,7 +75,7 @@ export default function AddProductPage() {
             return false;
         }
 
-        // Validación de unidad de cantidad y umbral mínimo
+
         if (stockUnit !== minThresholdUnit) {
             alert("La unidad de cantidad y el umbral mínimo deben ser iguales.");
             return false;
@@ -84,7 +84,7 @@ export default function AddProductPage() {
         return true;
     };
 
-    // Maneja el envío del formulario
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -100,12 +100,12 @@ export default function AddProductPage() {
                 tipoDeProducto: form.tipoDeProducto,
                 stockUnit: form.stockUnit,
                 minThreshold: form.minThreshold,
-                minThresholdUnit: form.minThresholdUnit, // Enviamos también la unidad del umbral mínimo
+                minThresholdUnit: form.minThresholdUnit,
                 supplierId: form.supplierId ? Number(form.supplierId) : null,
                 cost: form.cost
             });
 
-            // Limpiar el formulario
+
             setForm({
                 nombreProducto: '',
                 cantidadProducto: '',

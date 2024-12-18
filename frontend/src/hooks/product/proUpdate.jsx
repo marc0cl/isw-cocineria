@@ -82,8 +82,8 @@ const useUpdateProduct = (reloadProducts, updateProductListOrder) => {
       await updateProduct(searchName, updateData);
       alert('Producto actualizado exitosamente');
 
-      await reloadProducts(); // Recargar la lista de productos
-      updateProductListOrder(searchName); // Mover el producto actualizado al inicio de la lista
+      await reloadProducts();
+      updateProductListOrder(searchName); // mover el producto actualizado al inicio de la lista
 
     } catch (err) {
       alert('Error al actualizar el producto');

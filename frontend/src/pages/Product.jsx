@@ -102,7 +102,9 @@ const ProductPage = () => {
       );
       if (lowStock.length > 0) {
         setLowStockAlert(true);
-        setLowStockProducts(lowStock);  // obj : Actualiza la lista de productos con stock bajo
+
+        setLowStockProducts(lowStock);  // obj : actualiza la lista de productos con stock bajo
+
       } else {
         setLowStockAlert(false);
         setLowStockProducts([]);

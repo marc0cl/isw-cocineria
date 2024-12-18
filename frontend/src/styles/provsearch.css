@@ -11,8 +11,12 @@
     border: 1px solid #003366;
     font-size: 16px;
     margin-right: 8px;
+    font-family: "Montserrat", sans-serif;
 }
 
+.psearch-container .psearch-input-table {
+    padding-left: 40px !important;
+}
 
 .psearch-input-table {
     padding: 8px 16px;

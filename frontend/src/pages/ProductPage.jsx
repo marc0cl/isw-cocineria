@@ -53,6 +53,8 @@ export default function AddProductPage() {
         }
 
 
+
+
         if (Number(cantidadProducto) < 0) {
             alert("La cantidad no puede ser negativa.");
             return false;

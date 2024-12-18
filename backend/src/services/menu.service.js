@@ -22,13 +22,27 @@ export async function getAvailableMenuService() {
       return [null, "No se encontró el menú"];
     }
 
-    const onStockNames = finalMenu.menu.on_stock?.map(item => ({ name: item.name })) || [];
-    const outOfStockNames = finalMenu.menu.out_of_stock?.map(item => ({ name: item.name })) || [];
+    console.log(finalMenu)
+    const onStockItems = finalMenu.menu.on_stock.map(item => ({
+      name: item.name,
+      price: item.price,
+      amount: item.amount,
+      source: item.source,
+      ingredients: item.ingredients
+    }));
+
+    const outOfStockItems = finalMenu.menu.out_of_stock.map(item => ({
+      name: item.name,
+      price: item.price,
+      amount: item.amount,
+      source: item.source,
+      ingredients: item.ingredients
+    }));
 
     return [{
       menu: {
-        on_stock: onStockNames,
-        out_of_stock: outOfStockNames
+        on_stock: onStockItems,
+        out_of_stock: outOfStockItems
       }
     }, null];
   } catch (error) {

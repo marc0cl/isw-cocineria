@@ -1,119 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     PieChart, Pie, Cell, Tooltip, Legend,
     LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
-import { getIncomesService, getExpensesService } from '@services/transaction.service.js';
-import { fetchProducts } from '@services/inventory.service.js';
 import '@styles/finances.css';
 import dayjs from 'dayjs';
-import isBetween from 'dayjs/plugin/isBetween';
 import Spinner from '../components/Login/Spinner.jsx';
-dayjs.extend(isBetween);
+import { useFinancesData } from '../hooks/transactions/useFinancesData';
 
 const Finances = () => {
-    const [pieData, setPieData] = useState([]);
-    const [transactions, setTransactions] = useState([]);
-    const [criticalProducts, setCriticalProducts] = useState([]);
-    const [lineChartData, setLineChartData] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [selectedRange, setSelectedRange] = useState(7);
 
-    const COLORS = ['#00C49F', '#FF0000']; // Verde para ingresos, rojo para gastos
+    const {
+        pieData,
+        transactions,
+        criticalProducts,
+        lineChartData,
+        loading
+    } = useFinancesData(selectedRange);
 
-    const sourceDisplay = {
-        bar: 'Bar',
-        cocina: 'Cocina',
-        otros: 'Otros',
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Obtener ingresos
-                const [incomesData, incomesError] = await getIncomesService();
-                if (incomesError) {
-                    console.error('Error al obtener ingresos:', incomesError);
-                    return;
-                }
-
-                // Obtener gastos
-                const [expensesData, expensesError] = await getExpensesService();
-                if (expensesError) {
-                    console.error('Error al obtener gastos:', expensesError);
-                    return;
-                }
-
-                // Calcular totales y transacciones
-                const allTransactions = [
-                    ...incomesData.map(item => ({ ...item, type: 'income' })),
-                    ...expensesData.map(item => ({ ...item, type: 'expense' })),
-                ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                setTransactions(allTransactions);
-
-                const incomeTotal = incomesData.reduce((sum, item) => sum + parseFloat(item.amount), 0);
-                const expenseTotal = expensesData.reduce((sum, item) => sum + parseFloat(item.amount), 0);
-
-                setPieData([
-                    { name: 'Ingresos', value: incomeTotal },
-                    { name: 'Gastos', value: expenseTotal },
-                ]);
-
-                const allProducts = await fetchProducts();
-                const criticos = allProducts.data.filter(p => p.cantidadProducto < p.minThreshold);
-                setCriticalProducts(criticos);
-
-                const lineData = prepareLineChartData(incomesData, selectedRange);
-                setLineChartData(lineData);
-
-                setLoading(false);
-            } catch (error) {
-                console.error("Error en fetchData:", error);
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [selectedRange]);
-
-
-    const prepareLineChartData = (incomesData, range) => {
-        // Obtenemos la fecha actual
-        const endDate = dayjs();
-        // Fecha inicial basada en el rango
-        const startDate = endDate.subtract(range - 1, 'day');
-
-        // Filtrar ingresos dentro del rango
-        const filteredIncomes = incomesData.filter(inc => {
-            const date = dayjs(inc.createdAt);
-            return date.isBetween(startDate, endDate, 'day', '[]');
-        });
-
-        // Agrupar por día y fuente
-        const daySourceMap = {};
-        for (let i = 0; i < range; i++) {
-            const currentDay = startDate.add(i, 'day');
-            const dayStr = currentDay.format('DD/MM');
-            daySourceMap[dayStr] = { day: dayStr, bar: 0, cocina: 0, otros: 0 };
-        }
-
-        filteredIncomes.forEach(item => {
-            const dayStr = dayjs(item.createdAt).format('DD/MM');
-            const src = item.source || 'otros';
-            if (!daySourceMap[dayStr]) {
-                daySourceMap[dayStr] = { day: dayStr, bar: 0, cocina: 0, otros: 0 };
-            }
-            // Sumar montos por fuente
-            if (sourceDisplay[src]) {
-                daySourceMap[dayStr][src] += parseFloat(item.amount);
-            } else {
-                daySourceMap[dayStr]['otros'] += parseFloat(item.amount);
-            }
-        });
-
-        return Object.values(daySourceMap);
-    };
+    const COLORS = ['#00C49F', '#FF0000'];
+    const sourceDisplay = { bar: 'Bar', cocina: 'Cocina', otros: 'Otros' };
 
     if (loading) {
         return (
@@ -148,6 +55,7 @@ const Finances = () => {
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
+
                 <div className="chart-item table-container">
                     <h2>Transacciones</h2>
                     <div className="transactions-container">
@@ -175,6 +83,7 @@ const Finances = () => {
                         </table>
                     </div>
                 </div>
+
                 {criticalProducts && criticalProducts.length > 0 && (
                     <div className="chart-item table-container">
                         <h2>Productos Críticos</h2>

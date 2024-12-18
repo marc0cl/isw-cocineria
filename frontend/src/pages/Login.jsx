@@ -7,6 +7,7 @@ import SuccessTick from '@components/Login/SuccessTick';
 import ErrorX from '@components/Login/ErrorX';
 import '@styles/form.css';
 import { useState } from "react";
+import { FaArrowLeft } from 'react-icons/fa';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -48,6 +49,24 @@ const Login = () => {
 
     return (
         <main className="container">
+            <button
+                type="button"
+                onClick={() => navigate('/home')}
+                style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#003366',
+                    fontSize: '1.2em',
+                    cursor: 'pointer',
+                    marginBottom: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                }}
+            >
+                <FaArrowLeft /> Volver a Home
+            </button>
+
             <Form
                 title="Iniciar sesión"
                 fields={[

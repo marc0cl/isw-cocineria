@@ -1,29 +1,37 @@
 .prov-form {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Reduce the gap between form elements */
-    margin-top: 30px;
+    gap: 4px;
+    margin-top: 20px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .prov-form div {
-    margin-bottom: 10px; /* Reduce the margin between form elements */
+    margin-bottom: 5px;
   }
   
   .prov-form label {
     display: block;
-    margin-bottom: 5px; /* Reduce the margin below labels */
-    font-size: 14px; /* Reduce the font size of labels */
+    margin-bottom: 3px; 
+    font-size: 14px; 
   }
   
   .prov-form input {
     width: 100%;
-    padding: 6px; /* Reduce the padding inside input fields */
+    padding: 4px;
     box-sizing: border-box;
-    font-size: 14px; /* Reduce the font size of input text */
+    font-size: 12px;
   }
   
   .prov-form button {
-    padding: 8px 16px; /* Reduce the padding inside the button */
-    font-size: 14px; /* Reduce the font size of the button text */
-    border-radius: 4px; /* Adjust the border radius if needed */
+    padding: 6px 12px; 
+    font-size: 12px; 
+    border-radius: 4px;
+  }
+
+  .prov-form .error {
+    color: red;
+    font-size: 12px;
   }

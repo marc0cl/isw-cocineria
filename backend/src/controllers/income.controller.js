@@ -1,4 +1,6 @@
 "use strict";
+import { AppDataSource } from "../config/configDb.js";
+import Product from "../entity/product.entity.js";
 import {
   addTransactionService,
   deleteTransactionService,
@@ -13,6 +15,7 @@ import {
 import { getFinalMenuService } from "../services/menu.service.js"
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 import { transactionsArrayValidation } from "../validations/transaction.validation.js";
+import { MenuLoader } from "../utils/MenuLoader.js";
 
 export async function getIncome(req, res) {
   try {
@@ -55,18 +58,15 @@ export async function addMultipleIncomes(req, res) {
     const [menuData, errorMenu] = await getFinalMenuService();
     if (errorMenu) return handleErrorClient(res, 500, errorMenu);
 
-    // Agrupar productos solicitados
     const productCount = data.reduce((acc, prod) => {
       acc[prod.description] = (acc[prod.description] || 0) + 1;
       return acc;
     }, {});
 
-    // Validar con stock
     const insufficientProducts = [];
     for (const [productName, requestedQty] of Object.entries(productCount)) {
       const productInStock = menuData.menu.on_stock.find(item => item.name === productName);
 
-      // Si no existe el producto en on_stock o su cantidad es menor a la solicitada
       if (!productInStock || productInStock.amount < requestedQty) {
         insufficientProducts.push({
           product: productName,
@@ -77,11 +77,46 @@ export async function addMultipleIncomes(req, res) {
     }
 
     if (insufficientProducts.length > 0) {
-      // Retorna un arreglo con los productos que no se pueden surtir totalmente
       return res.status(200).send(insufficientProducts);
     }
 
-    // Si no hay insuficientes, proceder con la creación del ingreso
+    const productRepository = AppDataSource.getRepository(Product);
+    for (const [productName, requestedQty] of Object.entries(productCount)) {
+      const menuItem = MenuLoader.menu.find(item => item.name === productName);
+      if (!menuItem) {
+        return handleErrorClient(res, 400, `El producto '${productName}' no se encontró en el menú original.`);
+      }
+
+      // Por cada ingrediente se descuenta del inventario
+      for (const ingredient of menuItem.ingredients) {
+        const ingName = ingredient.name.trim();
+        const ingAmountNeededPerUnit = ingredient.amount;
+        const ingUnit = ingredient.unit;
+        const totalAmountNeeded = ingAmountNeededPerUnit * requestedQty;
+
+        const dbProduct = await productRepository.findOne({ where: { nombreProducto: ingName } });
+        if (!dbProduct) {
+          return handleErrorClient(res, 400, `El ingrediente '${ingName}' no existe en el inventario.`);
+        }
+
+        const pesoConvertido = convertToBaseUnit(totalAmountNeeded, ingUnit, dbProduct.stockUnit);
+
+        const newCantidad = dbProduct.cantidadProducto - pesoConvertido;
+        if (newCantidad < 0) {
+          return handleErrorClient(res, 400,
+            `Ingrediente '${ingName}' 
+            sin suficiente stock al intentar descontar (${pesoConvertido}${dbProduct.stockUnit}).`);
+        }
+
+        // Actualizar el stock del ingrediente
+        await productRepository.update({ id: dbProduct.id }, {
+          cantidadProducto: newCantidad,
+          updatedAt: new Date()
+        });
+      }
+    }
+
+    // Ahora sí agregamos las transacciones
     const [, errorIncome] = await addTransactionService(data);
     if (errorIncome) return handleErrorClient(res, 400, errorIncome);
 
@@ -129,5 +164,36 @@ export async function deleteIncome(req, res) {
     res.status(200).send("Ingreso eliminado correctamente");
   } catch (error) {
     handleErrorServer(res, 500, error.message);
+  }
+}
+
+function convertToBaseUnit(value, unit, targetUnit) {
+  const massUnits = ["g", "kg", "mg", "t"];
+  const volumeUnits = ["ml", "l"];
+
+  if (targetUnit === "g") {
+    switch (unit) {
+      case "g":
+        return value;
+      case "kg":
+        return value * 1000;
+      case "mg":
+        return value / 1000;
+      case "t":
+        return value * 1000000;
+      default:
+        throw new Error(`Unidad de masa no válida: ${unit}`);
+    }
+  } else if (targetUnit === "ml") {
+    switch (unit) {
+      case "ml":
+        return value;
+      case "l":
+        return value * 1000;
+      default:
+        throw new Error(`Unidad de volumen no válida: ${unit}`);
+    }
+  } else {
+    throw new Error(`Unidad de destino no válida: ${targetUnit}`);
   }
 }
